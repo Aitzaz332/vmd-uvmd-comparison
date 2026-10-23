@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+results/*/per_signal.csv
+.pytest_cache/
