@@ -69,6 +69,30 @@ method is scored on the same unseen test signals.
 * **Cost:** median wall-clock time per signal, iterations or layers, trainable parameters, analytic
   FLOPs per signal (`decomp/cost.py`), training time and training FLOPs.
 
+## Results — dataset 1 (synthetic, 30 unseen test signals, CPU, 2 threads)
+Full tables: `results/synthetic/summary.md` (K=4) and `results/synthetic_K13/summary.md` (K=13, paper setting).
+
+| K | method | rel. recon error | grouped mode SNR (dB) | ms / signal | training |
+|---|---|---|---|---|---|
+| 4 | VMD converged (~117 it) | 0.219 | 17.5 | 16.4 | – |
+| 4 | VMD-1 / VMD-2 | 0.469 / 0.380 | 7.2 / 12.3 | 0.64 / 0.88 | – |
+| 4 | UVMD-1 / UVMD-2 trained | 0.221 / 0.176 | 6.4 / 8.9 | 1.5 / 1.6 | 49 s / 72 s |
+| 13 | VMD converged (~498 it) | 0.029 | 20.7 | 450 | – |
+| 13 | VMD-1 / VMD-2 | 0.050 / 0.038 | 12.4 / 18.8 | 2.2 / 3.3 | – |
+| 13 | UVMD-1 / UVMD-2 trained | 0.007 / 0.014 | 8.5 / 7.3 | 3.8 / 5.1 | 130 s / 231 s |
+
+What the numbers show:
+* **Reconstruction:** trained UVMD matches or beats converged VMD, using 1–2 layers instead of 100–500 iterations.
+* **Mode recovery:** trained UVMD is *worse* than the untrained version, which is plain VMD with 1–2
+  iterations. The loss rewards only reconstruction, so training lowers every alpha (2000 → ~500 at K=4),
+  which widens the mode filters. The centre frequencies barely move in 1–2 layers. Modes absorb
+  neighbouring content (orthogonality index 3–4× higher at K=4).
+* **Cost:** UVMD inference costs ~10× (K=4) to ~120× (K=13) less than converged VMD. Training costs the same as roughly
+  3,000 converged VMD decompositions at K=4, or ~300 at K=13.
+* **Training length:** the training loss was still falling at epoch 100, so longer training may change these numbers.
+* **Wall-clock times:** at the same iteration count, PyTorch-per-signal UVMD is slower than NumPy VMD
+  (framework overhead, batch size 1). The FLOP counts in `cost.csv` are comparable across both.
+
 ## Notes on the upstream code (kept as-is, documented here)
 * The paper writes the denominator as `1 + 2·softplus(alpha)·(w - w_k)^2` and the loss as squared L2.
   The code uses `1 + softplus(alpha)·(w - w_k)^2` and an L1 loss. This benchmark runs the code.
