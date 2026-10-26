@@ -43,6 +43,43 @@ def plot_example(path, t, x, true_modes, mode_names, decomps: dict):
     plt.close(fig)
 
 
+def plot_modes_envelope(path, x, fs, decomps: dict, fault_hz, title):
+    """decomps: {label: (modes (K,T), sel_mode)}; one column per method: modes, then envelope spectrum."""
+    from decomp.fault_metrics import envelope_spectrum
+    labs = list(decomps)
+    K = max(m.shape[0] for m, _ in decomps.values())
+    fig, axes = plt.subplots(K + 2, len(labs), figsize=(4.2 * len(labs), 1.25 * (K + 2) + 0.6),
+                             squeeze=False)
+    t = np.arange(len(x)) / fs * 1e3
+    for c, lab in enumerate(labs):
+        u, sel = decomps[lab]
+        axes[0, c].plot(t, x, color=MUTED, lw=0.6)
+        axes[0, c].set_title(f"{lab}\ninput", loc="left", fontsize=9, color=INK)
+        for k in range(K):
+            ax = axes[k + 1, c]
+            if k < len(u):
+                ax.plot(t[:u.shape[1]], u[k], color=C[1] if k == sel else C[0], lw=0.6)
+                ax.set_title(f"mode {k}" + ("  (max kurtosis)" if k == sel else ""), loc="left",
+                             fontsize=8, color=INK)
+            else:
+                ax.axis("off")
+        f, s = envelope_spectrum(u[sel], fs)
+        ax = axes[K + 1, c]
+        keep = f <= 600
+        ax.plot(f[keep], s[keep], color=C[1], lw=1)
+        for h in (1, 2, 3):
+            ax.axvline(h * fault_hz, color=INK, lw=0.8, ls=":")
+        ax.set_title("envelope spectrum of selected mode (dotted: fault harmonics)", loc="left", fontsize=8,
+                     color=INK)
+        ax.set_xlabel("Hz", color=MUTED, fontsize=8)
+    for ax in axes.ravel():
+        _style(ax)
+    fig.suptitle(title, x=0.01, ha="left", fontsize=10, color=INK)
+    fig.tight_layout()
+    fig.savefig(path, dpi=130)
+    plt.close(fig)
+
+
 def plot_vs_iterations(path, sweep, uvmd_points, metric, ylabel, logy=False):
     """sweep: list of dicts with n_iter + metric mean; uvmd_points: {label: (layers, value)}"""
     fig, ax = plt.subplots(figsize=(7, 4))

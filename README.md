@@ -27,6 +27,11 @@ decomp/vmd_numpy.py           VMD with memory O(TK) and fixed-iteration mode (te
 decomp/metrics.py             reconstruction, spectral, mode-recovery, orthogonality metrics
 decomp/cost.py                analytic FLOP model and timing helpers
 datasets/synthetic.py         dataset 1: signals built from 4 known modes plus noise
+datasets/cwru.py              dataset 2: CWRU bearing data loader (windows, labels, fault frequencies)
+decomp/fault_metrics.py       envelope-spectrum fault metrics (no ground-truth modes needed)
+experiments/run_cwru.py       dataset-2 benchmark
+scripts/download_cwru.sh      downloads the 40-file CWRU subset
+scripts/run_cwru_cluster.sh   full CWRU run on a GPU node (K=4 and K=13)
 experiments/run_synthetic.py  dataset-1 benchmark (figures plus summary.md)
 tests/                        equivalence and integrity tests
 ```
@@ -92,6 +97,34 @@ What the numbers show:
 * **Training length:** the training loss was still falling at epoch 100, so longer training may change these numbers.
 * **Wall-clock times:** at the same iteration count, PyTorch-per-signal UVMD is slower than NumPy VMD
   (framework overhead, batch size 1). The FLOP counts in `cost.csv` are comparable across both.
+
+## Dataset 2: CWRU bearing data
+The 40 files used: normal baseline 97–100, plus the 12 kHz drive-end inner-race, ball and
+outer-race @6:00 recordings at fault sizes 0.007″, 0.014″ and 0.021″, for motor loads 0–3 HP. Run
+`bash scripts/download_cwru.sh ~/data/CWRU` to download them.
+
+* The normal files are recorded at 48 kHz. The loader resamples them to 12 kHz.
+* `99.mat` also contains the arrays of `98.mat`. The loader uses the key that matches the file number.
+* `98.mat` has no RPM value, so the nominal speed for its load is used.
+* Every recording is cut into non-overlapping windows of 2048 samples (171 ms); by default the first 30 of each are used.
+  Each window is standardised.
+* The split is by motor load: train on 0–1 HP, validate on 2 HP, test on 3 HP. No recording appears
+  in more than one set. `--split time` splits each recording in time instead.
+
+CWRU has no ground-truth modes, so the evaluation uses:
+* the **reconstruction** metrics from dataset 1
+* **envelope analysis of the mode with the highest kurtosis**: the harmonic SNR at 1–3× the
+  fault frequency of the true fault (BPFI 5.4152, BPFO 3.5848, BSF 2.357 × shaft speed; SKF 6205), the hit
+  rate (the true fault's frequency is the strongest of the three), and the best SNR across all modes
+* the **raw signal** without decomposition, as a reference
+* the same **cost** measurements as dataset 1
+
+```bash
+python experiments/run_cwru.py --data ~/data/CWRU --device cuda:0            # K=4
+python experiments/run_cwru.py --data ~/data/CWRU --device cuda:0 --K 13 --out results/cwru_K13
+bash scripts/run_cwru_cluster.sh ~/data/CWRU cuda:0                          # both, plus tests
+```
+Upstream UVMD processes one window at a time (batch size 1), so a GPU speeds it up less than you might expect.
 
 ## Notes on the upstream code (kept as-is, documented here)
 * The paper writes the denominator as `1 + 2·softplus(alpha)·(w - w_k)^2` and the loss as squared L2.
