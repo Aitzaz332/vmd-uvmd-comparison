@@ -144,9 +144,9 @@ What the numbers show:
   remaining gap. The near-zero loss is therefore a degenerate solution, not better separation:
   at N=2 the modes overlap (energy ratio 1.21, orthogonality index 0.38).
 * **Fault content:** no method beats the raw signal on hit rate. In fault SNR, only VMD-1, VMD-2 and
-  UVMD-1 come within 0.4 dB of it, and converged VMD and UVMD-2 fall about 1.4 dB below it.
-  The best mode (oracle SNR) is clearer than the raw signal for every method, but max kurtosis does
-  not always pick that mode. Ball faults stay hard for every method (hit rate ≈0.3–0.4), as in the CWRU literature.
+  UVMD-1 come within 0.45 dB of it, and converged VMD and UVMD-2 fall about 1.4 dB below it.
+  The best mode (oracle SNR) is clearer than the raw signal for every method except UVMD-2, but max
+  kurtosis does not always pick that mode. Ball faults stay hard for every method (hit rate ≈0.3–0.4), as in the CWRU literature.
 * **Cost:** a trained UVMD window costs 3–4 ms, against 43 ms for converged VMD. Training takes 4.5–8.5 minutes on CPU.
 
 ## Notes on the upstream code (kept as-is, documented here)
