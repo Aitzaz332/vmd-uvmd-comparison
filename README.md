@@ -18,6 +18,8 @@ length 2T) are learnable. They are trained by Adam to minimise the spectral reco
 `sum |sum_k u_hat_k - f_hat|`. Training uses no ground-truth modes. The paper uses 1 to 2 layers and K = 13.
 VMD runs until it converges, usually tens to hundreds of iterations. UVMD stops after N = 1 or 2 layers.
 
+Step-by-step guide to rerun or rebuild everything: [`docs/RECREATE.md`](docs/RECREATE.md).
+
 ## Layout
 ```
 third_party/MAGN/uvmd.py      upstream UVMD script (unchanged)
