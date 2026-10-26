@@ -126,6 +126,29 @@ bash scripts/run_cwru_cluster.sh ~/data/CWRU cuda:0                          # b
 ```
 Upstream UVMD processes one window at a time (batch size 1), so a GPU speeds it up less than you might expect.
 
+### Results: dataset 2, K=4 (300 test windows at 3 HP, CPU)
+Full tables: `results/cwru/summary.md`. Per-class numbers: `results/cwru/by_class.csv`.
+
+| method | rel. recon error | energy ratio | ortho index | fault SNR (dB) | hit rate | oracle SNR (dB) | ms / window | training |
+|---|---|---|---|---|---|---|---|---|
+| raw signal (no decomposition) | – | – | – | 8.90 | 0.70 | – | – | – |
+| VMD converged (~82 it) | 0.324 | 0.63 | 0.034 | 7.48 | 0.69 | 10.3 | 43.3 | – |
+| VMD-1 / VMD-2 | 0.554 / 0.479 | 0.24 / 0.34 | 0.024 / 0.026 | 8.47 / 8.68 | 0.71 / 0.68 | 10.8 / 10.6 | 1.4 / 2.0 | – |
+| UVMD-1 trained | 0.0004 | 0.83 | 0.083 | 8.64 | 0.70 | 10.1 | 2.9 | 275 s (66 ep.) |
+| UVMD-2 trained | 0.0004 | 1.21 | 0.381 | 7.58 | 0.69 | 8.6 | 4.1 | 512 s (76 ep.) |
+
+What the numbers show:
+* **Reconstruction:** trained UVMD reconstructs the input almost exactly. It gets there by shrinking
+  one mode's alpha to ≈0, which makes that mode an all-pass "residual" mode. The learned alphas were
+  [220, 0, 127, 146] for N=1 and [257, 75, 0, 168] for N=2. The multipliers it learned close the
+  remaining gap. The near-zero loss is therefore a degenerate solution, not better separation:
+  at N=2 the modes overlap (energy ratio 1.21, orthogonality index 0.38).
+* **Fault content:** no method beats the raw signal on hit rate. In fault SNR, only VMD-1, VMD-2 and
+  UVMD-1 come within 0.4 dB of it, and converged VMD and UVMD-2 fall about 1.4 dB below it.
+  The best mode (oracle SNR) is clearer than the raw signal for every method, but max kurtosis does
+  not always pick that mode. Ball faults stay hard for every method (hit rate ≈0.3–0.4), as in the CWRU literature.
+* **Cost:** a trained UVMD window costs 3–4 ms, against 43 ms for converged VMD. Training takes 4.5–8.5 minutes on CPU.
+
 ## Notes on the upstream code (kept as-is, documented here)
 * The paper writes the denominator as `1 + 2·softplus(alpha)·(w - w_k)^2` and the loss as squared L2.
   The code uses `1 + softplus(alpha)·(w - w_k)^2` and an L1 loss. This benchmark runs the code.
