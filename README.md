@@ -40,6 +40,8 @@ experiments/run_traffic.py    dataset-3 benchmark (the UVMD paper's protocol)
 scripts/prepare_traffic.py    raw LargeST -> region file (GBA / GLA / SD)
 scripts/run_traffic_cluster.sh, run_traffic_paper_cases.sh   staged and ablation runs on a GPU node
 experiments/run_synthetic.py  dataset-1 benchmark (figures plus summary.md)
+experiments/compare_datasets.py   one table and one figure across the three datasets -> results/comparison/
+scripts/run_all_node7.sh      runs every missing stage on node 7, builds the comparison, commits and pushes results
 tests/                        equivalence and integrity tests
 ```
 
@@ -166,6 +168,27 @@ python experiments/run_traffic.py --data demo --quick                       # in
 python experiments/run_traffic.py --data sd_his_2019.h5 --region sd --device cuda:0 --max-train-nodes 100 --max-test-nodes 30
 ```
 This part has been tested on generated data in LargeST's format, not on the real LargeST files.
+
+## Cross-dataset comparison (one table, one figure)
+`experiments/compare_datasets.py` reads the `summary.json` of the three runs and writes
+`results/comparison/comparison_table.md` (plus `.csv`) and `results/comparison/comparison.png`.
+All three datasets should be run with the paper's K = 13 so the rows are comparable (the script warns if K differs).
+
+* **Table:** one row per dataset and method (converged VMD, VMD-N, trained UVMD-N). Reconstruction error,
+  orthogonality index and energy ratio exist for every dataset. Each dataset adds its own separation measure:
+  grouped mode SNR against the true modes (synthetic), fault-line SNR in the best mode (CWRU), mode overlap and
+  bandwidth (traffic). A second table lists the learned alphas.
+* **Figure, top row:** per dataset, each method as a point (reconstruction error ÷ converged VMD, orthogonality index ÷
+  converged VMD). The green zone is better than converged VMD on both. Trained UVMD sits to the left (better
+  reconstruction) and above the line (worse separation).
+* **Figure, bottom row:** each dataset's own separation measure as bars.
+
+```bash
+H5=~/data/LargeST/sd_his_2019.h5 REG=sd bash scripts/run_all_node7.sh    # runs what is missing, saves each stage to GitHub
+python experiments/compare_datasets.py                                    # only rebuild the table and figure
+```
+`run_all_node7.sh` skips stages whose results already exist (`FORCE=1` reruns them), commits `results/` after
+every stage and pushes it (`PUSH=0` commits only). `FULL=1` adds the full traffic protocol.
 
 ## Notes on the upstream code (kept as-is, documented here)
 * The paper writes the denominator as `1 + 2·softplus(alpha)·(w - w_k)^2` and the loss as squared L2.

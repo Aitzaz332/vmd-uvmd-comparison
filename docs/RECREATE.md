@@ -51,6 +51,14 @@ If node 7 has no internet access, download the files on your PC and copy them ov
 
 To keep a long run alive after you log out, use `nohup python ... > run.log 2>&1 &` or `tmux`.
 
+### A4b. Everything on node 7 in one command, results pushed to GitHub
+```bash
+H5=~/data/LargeST/sd_his_2019.h5 REG=sd bash scripts/run_all_node7.sh      # FULL=1 adds the full traffic run
+```
+It runs the tests, then the K=13 synthetic and CWRU runs and the bounded traffic run (only the ones whose
+`results/<name>/summary.json` is missing), builds `results/comparison/`, and commits and pushes after each stage.
+The machine needs a git login that can push to this repository.
+
 ### A5. What each run writes (in `--out`)
 | file | contents |
 |---|---|
