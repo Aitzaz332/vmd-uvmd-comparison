@@ -53,7 +53,8 @@ def vmd(f, alpha=2000.0, tau=0.0, K=4, DC=True, init=1, tol=1e-7, max_iter=499,
 
     Returns dict with ``u`` (K, len(f) even-truncated), ``omega`` (K,) final centre frequencies in
     cycles/sample, ``n_iter`` (ADMM iterations run), ``converged`` (bool), ``spec_l1`` (upstream UVMD
-    loss: sum |sum_k u_hat_k - f_hat_plus| on the one-sided mirrored spectrum).
+    loss: sum |sum_k u_hat_k - f_hat_plus| on the one-sided mirrored spectrum), ``spec_l2`` (the paper's
+    L2 form of the same loss).
     ``tol < 0`` disables the convergence test (run exactly ``max_iter`` iterations).
     """
     f_hat_plus, freqs, T = _prep(f)
@@ -108,6 +109,7 @@ def vmd(f, alpha=2000.0, tau=0.0, K=4, DC=True, init=1, tol=1e-7, max_iter=499,
         "n_iter": n,
         "converged": converged,
         "spec_l1": float(np.sum(np.abs(u_prev.sum(axis=1) - f_hat_plus))),
+        "spec_l2": float(np.linalg.norm(u_prev.sum(axis=1) - f_hat_plus)),   # the paper's L_rec (eq. 5)
     }
     if return_history:
         out["uDiff"] = np.array(hist)

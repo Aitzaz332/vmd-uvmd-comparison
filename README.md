@@ -34,6 +34,11 @@ decomp/fault_metrics.py       envelope-spectrum fault metrics (no ground-truth m
 experiments/run_cwru.py       dataset-2 benchmark
 scripts/download_cwru.sh      downloads the 40-file CWRU subset
 scripts/run_cwru_cluster.sh   full CWRU run on a GPU node (K=4 and K=13)
+datasets/traffic.py           dataset 3: LargeST traffic loader and the authors' preprocessing
+decomp/traffic_metrics.py     mode-structure metrics for traffic (bandwidth, overlap, daily/weekly line ownership)
+experiments/run_traffic.py    dataset-3 benchmark (the UVMD paper's protocol)
+scripts/prepare_traffic.py    raw LargeST -> region file (GBA / GLA / SD)
+scripts/run_traffic_cluster.sh, run_traffic_paper_cases.sh   staged and ablation runs on a GPU node
 experiments/run_synthetic.py  dataset-1 benchmark (figures plus summary.md)
 tests/                        equivalence and integrity tests
 ```
@@ -150,6 +155,17 @@ What the numbers show:
   The best mode (oracle SNR) is clearer than the raw signal for every method except UVMD-2, but max
   kurtosis does not always pick that mode. Ball faults stay hard for every method (hit rate ≈0.3–0.4), as in the CWRU literature.
 * **Cost:** a trained UVMD window costs 3–4 ms, against 43 ms for converged VMD. Training takes 4.5–8.5 minutes on CPU.
+
+## Dataset 3: LargeST traffic (the UVMD paper's data)
+The paper's protocol: one signal per sensor (the year 2019 at 15 minutes, 35,040 samples), K=13, 1–2 UVMD
+layers, sensors split 70/15/15 %. See **[docs/TRAFFIC.md](docs/TRAFFIC.md)** for the download, the steps and
+what is measured. In short:
+```bash
+python scripts/prepare_traffic.py --raw ca_his_raw_2019.h5 --meta ca_meta.csv --region sd --out sd_his_2019.h5
+python experiments/run_traffic.py --data demo --quick                       # installation check, generated data
+python experiments/run_traffic.py --data sd_his_2019.h5 --region sd --device cuda:0 --max-train-nodes 100 --max-test-nodes 30
+```
+This part has been tested on generated data in LargeST's format, not on the real LargeST files.
 
 ## Notes on the upstream code (kept as-is, documented here)
 * The paper writes the denominator as `1 + 2·softplus(alpha)·(w - w_k)^2` and the loss as squared L2.

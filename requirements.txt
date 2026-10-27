@@ -5,4 +5,5 @@ tabulate
 matplotlib>=3.7
 scikit-learn>=1.2
 torch>=2.0
+tables
 pytest

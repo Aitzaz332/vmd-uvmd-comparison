@@ -137,3 +137,13 @@ def export_params(model) -> dict:
     alpha = F.softplus(model.Alpha.detach()).cpu().numpy().astype(np.float64)
     lam = model.lambda_hat.detach().cpu().numpy().astype(np.complex128)
     return {"alpha": alpha, "lambda": lam[: model.layers - 1], "omega0": model.omega_plus[0].cpu().numpy()}
+
+
+def clone_to_cpu(model, T: int, K: int, layers: int, alpha: float = 2000.0):
+    """CPU copy of a trained upstream model (same learned Alpha and lambda), for CPU-vs-GPU timing.
+    The upstream class keeps plain tensors on its device, so we build a fresh CPU model and copy the two
+    learned parameters into it."""
+    cpu = make_model(T, K, layers, "cpu", alpha)
+    cpu.Alpha.data = model.Alpha.detach().cpu().clone()
+    cpu.lambda_hat.data = model.lambda_hat.detach().cpu().clone()
+    return cpu

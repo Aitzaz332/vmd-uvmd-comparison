@@ -129,3 +129,61 @@ def plot_training(path, hists: dict):
     fig.tight_layout()
     fig.savefig(path, dpi=140)
     plt.close(fig)
+
+
+def plot_traffic_modes(path, x, decomps: dict, steps_per_day=96, days=7, max_cpd=6.0, title=""):
+    """decomps: {label: modes (K,T)}. Per method: input vs sum of modes (first ``days`` days), each mode,
+    and the power spectra of all modes with the daily / 2nd-harmonic / weekly lines marked."""
+    labs = list(decomps)
+    K = max(u.shape[0] for u in decomps.values())
+    n = days * steps_per_day
+    fig, axes = plt.subplots(K + 2, len(labs), figsize=(4.4 * len(labs), 0.95 * (K + 2) + 1.2), squeeze=False)
+    t = np.arange(n) / steps_per_day
+    for c, lab in enumerate(labs):
+        u = decomps[lab]
+        T = u.shape[1]
+        axes[0, c].plot(t, x[:n], color=MUTED, lw=0.8, label="input")
+        axes[0, c].plot(t, u.sum(axis=0)[:n], color=C[1], lw=0.8, ls="--", label="sum of modes")
+        axes[0, c].set_title(f"{lab}: input vs sum of modes", loc="left", fontsize=8, color=INK)
+        if c == 0:
+            axes[0, c].legend(fontsize=7, frameon=False, loc="upper right")
+        for k in range(K):
+            ax = axes[k + 1, c]
+            ax.plot(t, u[k, :n], color=C[0], lw=0.7)
+            ax.set_title(f"mode {k}", loc="left", fontsize=7, color=INK, pad=1)
+            ax.tick_params(labelsize=6)
+        ax = axes[K + 1, c]
+        f = np.fft.rfftfreq(T) * steps_per_day
+        P = np.abs(np.fft.rfft(u, axis=1)) ** 2
+        keep = (f <= max_cpd) & (f > 0)
+        for k in range(len(u)):
+            ax.plot(f[keep], P[k, keep] + 1e-12, lw=0.8, color=C[k % len(C)])
+        for v in (1.0, 2.0, 1 / 7):
+            ax.axvline(v, color=INK, lw=0.7, ls=":")
+        ax.set_yscale("log")
+        ax.set_xlabel("cycles / day  (dotted: weekly, daily, 2nd harmonic)", fontsize=7, color=MUTED)
+        ax.set_title("mode power spectra", loc="left", fontsize=7, color=INK, pad=1)
+    for ax in axes.ravel():
+        _style(ax)
+        ax.title.set_fontsize(7)
+    if title:
+        fig.suptitle(title, x=0.01, ha="left", fontsize=10, color=INK)
+    fig.tight_layout(rect=[0, 0, 1, 0.985])
+    fig.savefig(path, dpi=110)
+    plt.close(fig)
+
+
+def plot_alpha(path, alphas: dict):
+    """Learned bandwidth constraint phi(alpha_k)=softplus(alpha_raw_k) versus mode index (paper Fig. 2/3 right)."""
+    fig, ax = plt.subplots(figsize=(7, 4))
+    for i, (lab, a) in enumerate(alphas.items()):
+        ax.plot(np.arange(len(a)), a, marker="o", ms=4, lw=1.8, color=C[1 + i], label=lab)
+    ax.axhline(2000, color=MUTED, lw=0.8, ls=":")
+    ax.text(0.2, 2000, " initial alpha = 2000", va="bottom", fontsize=7, color=MUTED)
+    ax.set_xlabel("mode index k", color=MUTED)
+    ax.set_ylabel("learned bandwidth constraint", color=MUTED)
+    _style(ax)
+    ax.legend(fontsize=8, frameon=False)
+    fig.tight_layout()
+    fig.savefig(path, dpi=140)
+    plt.close(fig)
