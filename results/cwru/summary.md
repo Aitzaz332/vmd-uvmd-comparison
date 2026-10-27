@@ -11,9 +11,9 @@
 | VMD-1 | 0.5543 | 0.5543 | 5.195 | 3.176e+04 | 0.2426 | 0.02422 | 8.469 | 0.7074 | 10.81 | 8.784 | 4.536 |
 | VMD-2 | 0.4794 | 0.4794 | 6.458 | 2.903e+04 | 0.3375 | 0.02573 | 8.678 | 0.6778 | 10.62 | 9.257 | 4.712 |
 | UVMD-1 untrained | 0.5543 | 0.5543 | 5.195 | 3.176e+04 | 0.2426 | 0.02422 | 8.469 | 0.7074 | 10.81 | 8.784 | 4.536 |
-| UVMD-1 | 0.0003972 | 0.0003972 | 79.03 | 9.304 | 0.8331 | 0.08346 | 8.639 | 0.6963 | 10.07 | 8.727 | 4.905 |
+| UVMD-1 | 0.0003982 | 0.0003982 | 78.92 | 9.561 | 0.8331 | 0.08345 | 8.819 | 0.7 | 10.09 | 8.586 | 4.746 |
 | UVMD-2 untrained | 0.4794 | 0.4794 | 6.458 | 2.903e+04 | 0.3375 | 0.02573 | 8.678 | 0.6778 | 10.62 | 9.257 | 4.712 |
-| UVMD-2 | 0.0003985 | 0.0003985 | 78.89 | 9.572 | 1.207 | 0.3807 | 7.575 | 0.6852 | 8.621 | 6.651 | 4.162 |
+| UVMD-2 | 0.000399 | 0.000399 | 78.83 | 9.481 | 1.207 | 0.3804 | 6.78 | 0.6667 | 8.591 | 6.898 | 4.075 |
 
 ## Fault metrics by class
 
@@ -39,39 +39,39 @@
 | ('UVMD-1 untrained', 'inner')  |          11.4  |          1     |                 13.6  |          10.6  |        0.546    |
 | ('UVMD-1 untrained', 'normal') |         nan    |        nan     |                nan    |           3.39 |        0.589    |
 | ('UVMD-1 untrained', 'outer')  |          10.7  |          0.711 |                 12.6  |          12.3  |        0.607    |
-| ('UVMD-1', 'ball')             |           3.23 |          0.289 |                  5.49 |           5.6  |        8.02e-05 |
-| ('UVMD-1', 'inner')            |          11.6  |          1     |                 12.2  |          11.3  |        8.01e-05 |
+| ('UVMD-1', 'ball')             |           3.29 |          0.311 |                  5.76 |           5.39 |        8.14e-05 |
+| ('UVMD-1', 'inner')            |          11.7  |          1     |                 12    |          11.3  |        8.12e-05 |
 | ('UVMD-1', 'normal')           |         nan    |        nan     |                nan    |           3.06 |        0.00324  |
-| ('UVMD-1', 'outer')            |          11    |          0.8   |                 12.6  |          11.1  |        8.46e-05 |
+| ('UVMD-1', 'outer')            |          11.5  |          0.789 |                 12.6  |          11    |        8.57e-05 |
 | ('UVMD-2 untrained', 'ball')   |           3.59 |          0.311 |                  6.41 |           5.1  |        0.421    |
 | ('UVMD-2 untrained', 'inner')  |          12    |          1     |                 13    |          13    |        0.476    |
 | ('UVMD-2 untrained', 'normal') |         nan    |        nan     |                nan    |           3.39 |        0.54     |
 | ('UVMD-2 untrained', 'outer')  |          10.5  |          0.722 |                 12.4  |          11.6  |        0.52     |
-| ('UVMD-2', 'ball')             |           2.09 |          0.222 |                  4.44 |           4.66 |        8.16e-05 |
-| ('UVMD-2', 'inner')            |          10.4  |          1     |                 10.6  |           8.37 |        8.15e-05 |
+| ('UVMD-2', 'ball')             |           1.84 |          0.178 |                  4.21 |           4.86 |        8.23e-05 |
+| ('UVMD-2', 'inner')            |          10.4  |          1     |                 10.9  |           8.37 |        8.21e-05 |
 | ('UVMD-2', 'normal')           |         nan    |        nan     |                nan    |           3.11 |        0.00324  |
-| ('UVMD-2', 'outer')            |          10.2  |          0.833 |                 10.8  |           8.09 |        8.6e-05  |
+| ('UVMD-2', 'outer')            |           8.09 |          0.822 |                 10.7  |           8.72 |        8.66e-05 |
 
 ## Cost (per window)
 
 | method           |   iterations_or_layers |   trainable_params |   flops_per_window |   median_ms_per_window |   train_time_s |   train_flops |
 |:-----------------|-----------------------:|-------------------:|-------------------:|-----------------------:|---------------:|--------------:|
-| VMD (converged)  |                   82.4 |                  0 |          3.634e+07 |                 43.32  |            0   |     0         |
-| VMD-1            |                    1   |                  0 |          1.655e+06 |                  1.416 |            0   |     0         |
-| VMD-2            |                    2   |                  0 |          2.081e+06 |                  2.017 |            0   |     0         |
-| VMD-3            |                    3   |                  0 |          2.507e+06 |                  2.626 |            0   |     0         |
-| VMD-5            |                    5   |                  0 |          3.359e+06 |                  3.768 |            0   |     0         |
-| VMD-10           |                   10   |                  0 |          5.489e+06 |                  6.635 |            0   |     0         |
-| VMD-20           |                   20   |                  0 |          9.748e+06 |                 13.18  |            0   |     0         |
-| VMD-50           |                   50   |                  0 |          2.253e+07 |                 31.09  |            0   |     0         |
-| VMD-100          |                  100   |                  0 |          4.383e+07 |                 62.16  |            0   |     0         |
-| VMD-200          |                  200   |                  0 |          8.643e+07 |                127.2   |            0   |     0         |
-| UVMD-1 untrained |                    1   |              16388 |          1.54e+06  |                  2.696 |            0   |     0         |
-| UVMD-1           |                    1   |              16388 |          1.54e+06  |                  2.857 |          274.8 |     1.827e+11 |
-| UVMD-2 untrained |                    2   |              24580 |          1.851e+06 |                  3.972 |            0   |     0         |
-| UVMD-2           |                    2   |              24580 |          1.851e+06 |                  4.05  |          511.5 |     2.528e+11 |
+| VMD (converged)  |                   82.4 |                  0 |          3.634e+07 |                22.74   |            0   |     0         |
+| VMD-1            |                    1   |                  0 |          1.655e+06 |                 0.6378 |            0   |     0         |
+| VMD-2            |                    2   |                  0 |          2.081e+06 |                 1.008  |            0   |     0         |
+| VMD-3            |                    3   |                  0 |          2.507e+06 |                 1.327  |            0   |     0         |
+| VMD-5            |                    5   |                  0 |          3.359e+06 |                 1.983  |            0   |     0         |
+| VMD-10           |                   10   |                  0 |          5.489e+06 |                 3.62   |            0   |     0         |
+| VMD-20           |                   20   |                  0 |          9.748e+06 |                 6.831  |            0   |     0         |
+| VMD-50           |                   50   |                  0 |          2.253e+07 |                16.43   |            0   |     0         |
+| VMD-100          |                  100   |                  0 |          4.383e+07 |                32.44   |            0   |     0         |
+| VMD-200          |                  200   |                  0 |          8.643e+07 |                64.47   |            0   |     0         |
+| UVMD-1 untrained |                    1   |              16388 |          1.54e+06  |                 1.659  |            0   |     0         |
+| UVMD-1           |                    1   |              16388 |          1.54e+06  |                 1.675  |          226.8 |     2.159e+11 |
+| UVMD-2 untrained |                    2   |              24580 |          1.851e+06 |                 2.598  |            0   |     0         |
+| UVMD-2           |                    2   |              24580 |          1.851e+06 |                 2.579  |          576.6 |     2.362e+11 |
 
-Environment: {'python': '3.13.17', 'platform': 'Linux-6.18.44-fc-v153-x86_64-with-glibc2.39', 'numpy': '2.5.3', 'torch': '2.14.1+cpu', 'cuda': False, 'gpu': None}
+Environment: {'python': '3.13.12', 'platform': 'Linux-5.15.0-190-generic-x86_64-with-glibc2.35', 'numpy': '2.1.3', 'torch': '2.7.0', 'cuda': True, 'gpu': 'NVIDIA GeForce RTX 3060'}
 
 
 ## Log
@@ -79,170 +79,177 @@ Environment: {'python': '3.13.17', 'platform': 'Linux-6.18.44-fc-v153-x86_64-wit
 CWRU: 40 files, 1199 windows of 2048 samples (171 ms) | split 'load': train/val/test = 599/300/300 | K=4
 
 [VMD converged]
-  mean iters 82.4 (100% converged), rel err 0.3240, fault SNR 7.48 dB, hit 0.69, 43.3 ms
+  mean iters 82.4 (100% converged), rel err 0.3240, fault SNR 7.48 dB, hit 0.69, 22.7 ms
 
 [VMD-n sweep]
-  n=  1 (300 win): rel err 0.5543  fault SNR   8.47 dB  hit 0.71  1.42 ms
-  n=  2 (300 win): rel err 0.4794  fault SNR   8.68 dB  hit 0.68  2.02 ms
-  n=  3 (100 win): rel err 0.4124  fault SNR   8.44 dB  hit 0.68  2.63 ms
-  n=  5 (100 win): rel err 0.3888  fault SNR   8.18 dB  hit 0.67  3.77 ms
-  n= 10 (100 win): rel err 0.3601  fault SNR   8.09 dB  hit 0.72  6.64 ms
-  n= 20 (100 win): rel err 0.3475  fault SNR   7.75 dB  hit 0.71  13.18 ms
-  n= 50 (100 win): rel err 0.3313  fault SNR   7.27 dB  hit 0.70  31.09 ms
-  n=100 (100 win): rel err 0.3259  fault SNR   7.36 dB  hit 0.68  62.16 ms
-  n=200 (100 win): rel err 0.3240  fault SNR   7.38 dB  hit 0.68  127.19 ms
+  n=  1 (300 win): rel err 0.5543  fault SNR   8.47 dB  hit 0.71  0.64 ms
+  n=  2 (300 win): rel err 0.4794  fault SNR   8.68 dB  hit 0.68  1.01 ms
+  n=  3 (100 win): rel err 0.4124  fault SNR   8.44 dB  hit 0.68  1.33 ms
+  n=  5 (100 win): rel err 0.3888  fault SNR   8.18 dB  hit 0.67  1.98 ms
+  n= 10 (100 win): rel err 0.3601  fault SNR   8.09 dB  hit 0.72  3.62 ms
+  n= 20 (100 win): rel err 0.3475  fault SNR   7.75 dB  hit 0.71  6.83 ms
+  n= 50 (100 win): rel err 0.3313  fault SNR   7.27 dB  hit 0.70  16.43 ms
+  n=100 (100 win): rel err 0.3259  fault SNR   7.36 dB  hit 0.68  32.44 ms
+  n=200 (100 win): rel err 0.3240  fault SNR   7.38 dB  hit 0.68  64.47 ms
 
-[UVMD N=1] upstream Unfolding, K=4, device cpu
-  UVMD-1 untrained: rel err 0.5543  fault SNR 8.47 dB  hit 0.71  2.70 ms  alpha [2000.0, 2000.0, 2000.0, 2000.0]
-  epoch   1/100  train 31140.8267  val 31163.5877
-  epoch   2/100  train 30763.6403  val 30790.9531
-  epoch   3/100  train 30372.8842  val 30398.8962
-  epoch   4/100  train 29964.6649  val 29985.3943
-  epoch   5/100  train 29537.6838  val 29553.0396
-  epoch   6/100  train 29091.1253  val 29096.8413
-  epoch   7/100  train 28622.6846  val 28619.2077
-  epoch   8/100  train 28132.3667  val 28117.3757
-  epoch   9/100  train 27617.3428  val 27587.5917
-  epoch  10/100  train 27076.6751  val 27033.7829
-  epoch  11/100  train 26507.2400  val 26447.4685
-  epoch  12/100  train 25907.7396  val 25830.9148
-  epoch  13/100  train 25274.8018  val 25177.6439
-  epoch  14/100  train 24604.8498  val 24487.4481
-  epoch  15/100  train 23895.2907  val 23750.8627
-  epoch  16/100  train 23141.3231  val 22970.4187
-  epoch  17/100  train 22338.1666  val 22135.6251
-  epoch  18/100  train 21479.8248  val 21243.5577
-  epoch  19/100  train 20560.2013  val 20285.5178
-  epoch  20/100  train 19570.8783  val 19250.0344
-  epoch  21/100  train 18505.0808  val 18134.6311
-  epoch  22/100  train 17352.1424  val 16929.5117
-  epoch  23/100  train 16099.5974  val 15609.7723
-  epoch  24/100  train 14732.8321  val 14166.8331
-  epoch  25/100  train 13236.4766  val 12585.4344
-  epoch  26/100  train 11592.0220  val 10847.8787
-  epoch  27/100  train 9784.9850  val 8937.8096
-  epoch  28/100  train 7798.8719  val 6839.5719
-  epoch  29/100  train 5633.9048  val 4554.4733
-  epoch  30/100  train 3179.1050  val 1497.2180
-  epoch  31/100  train 123.9259  val 13.8124
-  epoch  32/100  train 13.5247  val 13.4772
-  epoch  33/100  train 12.9218  val 12.1411
-  epoch  34/100  train 11.9206  val 11.6688
-  epoch  35/100  train 11.6250  val 11.6129
-  epoch  36/100  train 11.2481  val 10.9864
-  epoch  37/100  train 11.1030  val 11.1489
-  epoch  38/100  train 10.9596  val 10.7812
-  epoch  39/100  train 10.6202  val 10.9205
-  epoch  40/100  train 10.5358  val 10.6710
-  epoch  41/100  train 10.4013  val 10.2598
-  epoch  42/100  train 10.3524  val 10.2266
-  epoch  43/100  train 10.1767  val 10.0695
-  epoch  44/100  train 10.0149  val 9.8650
-  epoch  45/100  train 9.9147  val 9.9999
-  epoch  46/100  train 9.7898  val 9.7106
-  epoch  47/100  train 9.6636  val 9.5191
-  epoch  48/100  train 9.6809  val 9.6112
-  epoch  49/100  train 9.5865  val 9.4514
-  epoch  50/100  train 9.4854  val 9.4804
-  epoch  51/100  train 9.4418  val 9.4632
-  epoch  52/100  train 9.3809  val 9.3368
-  epoch  53/100  train 9.3108  val 9.5005
-  epoch  54/100  train 9.5026  val 9.4159
-  epoch  55/100  train 9.4733  val 9.4701
-  epoch  56/100  train 9.4035  val 9.2783
-  epoch  57/100  train 9.4339  val 9.4497
-  epoch  58/100  train 9.3982  val 9.4994
-  epoch  59/100  train 9.4376  val 9.4813
-  epoch  60/100  train 9.4464  val 9.3961
-  epoch  61/100  train 9.5088  val 9.4939
-  epoch  62/100  train 9.5169  val 9.5803
-  epoch  63/100  train 9.4240  val 9.4336
-  epoch  64/100  train 9.3849  val 9.5059
-  epoch  65/100  train 9.4818  val 9.5299
-  epoch  66/100  train 9.4459  val 9.3043
+[UVMD N=1] upstream Unfolding, K=4, device cuda:0
+  UVMD-1 untrained: rel err 0.5543  fault SNR 8.47 dB  hit 0.71  1.66 ms  alpha [2000.0, 2000.0, 2000.0, 2000.0]
+  epoch   1/100  train 31140.8265  val 31163.5474
+  epoch   2/100  train 30763.6357  val 30790.9449
+  epoch   3/100  train 30372.8714  val 30398.9108
+  epoch   4/100  train 29964.6831  val 29985.6441
+  epoch   5/100  train 29537.6982  val 29552.9766
+  epoch   6/100  train 29091.1371  val 29096.7061
+  epoch   7/100  train 28622.6984  val 28619.1757
+  epoch   8/100  train 28132.3899  val 28117.4655
+  epoch   9/100  train 27617.3540  val 27587.7636
+  epoch  10/100  train 27076.6833  val 27033.7281
+  epoch  11/100  train 26507.2534  val 26447.5254
+  epoch  12/100  train 25907.7367  val 25830.9595
+  epoch  13/100  train 25274.8199  val 25177.5923
+  epoch  14/100  train 24604.8619  val 24487.6371
+  epoch  15/100  train 23895.2734  val 23750.9097
+  epoch  16/100  train 23141.3207  val 22970.2559
+  epoch  17/100  train 22338.1591  val 22135.5931
+  epoch  18/100  train 21479.8418  val 21243.5257
+  epoch  19/100  train 20560.2525  val 20285.7518
+  epoch  20/100  train 19570.8978  val 19250.1258
+  epoch  21/100  train 18505.0919  val 18134.5777
+  epoch  22/100  train 17352.1410  val 16929.3531
+  epoch  23/100  train 16099.6017  val 15609.9109
+  epoch  24/100  train 14732.8663  val 14166.8596
+  epoch  25/100  train 13236.4801  val 12585.3735
+  epoch  26/100  train 11592.0615  val 10847.9267
+  epoch  27/100  train 9785.0297  val 8937.8970
+  epoch  28/100  train 7798.8976  val 6839.5209
+  epoch  29/100  train 5633.9236  val 4554.5660
+  epoch  30/100  train 3179.0685  val 1496.9884
+  epoch  31/100  train 123.7970  val 13.5885
+  epoch  32/100  train 13.5030  val 13.4091
+  epoch  33/100  train 12.9320  val 12.3547
+  epoch  34/100  train 11.9746  val 11.7104
+  epoch  35/100  train 11.7704  val 11.7720
+  epoch  36/100  train 11.3503  val 11.1876
+  epoch  37/100  train 10.9905  val 10.9137
+  epoch  38/100  train 10.8803  val 10.6629
+  epoch  39/100  train 10.7687  val 10.9255
+  epoch  40/100  train 10.6426  val 10.4907
+  epoch  41/100  train 10.4273  val 10.4307
+  epoch  42/100  train 10.3175  val 10.1184
+  epoch  43/100  train 10.0926  val 10.0611
+  epoch  44/100  train 10.0544  val 10.0138
+  epoch  45/100  train 9.9112  val 9.7889
+  epoch  46/100  train 9.7393  val 9.5747
+  epoch  47/100  train 9.7055  val 9.5667
+  epoch  48/100  train 9.5600  val 9.4262
+  epoch  49/100  train 9.5476  val 9.4418
+  epoch  50/100  train 9.4903  val 9.4233
+  epoch  51/100  train 9.5007  val 9.5592
+  epoch  52/100  train 9.4346  val 9.3025
+  epoch  53/100  train 9.4136  val 9.5876
+  epoch  54/100  train 9.5139  val 9.3541
+  epoch  55/100  train 9.4141  val 9.4800
+  epoch  56/100  train 9.3147  val 9.2711
+  epoch  57/100  train 9.3632  val 9.4368
+  epoch  58/100  train 9.4631  val 9.5399
+  epoch  59/100  train 9.4502  val 9.4400
+  epoch  60/100  train 9.4561  val 9.4024
+  epoch  61/100  train 9.4948  val 9.4864
+  epoch  62/100  train 9.3669  val 9.2606
+  epoch  63/100  train 9.5486  val 9.3745
+  epoch  64/100  train 9.5117  val 9.3430
+  epoch  65/100  train 9.3725  val 9.5302
+  epoch  66/100  train 9.4778  val 9.4011
+  epoch  67/100  train 9.3495  val 9.3877
+  epoch  68/100  train 9.3527  val 9.1463
+  epoch  69/100  train 9.3244  val 9.4547
+  epoch  70/100  train 9.3980  val 9.3668
+  epoch  71/100  train 9.4567  val 9.4772
+  epoch  72/100  train 9.4955  val 9.5635
+  epoch  73/100  train 9.4439  val 9.3292
+  epoch  74/100  train 9.4409  val 9.6273
+  epoch  75/100  train 9.4248  val 9.3750
+  epoch  76/100  train 9.5466  val 9.6939
+  epoch  77/100  train 9.5223  val 9.5171
+  epoch  78/100  train 9.4500  val 9.5607
   early stopping triggered
-  training: 66 epochs, 274.8 s
-  UVMD-1: rel err 0.0004  fault SNR 8.64 dB  hit 0.70  2.86 ms  alpha [220.0, 0.0, 127.0, 146.0]
+  training: 78 epochs, 226.8 s
+  UVMD-1: rel err 0.0004  fault SNR 8.82 dB  hit 0.70  1.67 ms  alpha [220.0, 0.0, 127.0, 146.0]
 
-[UVMD N=2] upstream Unfolding, K=4, device cpu
-  UVMD-2 untrained: rel err 0.4794  fault SNR 8.68 dB  hit 0.68  3.97 ms  alpha [2000.0, 2000.0, 2000.0, 2000.0]
-  epoch   1/100  train 28636.7187  val 28580.7094
-  epoch   2/100  train 28242.0572  val 28176.4367
-  epoch   3/100  train 27775.6523  val 27629.9893
-  epoch   4/100  train 27169.1876  val 26975.3487
-  epoch   5/100  train 26546.8638  val 26359.3366
-  epoch   6/100  train 25947.1071  val 25755.2852
-  epoch   7/100  train 25353.6570  val 25153.1229
-  epoch   8/100  train 24761.8879  val 24550.5500
-  epoch   9/100  train 24166.9538  val 23943.3861
-  epoch  10/100  train 23571.6706  val 23337.6288
-  epoch  11/100  train 22977.5319  val 22731.9407
-  epoch  12/100  train 22385.4143  val 22131.2686
-  epoch  13/100  train 21793.4857  val 21529.3429
-  epoch  14/100  train 21197.7316  val 20930.4661
-  epoch  15/100  train 20594.5217  val 20322.7174
-  epoch  16/100  train 19973.8876  val 19695.5289
-  epoch  17/100  train 19328.9481  val 19042.1237
-  epoch  18/100  train 18650.6864  val 18355.1114
-  epoch  19/100  train 17933.2047  val 17622.8556
-  epoch  20/100  train 17172.5635  val 16846.2356
-  epoch  21/100  train 16368.7685  val 16024.5700
-  epoch  22/100  train 15518.3292  val 15154.7750
-  epoch  23/100  train 14622.0155  val 14235.8319
-  epoch  24/100  train 13677.6280  val 13267.1702
-  epoch  25/100  train 12683.6733  val 12251.5999
-  epoch  26/100  train 11634.8759  val 11179.6014
-  epoch  27/100  train 10523.1016  val 10042.5037
-  epoch  28/100  train 9338.5322  val 8821.5680
-  epoch  29/100  train 8059.1898  val 7487.6794
-  epoch  30/100  train 6631.7973  val 5942.1849
-  epoch  31/100  train 4859.4128  val 3728.0396
-  epoch  32/100  train 1934.9973  val 604.3913
-  epoch  33/100  train 156.1595  val 21.0050
-  epoch  34/100  train 17.9291  val 15.8728
-  epoch  35/100  train 15.4974  val 14.7438
-  epoch  36/100  train 14.2513  val 13.5530
-  epoch  37/100  train 13.6391  val 13.2240
-  epoch  38/100  train 13.0440  val 13.0727
-  epoch  39/100  train 12.7504  val 12.3908
-  epoch  40/100  train 12.3581  val 12.4509
-  epoch  41/100  train 12.1186  val 11.7132
-  epoch  42/100  train 11.8572  val 11.6682
-  epoch  43/100  train 11.3822  val 11.3822
-  epoch  44/100  train 11.2154  val 10.9200
-  epoch  45/100  train 10.8384  val 10.6851
-  epoch  46/100  train 10.7066  val 10.5625
-  epoch  47/100  train 10.4340  val 10.5335
-  epoch  48/100  train 10.1386  val 10.0994
-  epoch  49/100  train 10.0471  val 9.9445
-  epoch  50/100  train 9.9447  val 9.9084
-  epoch  51/100  train 9.8714  val 9.7621
-  epoch  52/100  train 9.7992  val 9.8475
-  epoch  53/100  train 9.6969  val 9.6889
-  epoch  54/100  train 9.6916  val 9.7796
-  epoch  55/100  train 9.7313  val 9.7162
-  epoch  56/100  train 9.6128  val 9.4101
-  epoch  57/100  train 9.4548  val 9.3008
-  epoch  58/100  train 9.3951  val 9.3719
-  epoch  59/100  train 9.3642  val 9.4839
-  epoch  60/100  train 9.4133  val 9.5843
-  epoch  61/100  train 9.3973  val 9.3640
-  epoch  62/100  train 9.3669  val 9.2521
-  epoch  63/100  train 9.4083  val 9.4492
-  epoch  64/100  train 9.4338  val 9.4299
-  epoch  65/100  train 9.5049  val 9.4871
-  epoch  66/100  train 9.3876  val 9.1725
-  epoch  67/100  train 9.2915  val 9.2669
-  epoch  68/100  train 9.4017  val 9.4463
-  epoch  69/100  train 9.4417  val 9.4609
-  epoch  70/100  train 9.4967  val 9.3223
-  epoch  71/100  train 9.5237  val 9.6071
-  epoch  72/100  train 9.5027  val 9.3849
-  epoch  73/100  train 9.4895  val 9.4603
-  epoch  74/100  train 9.3868  val 9.4669
-  epoch  75/100  train 9.4389  val 9.5192
-  epoch  76/100  train 9.5288  val 9.5722
+[UVMD N=2] upstream Unfolding, K=4, device cuda:0
+  UVMD-2 untrained: rel err 0.4794  fault SNR 8.68 dB  hit 0.68  2.60 ms  alpha [2000.0, 2000.0, 2000.0, 2000.0]
+  epoch   1/100  train 28636.7197  val 28580.6922
+  epoch   2/100  train 28242.0531  val 28176.4338
+  epoch   3/100  train 27775.6503  val 27629.9111
+  epoch   4/100  train 27169.1949  val 26975.3468
+  epoch   5/100  train 26546.8735  val 26359.2803
+  epoch   6/100  train 25947.1015  val 25755.2469
+  epoch   7/100  train 25353.6316  val 25153.1425
+  epoch   8/100  train 24761.8763  val 24550.4576
+  epoch   9/100  train 24166.9488  val 23943.3338
+  epoch  10/100  train 23571.6615  val 23337.6341
+  epoch  11/100  train 22977.5525  val 22731.8264
+  epoch  12/100  train 22385.3888  val 22131.2301
+  epoch  13/100  train 21793.4845  val 21529.3174
+  epoch  14/100  train 21197.7334  val 20930.4913
+  epoch  15/100  train 20594.5288  val 20322.6002
+  epoch  16/100  train 19973.8938  val 19695.4190
+  epoch  17/100  train 19328.9372  val 19042.2052
+  epoch  18/100  train 18650.6441  val 18355.1804
+  epoch  19/100  train 17933.2019  val 17622.9060
+  epoch  20/100  train 17172.5515  val 16846.0878
+  epoch  21/100  train 16368.7324  val 16024.3811
+  epoch  22/100  train 15518.2801  val 15154.8551
+  epoch  23/100  train 14622.0005  val 14235.9185
+  epoch  24/100  train 13677.6116  val 13267.1233
+  epoch  25/100  train 12683.6767  val 12251.5008
+  epoch  26/100  train 11634.9179  val 11179.6460
+  epoch  27/100  train 10523.1026  val 10042.5638
+  epoch  28/100  train 9338.5400  val 8821.6614
+  epoch  29/100  train 8059.1913  val 7487.8114
+  epoch  30/100  train 6631.8024  val 5942.1771
+  epoch  31/100  train 4859.4166  val 3728.2268
+  epoch  32/100  train 1935.1214  val 604.5751
+  epoch  33/100  train 156.1149  val 20.4952
+  epoch  34/100  train 17.9635  val 15.7356
+  epoch  35/100  train 15.4792  val 14.8464
+  epoch  36/100  train 14.2583  val 13.7416
+  epoch  37/100  train 13.7385  val 13.1264
+  epoch  38/100  train 13.1280  val 12.9103
+  epoch  39/100  train 12.7639  val 12.2381
+  epoch  40/100  train 12.3642  val 12.5319
+  epoch  41/100  train 12.1569  val 11.6454
+  epoch  42/100  train 11.7142  val 11.3431
+  epoch  43/100  train 11.3830  val 11.3271
+  epoch  44/100  train 11.2380  val 11.0573
+  epoch  45/100  train 10.9656  val 10.7370
+  epoch  46/100  train 10.7094  val 10.5104
+  epoch  47/100  train 10.4979  val 10.4153
+  epoch  48/100  train 10.3497  val 10.3153
+  epoch  49/100  train 10.1559  val 10.0221
+  epoch  50/100  train 9.9765  val 9.9395
+  epoch  51/100  train 9.8359  val 9.6774
+  epoch  52/100  train 9.7621  val 9.7277
+  epoch  53/100  train 9.6381  val 9.6561
+  epoch  54/100  train 9.6638  val 9.6127
+  epoch  55/100  train 9.5573  val 9.4225
+  epoch  56/100  train 9.5046  val 9.5586
+  epoch  57/100  train 9.5549  val 9.4308
+  epoch  58/100  train 9.5099  val 9.4779
+  epoch  59/100  train 9.4243  val 9.3744
+  epoch  60/100  train 9.3527  val 9.2589
+  epoch  61/100  train 9.3516  val 9.2502
+  epoch  62/100  train 9.3281  val 9.3977
+  epoch  63/100  train 9.4327  val 9.5454
+  epoch  64/100  train 9.4375  val 9.4284
+  epoch  65/100  train 9.3928  val 9.4951
+  epoch  66/100  train 9.3647  val 9.2987
+  epoch  67/100  train 9.3788  val 9.5504
+  epoch  68/100  train 9.4958  val 9.4036
+  epoch  69/100  train 9.4393  val 9.4776
+  epoch  70/100  train 9.3922  val 9.4075
+  epoch  71/100  train 9.3402  val 9.4812
   early stopping triggered
-  training: 76 epochs, 511.5 s
-  UVMD-2: rel err 0.0004  fault SNR 7.58 dB  hit 0.69  4.05 ms  alpha [257.0, 75.0, 0.0, 168.0]
+  training: 71 epochs, 576.6 s
+  UVMD-2: rel err 0.0004  fault SNR 6.78 dB  hit 0.67  2.58 ms  alpha [257.0, 76.0, 0.0, 168.0]
 ```
