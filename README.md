@@ -183,6 +183,11 @@ All three datasets should be run with the paper's K = 13 so the rows are compara
   reconstruction) and above the line (worse separation).
 * **Figure, bottom row:** each dataset's own separation measure as bars.
 
+**Centre-frequency movement across the datasets:** `experiments/omega_shift_all.py` rebuilds the trained UVMD models from
+the saved parameters (no retraining), decomposes the same test signals, and measures how far each ω_k ends up from the
+uniform start grid, in grid spacings so that the datasets are comparable. It writes `results/omega_shift_all/`
+(`omega_shift_all.md`, `.csv`, `omega_per_mode.csv`, `.png`). Moving more is not the same as moving to the right place.
+
 ```bash
 H5=~/data/LargeST/sd_his_2019.h5 REG=sd bash scripts/run_all_node7.sh    # runs what is missing, saves each stage to GitHub
 python experiments/compare_datasets.py                                    # only rebuild the table and figure

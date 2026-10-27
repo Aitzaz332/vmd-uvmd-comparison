@@ -55,6 +55,12 @@ fi
 python experiments/compare_datasets.py --traffic results/traffic_${REG}_bounded --out results/comparison
 save "node7: cross-dataset comparison table and figure"
 
+if [ "$FORCE" = "1" ] || [ ! -f results/omega_shift_all/omega_shift_all.md ]; then
+  python experiments/omega_shift_all.py --traffic results/traffic_${REG}_bounded --traffic-data "$H5" \
+      --cwru-data "$CWRU" --device "$DEV" --out results/omega_shift_all 2>&1 | tee results/omega_shift_all.log
+  save "node7: centre-frequency movement across the three datasets"
+fi
+
 if [ "${FULL:-0}" = "1" ] && want results/traffic_${REG}_full; then
   python experiments/run_traffic.py --data "$H5" --region "$REG" --device "$DEV" \
       --out results/traffic_${REG}_full 2>&1 | tee results/traffic_${REG}_full.log
