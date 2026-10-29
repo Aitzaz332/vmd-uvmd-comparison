@@ -306,7 +306,7 @@ function arrow(s, x, y) { s.addText("→", { x, y, w: 0.5, h: 0.6, fontSize: 28,
     card(s, x, 2.4, 3.9, 3.3, "", "", { dark: true, fill: PANEL });
     s.addText([{ text: d[0], options: { fontSize: 22, bold: true, color: LBLUE, breakLine: true } }, { text: d[1], options: { fontSize: 44, bold: true, color: "F4F1EA", breakLine: true } }, { text: "1 layer", options: { fontSize: 15, color: MUTEDL, breakLine: true } }, { text: d[2], options: { fontSize: 44, bold: true, color: "F4F1EA", breakLine: true } }, { text: "2 layers", options: { fontSize: 15, color: MUTEDL } }], { x: x + 0.3, y: 2.55, w: 3.3, h: 3.0, margin: 0, valign: "top", isTextBox: true });
   });
-  s.addText("The gain is largest where the loss can be gamed most easily (CWRU, with one α driven to 0). Read these numbers together with the separation results.", { x: 0.6, y: 6.0, w: 12.1, h: 0.9, fontSize: 18, color: "D5DAE6", margin: 0, valign: "top", isTextBox: true });
+  s.addText("CWRU shows the biggest drop. But there, one α was pushed to 0, which lets the model reach a very low error without really separating the modes. So a low error alone does not prove good separation. Check the separation results next.", { x: 0.6, y: 6.0, w: 12.1, h: 0.9, fontSize: 18, color: "D5DAE6", margin: 0, valign: "top", isTextBox: true });
 }
 // 19 sep criteria
 {
