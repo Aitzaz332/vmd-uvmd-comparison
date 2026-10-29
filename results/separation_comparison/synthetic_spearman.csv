@@ -1,0 +1,7 @@
+criterion,key,spearman_rho,n_points,verdict
+Relative reconstruction error,recon_rel_err,0.5227841237388329,150,misleading (opposite sign)
+Orthogonality index,ortho_index,-0.5427921240944042,150,tracks truth
+Spectral overlap,mode_overlap,-0.5088172807680341,150,tracks truth
+Relative bandwidth (÷ Nyquist),bandwidth_rel,-0.8492092981910307,150,tracks truth
+Energy ratio,energy_ratio,-0.1361287168318592,150,no relation
+Effective number of modes,n_eff_modes,0.4343784168185253,150,guard (no direction)

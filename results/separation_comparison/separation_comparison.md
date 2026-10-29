@@ -1,0 +1,69 @@
+# Reconstruction and separation across the datasets
+
+## Table A. All datasets
+
+Mean ± standard deviation over the test signals of each dataset (the same signals as in the benchmark runs). Bold = best of the rows of that dataset. VMD-N is also UVMD-N before training.
+
+| Dataset | Method | Signals | Relative reconstruction error ↓ | Orthogonality index ↓ | Spectral overlap ↓ | Relative bandwidth (÷ Nyquist) ↓ | Energy ratio (→ 1) | Effective number of modes (guard) |
+|---|---|---|---|---|---|---|---|---|
+| Synthetic (K=13) | VMD (converged) | 30 | 0.0294 ± 0.0041 | **0.0431 ± 0.021** | **0.0166 ± 0.0067** | **0.0127 ± 0.0053** | 0.894 ± 0.046 | 2.89 ± 0.36 |
+| Synthetic (K=13) | VMD-1 | 30 | 0.0499 ± 0.012 | 0.129 ± 0.019 | 0.0631 ± 0.0083 | 0.0208 ± 0.0052 | 0.672 ± 0.048 | 2.2 ± 0.33 |
+| Synthetic (K=13) | UVMD-1 | 30 | **0.0066 ± 0.0014** | 0.173 ± 0.025 | 0.0992 ± 0.0097 | 0.0344 ± 0.0049 | 0.645 ± 0.051 | 1.77 ± 0.23 |
+| Synthetic (K=13) | VMD-2 | 30 | 0.0379 ± 0.0059 | 0.0824 ± 0.017 | 0.0461 ± 0.0099 | 0.0136 ± 0.0057 | 0.788 ± 0.038 | 2.6 ± 0.34 |
+| Synthetic (K=13) | UVMD-2 | 30 | 0.0142 ± 0.0023 | 0.089 ± 0.029 | 0.0447 ± 0.0031 | 0.0318 ± 0.0037 | **0.928 ± 0.055** | 2.51 ± 0.29 |
+| CWRU (K=13) | VMD (converged) | 300 | 0.076 ± 0.023 | **0.0885 ± 0.018** | **0.00678 ± 0.0019** | **0.0107 ± 0.0025** | 0.76 ± 0.029 | 6.45 ± 1.1 |
+| CWRU (K=13) | VMD-1 | 300 | 0.0662 ± 0.007 | 0.259 ± 0.0072 | 0.0663 ± 0.017 | 0.0281 ± 0.0024 | 0.38 ± 0.023 | 4.14 ± 1.3 |
+| CWRU (K=13) | UVMD-1 | 300 | 0.0004 ± 0.0012 | 0.273 ± 0.023 | 0.371 ± 0.12 | 0.0727 ± 0.012 | 0.455 ± 0.046 | 1.78 ± 0.45 |
+| CWRU (K=13) | VMD-2 | 300 | 0.107 ± 0.012 | 0.179 ± 0.016 | 0.0338 ± 0.0092 | 0.0176 ± 0.0021 | 0.495 ± 0.025 | 3.66 ± 1.3 |
+| CWRU (K=13) | UVMD-2 | 300 | **0.0004 ± 0.0012** | 0.454 ± 0.047 | 0.133 ± 0.0079 | 0.0646 ± 0.0048 | **1.02 ± 0.066** | 3.66 ± 0.69 |
+| LargeST traffic (K=13) | VMD (converged) | 30 | 0.0303 ± 0.013 | **0.0137 ± 0.0097** | **0.00404 ± 0.00083** | **0.00213 ± 0.00091** | **0.964 ± 0.027** | 1.88 ± 0.51 |
+| LargeST traffic (K=13) | VMD-1 | 30 | 0.0729 ± 0.02 | 0.0691 ± 0.029 | 0.0358 ± 0.012 | 0.0101 ± 0.003 | 0.747 ± 0.1 | 1.1 ± 0.07 |
+| LargeST traffic (K=13) | UVMD-1 | 30 | **0.0205 ± 0.0042** | 0.0709 ± 0.03 | 0.0579 ± 0.016 | 0.0109 ± 0.0032 | 0.835 ± 0.072 | 1.07 ± 0.047 |
+| LargeST traffic (K=13) | VMD-2 | 30 | 0.0838 ± 0.026 | 0.0853 ± 0.035 | 0.0163 ± 0.0071 | 0.00931 ± 0.0027 | 0.698 ± 0.12 | 1.22 ± 0.14 |
+| LargeST traffic (K=13) | UVMD-2 | 30 | 0.0372 ± 0.011 | 0.0806 ± 0.034 | 0.0289 ± 0.0092 | 0.0104 ± 0.0027 | 0.786 ± 0.092 | 1.15 ± 0.096 |
+
+* **Reconstruction:** relative error of the sum of the modes against the input.
+* **Orthogonality index:** content shared between modes. **Spectral overlap:** share of spectrum two modes occupy together (0 = disjoint). **Relative bandwidth:** width of each mode's spectrum as a fraction of the Nyquist frequency (energy-weighted).
+* **Energy ratio:** total mode energy over input energy; above 1 means the modes double count, below 1 that energy is missing.
+* **Effective number of modes** is a guard, not a score: a low orthogonality index or overlap is meaningless if one mode holds almost all the energy (value near 1).
+
+## Table A2. What training changed: trained UVMD-N relative to VMD-N
+
+Ratio of the means, UVMD-N ÷ VMD-N, and in brackets the share of signals on which trained UVMD is better. Below 1× is better for every column (for the energy ratio it is the distance from 1 that is compared). Same number of layers or iterations, so the only difference is training.
+
+| Dataset | Layers | Relative reconstruction error ↓ | Orthogonality index ↓ | Spectral overlap ↓ | Relative bandwidth (÷ Nyquist) ↓ | Energy ratio (→ 1) |
+|---|---|---|---|---|---|---|
+| Synthetic | 1 | 0.13× (100%) | 1.34× (0%) | 1.57× (0%) | 1.65× (0%) | 1.08× (3%) |
+| Synthetic | 2 | 0.38× (100%) | 1.08× (47%) | 0.97× (47%) | 2.35× (0%) | 0.37× (100%) |
+| CWRU | 1 | 0.01× (100%) | 1.05× (25%) | 5.59× (0%) | 2.59× (0%) | 0.88× (90%) |
+| CWRU | 2 | 0.00× (100%) | 2.54× (0%) | 3.93× (0%) | 3.67× (0%) | 0.10× (100%) |
+| LargeST traffic | 1 | 0.28× (100%) | 1.03× (23%) | 1.62× (0%) | 1.08× (0%) | 0.65× (100%) |
+| LargeST traffic | 2 | 0.44× (100%) | 0.94× (60%) | 1.77× (3%) | 1.12× (0%) | 0.71× (100%) |
+
+Check: the mean relative reconstruction error recomputed here reproduces the one stored in each benchmark run's summary.json (largest relative difference over the methods: Synthetic 0.00052%, CWRU 0%, LargeST traffic 0%).
+
+## Table B. Synthetic data: ground-truth criteria next to the criteria of Table A
+
+The synthetic signals are built from 4 known modes, so separation can be measured against the truth. With K > 4 the grouped mode SNR is used: each estimated mode is assigned to the true mode it projects onto most, and the assigned modes are summed. Mean ± standard deviation over the test signals.
+
+| Method | Grouped mode SNR (dB) ↑ | Mode correlation ↑ | Centre-freq. error (cycles/sample) ↓ | Spurious energy share ↓ | Relative reconstruction error ↓ | Orthogonality index ↓ | Spectral overlap ↓ | Relative bandwidth (÷ Nyquist) ↓ | Energy ratio (→ 1) | Effective number of modes (guard) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| VMD (converged) | **20.7 ± 1.2** | 0.928 ± 0.023 | 0.00106 ± 0.00025 | 0.073 ± 0.034 | 0.0294 ± 0.0041 | **0.0431 ± 0.021** | **0.0166 ± 0.0067** | **0.0127 ± 0.0053** | 0.894 ± 0.046 | 2.89 ± 0.36 |
+| VMD-1 | 12.4 ± 0.76 | 0.987 ± 0.0024 | 0.0012 ± 0.00023 | 0.0361 ± 0.02 | 0.0499 ± 0.012 | 0.129 ± 0.019 | 0.0631 ± 0.0083 | 0.0208 ± 0.0052 | 0.672 ± 0.048 | 2.2 ± 0.33 |
+| UVMD-1 | 8.54 ± 0.55 | 0.963 ± 0.0074 | 0.00252 ± 0.00077 | **0.025 ± 0.012** | **0.0066 ± 0.0014** | 0.173 ± 0.025 | 0.0992 ± 0.0097 | 0.0344 ± 0.0049 | 0.645 ± 0.051 | 1.77 ± 0.23 |
+| VMD-2 | 18.8 ± 0.96 | **0.995 ± 0.0012** | **0.0009 ± 0.00021** | 0.0475 ± 0.03 | 0.0379 ± 0.0059 | 0.0824 ± 0.017 | 0.0461 ± 0.0099 | 0.0136 ± 0.0057 | 0.788 ± 0.038 | 2.6 ± 0.34 |
+| UVMD-2 | 7.33 ± 0.97 | 0.899 ± 0.024 | 0.00207 ± 0.00054 | 0.0388 ± 0.013 | 0.0142 ± 0.0023 | 0.089 ± 0.029 | 0.0447 ± 0.0031 | 0.0318 ± 0.0037 | **0.928 ± 0.055** | 2.51 ± 0.29 |
+
+## Table C. Do the criteria of Table A track the true separation quality?
+
+Spearman rank correlation between each criterion and the grouped mode SNR, over all 150 points (test signals × methods). For a criterion where lower is better, a good one has a strongly negative ρ. Reads as: |ρ| ≥ 0.5 tracks truth, 0.2 to 0.5 weakly, below 0.2 no relation; the opposite sign is misleading.
+
+| Criterion | Spearman ρ with true mode SNR | Reads as |
+|---|---|---|
+| Relative reconstruction error ↓ | +0.52 | misleading (opposite sign) |
+| Orthogonality index ↓ | -0.54 | tracks truth |
+| Spectral overlap ↓ | -0.51 | tracks truth |
+| Relative bandwidth (÷ Nyquist) ↓ | -0.85 | tracks truth |
+| Energy ratio (→ 1) | -0.14 | no relation |
+| Effective number of modes (guard) | +0.43 | guard (no direction) |
+
