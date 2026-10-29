@@ -1,0 +1,36 @@
+<section id="unfold-train" data-transition="fade" style="background:#F4F1EA;color:#121A2B;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">How an unfolded algorithm is trained</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px">
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:16px;padding:28px">
+<p style="font-size:32px;font-weight:600;color:#C4621F">1</p>
+<h3 style="font-size:32px;font-weight:600">Truncate</h3>
+<p style="font-size:26px;color:#4A5568;line-height:1.35">Keep N iterations, N = 1 or 2 here</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:16px;padding:28px">
+<p style="font-size:32px;font-weight:600;color:#C4621F">2</p>
+<h3 style="font-size:32px;font-weight:600">Parametrise</h3>
+<p style="font-size:26px;color:#4A5568;line-height:1.35">Pick hyperparameters to learn, one set per layer</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:16px;padding:28px">
+<p style="font-size:32px;font-weight:600;color:#C4621F">3</p>
+<h3 style="font-size:32px;font-weight:600">Define a loss</h3>
+<p style="font-size:26px;color:#4A5568;line-height:1.35">Score the output of the last layer</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:16px;padding:28px">
+<p style="font-size:32px;font-weight:600;color:#C4621F">4</p>
+<h3 style="font-size:32px;font-weight:600">Backpropagate</h3>
+<p style="font-size:26px;color:#4A5568;line-height:1.35">Gradients flow through all layers; Adam updates the parameters</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:16px;padding:28px">
+<p style="font-size:32px;font-weight:600;color:#C4621F">5</p>
+<h3 style="font-size:32px;font-weight:600">Fix and deploy</h3>
+<p style="font-size:26px;color:#4A5568;line-height:1.35">Freeze the weights, run N layers on new signals</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#121A2B;color:#F4F1EA;border-radius:16px;padding:28px">
+<p style="font-size:32px;font-weight:600;color:#E8833A">Trade</p>
+<h3 style="font-size:32px;font-weight:600">Speed for guarantees</h3>
+<p style="font-size:26px;color:#B8C4D9;line-height:1.35">Far fewer steps, but no convergence guarantee and tuned to the training data</p>
+</div>
+</div>
+<aside>Training is end to end: the loss only sees the final layer, but its gradient reaches every layer’s parameters.</aside>
+</section>

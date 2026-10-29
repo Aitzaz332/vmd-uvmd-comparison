@@ -1,0 +1,23 @@
+<section id="vmd-problem" data-transition="fade" style="background:#F4F1EA;color:#121A2B;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">VMD: split a signal into K narrow-band modes</h2>
+<div style="display:flex;gap:48px">
+<div style="flex:1.25;display:flex;flex-direction:column;gap:24px;background:#121A2B;color:#F4F1EA;border-radius:20px;padding:44px">
+<p style="font-size:24px;color:#E8833A;font-weight:600;letter-spacing:2px;text-transform:uppercase">Constrained problem</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px;line-height:1.5">min over {u_k}, {ω_k}</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px;line-height:1.5">Σ_k ‖ ∂t[(δ(t) + j/(πt)) ∗ u_k(t)] · e^(−jω_k t) ‖²</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px;line-height:1.5;color:#E8833A">subject to Σ_k u_k = f</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<h3 style="font-size:36px;font-weight:600">Reading the terms</h3>
+<ul style="font-size:30px;line-height:1.4;color:#2D3748">
+<li><b>u_k</b>: mode k, <b>ω_k</b>: its centre frequency</li>
+<li>Hilbert term: makes u_k analytic, so its spectrum is one-sided</li>
+<li>e^(−jω_k t): shifts mode k to baseband</li>
+<li>‖∂t ·‖²: the bandwidth of that shifted mode</li>
+<li>Constraint: the modes must add up to f</li>
+</ul>
+</div>
+</div>
+<p style="font-size:30px;color:#4A5568;line-height:1.4">Hyperparameters: number of modes <b>K</b>, bandwidth penalty <b>α</b>, dual step <b>τ</b>.</p>
+<aside>VMD minimises the summed bandwidth of K modes, each centred on its own frequency, under the constraint that the modes reconstruct the signal exactly.</aside>
+</section>

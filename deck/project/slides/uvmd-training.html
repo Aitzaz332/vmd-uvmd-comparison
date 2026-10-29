@@ -1,0 +1,15 @@
+<section id="uvmd-training" data-transition="fade" style="background:#F4F1EA;color:#121A2B;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">How UVMD is trained</h2>
+<table style="font-size:30px;color:#121A2B">
+<tr><th style="width:30%;text-align:left">Item</th><th style="width:70%;text-align:left">Setting</th></tr>
+<tr><td>Loss</td><td>Spectral reconstruction error, Σ |Σ_k û_k − f̂₊| (L1 in the code, L2 in the paper)</td></tr>
+<tr><td>Supervision</td><td>None: no ground-truth modes, the loss sees only the sum</td></tr>
+<tr><td>Optimiser</td><td>Adam, learning rate 0.1, batch size 1</td></tr>
+<tr><td>Schedule</td><td>Up to 100 epochs, early stopping with patience 10</td></tr>
+<tr><td>Data split</td><td>70 / 15 / 15, random_state 42</td></tr>
+<tr><td>Model size</td><td>K = 13 modes, N = 1 or 2 layers</td></tr>
+<tr><td>Initial values</td><td>α_k = 2000, λ̂ = 0, ω on the uniform grid</td></tr>
+</table>
+<p style="font-size:28px;color:#4A5568;line-height:1.4">The learned α and λ̂ are shared by every signal of the dataset; they are not computed per signal.</p>
+<aside>Our runs use the upstream training loop unchanged. The upstream code saves the best weights and then overwrites them with the last-epoch weights; the training loss was still falling at epoch 100.</aside>
+</section>

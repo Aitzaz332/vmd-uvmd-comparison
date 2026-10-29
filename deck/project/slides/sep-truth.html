@@ -1,0 +1,18 @@
+<section id="sep-truth" data-transition="fade" style="background:#F4F1EA;color:#121A2B;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<h2 style="font-size:56px;font-weight:600;line-height:1.1">Synthetic data: separation against the true modes</h2>
+<div style="display:flex;gap:40px;align-items:flex-start">
+<div style="width:760px;display:flex;flex-direction:column;gap:20px">
+<table style="font-size:26px;color:#121A2B">
+<tr><th style="width:34%;text-align:left">Method</th><th style="width:33%;text-align:right">Mode SNR (dB) ↑</th><th style="width:33%;text-align:right">Freq. error ↓</th></tr>
+<tr><td>VMD converged</td><td style="text-align:right"><b>20.7</b></td><td style="text-align:right">0.00106</td></tr>
+<tr><td>VMD-1</td><td style="text-align:right">12.4</td><td style="text-align:right">0.00120</td></tr>
+<tr><td>UVMD-1</td><td style="text-align:right">8.5</td><td style="text-align:right">0.00252</td></tr>
+<tr><td>VMD-2</td><td style="text-align:right">18.8</td><td style="text-align:right"><b>0.00090</b></td></tr>
+<tr><td>UVMD-2</td><td style="text-align:right">7.3</td><td style="text-align:right">0.00207</td></tr>
+</table>
+<p style="font-size:26px;color:#2D3748;line-height:1.4">Training lowers the true mode SNR by 4 to 12 dB while reconstruction error falls by a factor of 2.7 to 7.6. Centre frequencies get farther from the truth.</p>
+</div>
+<img src="/_blob/502528c0da5b1e8f18a5f050e04d341c" alt="Each separation criterion plotted against the true grouped mode SNR on synthetic data" style="width:860px;height:560px;object-fit:contain;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:12px">
+</div>
+<aside>Grouped mode SNR: each estimated mode is assigned to the true mode it projects onto most, and the assigned modes are summed. The figure shows why relative bandwidth is the best proxy and reconstruction error misleads. Frequency error is in cycles per sample.</aside>
+</section>

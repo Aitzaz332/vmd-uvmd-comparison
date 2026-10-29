@@ -1,0 +1,15 @@
+<section id="sep-results" data-transition="fade" style="background:#F4F1EA;color:#121A2B;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<h2 style="font-size:56px;font-weight:600;line-height:1.1">Separation: training does not help</h2>
+<div style="display:flex;gap:36px;align-items:flex-start">
+<img src="/_blob/0a33f043ea5902a4e492dcbb25fafef8" alt="Grouped bars of reconstruction and separation criteria for the three datasets" style="width:1040px;height:660px;object-fit:contain;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:12px">
+<div style="flex:1;display:flex;flex-direction:column;gap:18px">
+<ul style="font-size:26px;line-height:1.4;color:#2D3748">
+<li>Converged VMD is best on orthogonality, overlap and bandwidth in all three datasets</li>
+<li>Trained UVMD-1 never beats VMD-1 on bandwidth (0% of signals): 1.65× synthetic, 2.59× CWRU, 1.08× traffic</li>
+<li>Overlap is worse after training in five of six dataset and depth pairs, level in the sixth</li>
+<li>Energy ratio is the one criterion that improves</li>
+</ul>
+</div>
+</div>
+<aside>Lower is better for orthogonality, overlap and bandwidth. Ratios are trained UVMD-1 over untrained VMD-1 from Table A2. Overlap, 1 layer: 1.57×, 5.59×, 1.62×; 2 layers on synthetic is 0.97× (47% of signals better).</aside>
+</section>

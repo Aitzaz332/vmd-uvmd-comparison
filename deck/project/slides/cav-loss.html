@@ -1,0 +1,21 @@
+<section id="cav-loss" data-transition="fade" style="background:#F4F1EA;color:#121A2B;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<p style="font-size:24px;color:#C4621F;font-weight:600;letter-spacing:2px;text-transform:uppercase">Caveat 2</p>
+<h2 style="font-size:60px;font-weight:600;line-height:1.1">The loss rewards reconstruction only</h2>
+<div style="display:flex;gap:40px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<ul style="font-size:30px;line-height:1.45;color:#2D3748">
+<li>λ̂ is a free complex vector of length 2T: it can <b>absorb the residual</b> and cut the error without making better modes</li>
+<li>α can <b>collapse</b>: with α → 0 a mode passes everything and the sum is exact</li>
+<li>No term asks for orthogonal or narrow-band modes</li>
+<li>One α and λ̂ for the whole dataset; changing T means retraining</li>
+</ul>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#121A2B;color:#F4F1EA;border-radius:20px;padding:40px">
+<p style="font-size:24px;color:#E8833A;font-weight:600;letter-spacing:2px;text-transform:uppercase">Seen on CWRU, 1 layer</p>
+<p style="font-size:32px;line-height:1.4">Reconstruction error<br><b style="color:#7DB8F0">0.0662 → 0.0004</b></p>
+<p style="font-size:32px;line-height:1.4">Spectral overlap<br><b style="color:#E8833A">0.066 → 0.371</b></p>
+<p style="font-size:26px;color:#B8C4D9;line-height:1.35">Untrained VMD-1 to trained UVMD-1. One α went to 0.</p>
+</div>
+</div>
+<aside>The CWRU result is the clearest case: near-perfect reconstruction with modes that overlap far more than the untrained ones.</aside>
+</section>

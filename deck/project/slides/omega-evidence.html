@@ -1,0 +1,21 @@
+<section id="omega-evidence" data-transition="fade" style="background:#F4F1EA;color:#121A2B;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<h2 style="font-size:60px;font-weight:600;line-height:1.1">Does ω really barely move? Partly</h2>
+<div style="display:flex;gap:40px;align-items:flex-start">
+<img src="/_blob/908cfb73b71d0356f7a7e918c7621cce" alt="Centre-frequency movement of VMD and UVMD across the three datasets" style="width:880px;height:560px;object-fit:contain;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:12px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<table style="font-size:26px;color:#121A2B">
+<tr><th style="width:34%;text-align:left">Mean shift</th><th style="width:22%;text-align:right">VMD</th><th style="width:22%;text-align:right">UVMD-1</th><th style="width:22%;text-align:right">UVMD-2</th></tr>
+<tr><td>Synthetic</td><td style="text-align:right">0.46</td><td style="text-align:right">0.69</td><td style="text-align:right">0.46</td></tr>
+<tr><td>CWRU</td><td style="text-align:right">0.62</td><td style="text-align:right">1.86</td><td style="text-align:right">2.05</td></tr>
+<tr><td>Traffic</td><td style="text-align:right">1.61</td><td style="text-align:right">0.38</td><td style="text-align:right">0.28</td></tr>
+</table>
+<p style="font-size:24px;color:#4A5568;line-height:1.35">Grid spacings from the start grid; VMD is the converged run.</p>
+</div>
+</div>
+<ul style="font-size:28px;line-height:1.4;color:#2D3748">
+<li>Traffic and synthetic: UVMD moves ω little, as predicted</li>
+<li>CWRU: UVMD moves it <b>3× more</b> than converged VMD</li>
+<li>Moving more is not moving right: synthetic centre-frequency error is 0.0025 for UVMD-1 against 0.0011 for VMD</li>
+</ul>
+<aside>Shift is measured in grid spacings of 0.5/K cycles per sample, averaged over modes 1 to K-1 and over the test signals. Converged VMD is computed on 10 signals.</aside>
+</section>

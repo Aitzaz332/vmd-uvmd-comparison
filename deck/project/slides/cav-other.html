@@ -1,0 +1,30 @@
+<section id="cav-other" data-transition="fade" style="background:#F4F1EA;color:#121A2B;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<p style="font-size:24px;color:#C4621F;font-weight:600;letter-spacing:2px;text-transform:uppercase">Further caveats</p>
+<h2 style="font-size:60px;font-weight:600;line-height:1.1">Other limits to keep in mind</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px">
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:16px;padding:28px">
+<h3 style="font-size:30px;font-weight:600">Far from the fixed point</h3>
+<p style="font-size:26px;color:#4A5568;line-height:1.35">1 or 2 sweeps cannot reach what 500 reach, so the output is not a VMD solution</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:16px;padding:28px">
+<h3 style="font-size:30px;font-weight:600">Non-causal</h3>
+<p style="font-size:26px;color:#4A5568;line-height:1.35">A global FFT sees the whole window, so forecasting use risks leakage from the future</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:16px;padding:28px">
+<h3 style="font-size:30px;font-weight:600">Fixed window length</h3>
+<p style="font-size:26px;color:#4A5568;line-height:1.35">λ̂ has length 2T, so a different T needs new training</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:16px;padding:28px">
+<h3 style="font-size:30px;font-weight:600">Batch size 1</h3>
+<p style="font-size:26px;color:#4A5568;line-height:1.35">One signal per step, so a GPU helps little</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:16px;padding:28px">
+<h3 style="font-size:30px;font-weight:600">Training bookkeeping</h3>
+<p style="font-size:26px;color:#4A5568;line-height:1.35">Best weights are saved, then overwritten by the last epoch; loss still falling at epoch 100</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:16px;padding:28px">
+<h3 style="font-size:30px;font-weight:600">Not tuned for forecasting</h3>
+<p style="font-size:26px;color:#4A5568;line-height:1.35">The paper reports that more layers overfit</p>
+</div>
+</div>
+</section>

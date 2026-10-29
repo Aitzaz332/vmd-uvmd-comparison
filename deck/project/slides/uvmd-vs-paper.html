@@ -1,0 +1,17 @@
+<section id="uvmd-vs-paper" data-transition="fade" style="background:#F4F1EA;color:#121A2B;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">The paper and the released code differ</h2>
+<table style="font-size:28px;color:#121A2B">
+<tr><th style="width:24%;text-align:left">Item</th><th style="width:38%;text-align:left">Paper</th><th style="width:38%;text-align:left">Released code</th></tr>
+<tr><td>Denominator</td><td>1 + 2·softplus(α)(ω − ω_k)²</td><td>1 + softplus(α)(ω − ω_k)²</td></tr>
+<tr><td>Multiplier term</td><td>+ λ̂/2</td><td>− λ̂/2</td></tr>
+<tr><td>Loss</td><td>L2 norm</td><td>L1, sum of absolute values</td></tr>
+<tr><td>Problem statement</td><td>No constraint, no λ update given</td><td>λ̂ is a free trained tensor</td></tr>
+</table>
+<ul style="font-size:28px;line-height:1.45;color:#2D3748">
+<li>The sign of λ̂ is absorbed by training, but the factor 2 changes what α means: the same number gives a different filter width</li>
+<li>The headline “250× faster” is about 162× from the paper’s own timings</li>
+<li>“Robust” is in the title, but no noise experiments are reported</li>
+<li>The upstream repository carries no licence</li>
+</ul>
+<aside>We use the released code unchanged as the reference implementation, since the paper does not give enough detail to reproduce it.</aside>
+</section>

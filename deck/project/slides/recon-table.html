@@ -1,0 +1,15 @@
+<section id="recon-table" data-transition="fade" style="background:#F4F1EA;color:#121A2B;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Reconstruction: trained UVMD wins</h2>
+<table style="font-size:30px;color:#121A2B">
+<tr><th style="width:24%;text-align:left">Relative error ↓</th><th style="width:15%;text-align:right">VMD converged</th><th style="width:15%;text-align:right">VMD-1</th><th style="width:15%;text-align:right">UVMD-1</th><th style="width:15%;text-align:right">VMD-2</th><th style="width:16%;text-align:right">UVMD-2</th></tr>
+<tr><td>Synthetic</td><td style="text-align:right">0.0294</td><td style="text-align:right">0.0499</td><td style="text-align:right"><b>0.0066</b></td><td style="text-align:right">0.0379</td><td style="text-align:right">0.0142</td></tr>
+<tr><td>CWRU</td><td style="text-align:right">0.0760</td><td style="text-align:right">0.0662</td><td style="text-align:right"><b>0.0004</b></td><td style="text-align:right">0.1070</td><td style="text-align:right"><b>0.0004</b></td></tr>
+<tr><td>LargeST traffic</td><td style="text-align:right">0.0303</td><td style="text-align:right">0.0729</td><td style="text-align:right"><b>0.0205</b></td><td style="text-align:right">0.0838</td><td style="text-align:right">0.0372</td></tr>
+</table>
+<ul style="font-size:30px;line-height:1.45;color:#2D3748">
+<li>Trained UVMD-N beats untrained VMD-N on <b>100% of signals</b> in every dataset and for both depths</li>
+<li>One trained layer also beats converged VMD on all three datasets</li>
+<li>Exception: on traffic, UVMD-2 (0.0372) is slightly worse than converged VMD (0.0303)</li>
+</ul>
+<aside>Mean over test signals. Bold marks the best entry of each row (a tie on CWRU). Standard deviations are in the repository tables, results/separation_comparison/separation_comparison.md.</aside>
+</section>

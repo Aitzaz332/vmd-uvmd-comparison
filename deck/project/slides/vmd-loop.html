@@ -1,0 +1,38 @@
+<section id="vmd-loop" data-transition="fade" style="background:#F4F1EA;color:#121A2B;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">How the VMD loop runs</h2>
+<div style="display:flex;gap:20px;align-items:stretch">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:16px;padding:32px">
+<p style="font-size:24px;color:#C4621F;font-weight:600">START</p>
+<h3 style="font-size:32px;font-weight:600">Initialise</h3>
+<p style="font-size:26px;color:#4A5568;line-height:1.35">ω_k on a uniform grid, û = 0, λ̂ = 0</p>
+</div>
+<p style="font-size:44px;color:#C4621F;align-self:center">→</p>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:16px;padding:32px">
+<p style="font-size:24px;color:#C4621F;font-weight:600">STEP 1</p>
+<h3 style="font-size:32px;font-weight:600">Modes</h3>
+<p style="font-size:26px;color:#4A5568;line-height:1.35">Update û_k for k = 1..K, one after the other</p>
+</div>
+<p style="font-size:44px;color:#C4621F;align-self:center">→</p>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:16px;padding:32px">
+<p style="font-size:24px;color:#C4621F;font-weight:600">STEP 2</p>
+<h3 style="font-size:32px;font-weight:600">Centres</h3>
+<p style="font-size:26px;color:#4A5568;line-height:1.35">ω_k from the mode’s power spectrum</p>
+</div>
+<p style="font-size:44px;color:#C4621F;align-self:center">→</p>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:16px;padding:32px">
+<p style="font-size:24px;color:#C4621F;font-weight:600">STEP 3</p>
+<h3 style="font-size:32px;font-weight:600">Multiplier</h3>
+<p style="font-size:26px;color:#4A5568;line-height:1.35">Dual ascent on λ̂ with step τ</p>
+</div>
+</div>
+<p style="font-size:30px;color:#2D3748;line-height:1.4">Repeat until the modes stop changing (tolerance) or the iteration cap is reached. Typically hundreds of FFT sweeps per signal.</p>
+<div style="display:flex;gap:16px;flex-wrap:wrap">
+<p style="font-size:26px;background:#121A2B;color:#F4F1EA;border-radius:999px;padding:10px 24px">K = 13</p>
+<p style="font-size:26px;background:#121A2B;color:#F4F1EA;border-radius:999px;padding:10px 24px">α = 2000</p>
+<p style="font-size:26px;background:#121A2B;color:#F4F1EA;border-radius:999px;padding:10px 24px">τ = 0</p>
+<p style="font-size:26px;background:#121A2B;color:#F4F1EA;border-radius:999px;padding:10px 24px">tol = 1e-7</p>
+<p style="font-size:26px;background:#121A2B;color:#F4F1EA;border-radius:999px;padding:10px 24px">max 499 iterations</p>
+<p style="font-size:26px;background:#121A2B;color:#F4F1EA;border-radius:999px;padding:10px 24px">DC mode, mirrored extension</p>
+</div>
+<aside>The settings in the pills are the ones used in this benchmark. The mode sweep is Gauss-Seidel: each mode uses the freshest values of the others.</aside>
+</section>

@@ -1,0 +1,27 @@
+<section id="cav-omega" data-transition="fade" style="background:#121A2B;color:#F4F1EA;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<p style="font-size:24px;color:#E8833A;font-weight:600;letter-spacing:2px;text-transform:uppercase">Caveat 1</p>
+<h2 style="font-size:60px;font-weight:600;line-height:1.1">The trained parameters never act on ω</h2>
+<div style="display:flex;gap:16px;align-items:center">
+<div style="flex:1;background:#1C2740;border-radius:16px;padding:28px">
+<h3 style="font-size:32px;font-weight:600;color:#7DB8F0">α_k, λ̂</h3>
+<p style="font-size:26px;color:#B8C4D9;line-height:1.35">The only weights</p>
+</div>
+<p style="font-size:44px;color:#E8833A">→</p>
+<div style="flex:1;background:#1C2740;border-radius:16px;padding:28px">
+<h3 style="font-size:32px;font-weight:600">û_k update</h3>
+<p style="font-size:26px;color:#B8C4D9;line-height:1.35">Filter width and offset</p>
+</div>
+<p style="font-size:44px;color:#E8833A">→</p>
+<div style="flex:1;background:#1C2740;border-radius:16px;padding:28px">
+<h3 style="font-size:32px;font-weight:600">ω_k update</h3>
+<p style="font-size:26px;color:#B8C4D9;line-height:1.35">Mean frequency of û_k, no weight</p>
+</div>
+</div>
+<ul style="font-size:30px;line-height:1.45;color:#D5DDEA">
+<li>ω can move only <b>indirectly</b>, through the spectrum that α and λ̂ shape</li>
+<li>With N = 1 or 2 it is updated <b>once or twice</b>; classic VMD updates it hundreds of times</li>
+<li>It starts on a <b>uniform grid</b> that need not match the signal’s true frequencies</li>
+<li>Nothing in the loss pushes ω toward the right place</li>
+</ul>
+<aside>Our measurements on the next slides show this is true on the traffic and synthetic data, but not on CWRU, where UVMD moves ω a lot.</aside>
+</section>

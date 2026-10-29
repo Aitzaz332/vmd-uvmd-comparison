@@ -1,0 +1,29 @@
+<section id="recon-effect" data-transition="fade" style="background:#121A2B;color:#F4F1EA;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">How much training cuts the error</h2>
+<p style="font-size:30px;color:#B8C4D9;line-height:1.4">Trained UVMD-N error divided by untrained VMD-N error, same depth. Lower is better.</p>
+<div style="display:flex;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1C2740;border-radius:20px;padding:36px">
+<h3 style="font-size:32px;font-weight:600;color:#7DB8F0">Synthetic</h3>
+<p style="font-size:64px;font-weight:600;line-height:1.1">0.13×</p>
+<p style="font-size:26px;color:#B8C4D9">1 layer</p>
+<p style="font-size:64px;font-weight:600;line-height:1.1">0.38×</p>
+<p style="font-size:26px;color:#B8C4D9">2 layers</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1C2740;border-radius:20px;padding:36px">
+<h3 style="font-size:32px;font-weight:600;color:#7DB8F0">CWRU</h3>
+<p style="font-size:64px;font-weight:600;line-height:1.1">0.01×</p>
+<p style="font-size:26px;color:#B8C4D9">1 layer</p>
+<p style="font-size:64px;font-weight:600;line-height:1.1">&lt;0.01×</p>
+<p style="font-size:26px;color:#B8C4D9">2 layers</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1C2740;border-radius:20px;padding:36px">
+<h3 style="font-size:32px;font-weight:600;color:#7DB8F0">LargeST traffic</h3>
+<p style="font-size:64px;font-weight:600;line-height:1.1">0.28×</p>
+<p style="font-size:26px;color:#B8C4D9">1 layer</p>
+<p style="font-size:64px;font-weight:600;line-height:1.1">0.44×</p>
+<p style="font-size:26px;color:#B8C4D9">2 layers</p>
+</div>
+</div>
+<p style="font-size:28px;color:#D5DDEA;line-height:1.4">The gain is largest where the loss can be gamed most easily (CWRU, with one α driven to 0). That is a reason to read these numbers together with the separation results.</p>
+<aside>Ratios of the means from Table A2 of the separation comparison. CWRU two layers is 0.00 in the table, below the rounding precision.</aside>
+</section>

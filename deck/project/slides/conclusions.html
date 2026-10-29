@@ -1,0 +1,26 @@
+<section id="conclusions" data-transition="fade" style="background:#121A2B;color:#F4F1EA;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:44px">
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Conclusions and next steps</h2>
+<div style="display:flex;gap:40px">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#1C2740;border-radius:20px;padding:40px">
+<p style="font-size:24px;color:#E8833A;font-weight:600;letter-spacing:2px;text-transform:uppercase">What we found</p>
+<ul style="font-size:28px;line-height:1.4;color:#D5DDEA">
+<li>UVMD reconstructs better than VMD at the same depth on every signal, with 1 or 2 layers instead of hundreds of iterations</li>
+<li>It does not separate better: at best on par with untrained VMD-N, below converged VMD</li>
+<li>Reconstruction error is no evidence of separation</li>
+<li>ω barely moves on traffic and synthetic, but moves a lot on CWRU</li>
+</ul>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#1C2740;border-radius:20px;padding:40px">
+<p style="font-size:24px;color:#7DB8F0;font-weight:600;letter-spacing:2px;text-transform:uppercase">Next steps</p>
+<ul style="font-size:28px;line-height:1.4;color:#D5DDEA">
+<li>Add a separation term (bandwidth or orthogonality) to the loss</li>
+<li>Give ω a trainable path: learned initial grid or a filter on the spectrum</li>
+<li>Ablate: train α only, then λ̂ only</li>
+<li>Test on forecasting with causal windows</li>
+<li>Run the full traffic protocol</li>
+</ul>
+</div>
+</div>
+<p style="font-size:26px;color:#8FA0BC;line-height:1.4">Traffic results come from a bounded run (100 / 20 / 30 nodes). Code, tables and figures: repository vmd-uvmd-comparison.</p>
+<aside>The next-step ideas are proposals, not results. They would be implemented as separate files, leaving the upstream UVMD code untouched.</aside>
+</section>

@@ -1,0 +1,23 @@
+<section id="vmd-admm" data-transition="fade" style="background:#F4F1EA;color:#121A2B;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">ADMM turns it into three closed-form updates</h2>
+<div style="display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;gap:32px;align-items:center;background:#121A2B;color:#F4F1EA;border-radius:16px;padding:28px 40px">
+<p style="font-size:28px;font-weight:600;color:#E8833A;width:260px">Mode update</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px;line-height:1.4">û_k = ( f̂ − Σ_{i≠k} û_i + λ̂/2 ) / ( 1 + 2α(ω − ω_k)² )</p>
+</div>
+<div style="display:flex;gap:32px;align-items:center;background:#121A2B;color:#F4F1EA;border-radius:16px;padding:28px 40px">
+<p style="font-size:28px;font-weight:600;color:#E8833A;width:260px">Centre frequency</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px;line-height:1.4">ω_k = ∫₀^∞ ω |û_k(ω)|² dω / ∫₀^∞ |û_k(ω)|² dω</p>
+</div>
+<div style="display:flex;gap:32px;align-items:center;background:#121A2B;color:#F4F1EA;border-radius:16px;padding:28px 40px">
+<p style="font-size:28px;font-weight:600;color:#E8833A;width:260px">Dual ascent</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px;line-height:1.4">λ̂ ← λ̂ + τ ( f̂ − Σ_k û_k )</p>
+</div>
+</div>
+<ul style="font-size:30px;line-height:1.45;color:#2D3748">
+<li>The mode update is a <b>Wiener-like filter</b> centred on ω_k; α sets how narrow it is</li>
+<li>ω_k is the <b>power-weighted mean frequency</b> of the mode, positive half spectrum</li>
+<li>All updates run in the FFT domain, so the method is global and non-causal</li>
+</ul>
+<aside>Standard VMD (Dragomiretskiy and Zosso, 2014). In our benchmark tau is 0, so the multiplier stays at zero and the data constraint is only enforced through the mode update.</aside>
+</section>

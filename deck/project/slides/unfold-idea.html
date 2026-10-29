@@ -1,0 +1,21 @@
+<section id="unfold-idea" data-transition="fade" style="background:#121A2B;color:#F4F1EA;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Unfolding: an iterative algorithm becomes a network</h2>
+<div style="display:flex;gap:40px">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#1C2740;border-radius:20px;padding:40px">
+<p style="font-size:24px;color:#E8833A;font-weight:600;letter-spacing:2px;text-transform:uppercase">Iterative solver</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px;line-height:1.5">repeat n = 1..500:<br>  x ← T(x; θ)</p>
+<p style="font-size:28px;color:#B8C4D9;line-height:1.4">One operator T, one fixed θ (α, τ), many repetitions until convergence.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;background:#1C2740;border-radius:20px;padding:40px">
+<p style="font-size:24px;color:#7DB8F0;font-weight:600;letter-spacing:2px;text-transform:uppercase">Unfolded network</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:30px;line-height:1.5">x₁ = T(x₀; θ₁)<br>x₂ = T(x₁; θ₂)<br>…  x_N = T(x_{N−1}; θ_N)</p>
+<p style="font-size:28px;color:#B8C4D9;line-height:1.4">The same operator, but N copies (N small) with their own learnable θ_n.</p>
+</div>
+</div>
+<ul style="font-size:30px;line-height:1.45;color:#D5DDEA">
+<li>Each <b>iteration becomes a layer</b>; fixed depth N replaces “until convergence”</li>
+<li>Hyperparameters become <b>weights</b> that gradient descent can tune</li>
+<li>Origin: LISTA, which unfolded ISTA for sparse coding (Gregor and LeCun, 2010)</li>
+</ul>
+<aside>The structure of the algorithm is kept, so the network stays interpretable: every layer is still one step of the original method.</aside>
+</section>

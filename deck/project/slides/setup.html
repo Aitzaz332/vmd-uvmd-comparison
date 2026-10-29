@@ -1,0 +1,24 @@
+<section id="setup" data-transition="fade" style="background:#F4F1EA;color:#121A2B;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<h2 style="font-size:64px;font-weight:600;line-height:1.1">Experimental setup</h2>
+<div style="display:flex;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:16px;padding:28px">
+<h3 style="font-size:32px;font-weight:600">Synthetic</h3>
+<p style="font-size:26px;color:#4A5568;line-height:1.35">4 known modes, ground truth available, 30 test signals</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:16px;padding:28px">
+<h3 style="font-size:32px;font-weight:600">CWRU bearing</h3>
+<p style="font-size:26px;color:#4A5568;line-height:1.35">Vibration with fault lines, 300 test signals</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border:1px solid #DDD8CC;border-radius:16px;padding:28px">
+<h3 style="font-size:32px;font-weight:600">LargeST traffic</h3>
+<p style="font-size:26px;color:#4A5568;line-height:1.35">San Diego sensors, bounded run, 30 test windows</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:14px">
+<p style="font-size:28px;line-height:1.4"><b>Methods, all at K = 13:</b> converged VMD; VMD-N (VMD stopped after N iterations); trained UVMD-N with N = 1, 2.</p>
+<p style="font-size:28px;line-height:1.4;color:#2D3748">VMD-N equals UVMD-N before training, so the pair isolates the effect of training.</p>
+<p style="font-size:28px;line-height:1.4"><b>Reconstruction:</b> relative error ‖x − Σu_k‖ / ‖x‖.</p>
+<p style="font-size:28px;line-height:1.4"><b>Separation, without ground truth:</b> orthogonality index, spectral overlap, relative bandwidth, energy ratio, with the effective number of modes as a guard.</p>
+</div>
+<aside>The traffic run uses 100 training, 20 validation and 30 test nodes; the full protocol has not been run. Numbers on the next slides come from the repository’s results folder.</aside>
+</section>
