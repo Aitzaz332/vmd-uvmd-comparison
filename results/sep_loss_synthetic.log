@@ -7,3 +7,6 @@ Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pyto
   trained 100 epochs in 134 s
 
 [UVMD-2 [bw]] weights {'beta': 1.0, 'gamma': 0.0, 'mu': 0.0, 'nu': 0.0, 'alpha_floor': 200.0}
+  trained 100 epochs in 294 s
+
+[UVMD-1 [bw+ortho]] weights {'beta': 1.0, 'gamma': 1.0, 'mu': 0.0, 'nu': 0.0, 'alpha_floor': 200.0}
