@@ -1,0 +1,83 @@
+# UVMD trained with a separation-aware loss
+
+Same train / validation / test signals as the benchmark runs. `[recon]` = UVMD trained with the upstream reconstruction loss (the stored models of the benchmark), the other rows add the terms of `decomp/uvmd_sep.py`. Converged VMD and VMD-N are taken from `results/separation_comparison/per_signal.csv`. Single training run (seed 0) per row; test signals: Synthetic 30.
+
+Variants: **bw**: {'beta': 1.0, 'gamma': 0.0, 'mu': 0.0, 'nu': 0.0, 'alpha_floor': 200.0}; **bw+ortho**: {'beta': 1.0, 'gamma': 1.0, 'mu': 0.0, 'nu': 0.0, 'alpha_floor': 200.0}; **full**: {'beta': 1.0, 'gamma': 1.0, 'mu': 1.0, 'nu': 1.0, 'alpha_floor': 200.0}
+
+## Table 1. All datasets
+
+Mean ± standard deviation over the test signals. Bold = best of the rows of that dataset.
+
+| Dataset | Method | Signals | Relative reconstruction error ↓ | Orthogonality index ↓ | Spectral overlap ↓ | Relative bandwidth (÷ Nyquist) ↓ | Energy ratio (→ 1) | Effective number of modes (guard) |
+|---|---|---|---|---|---|---|---|---|
+| Synthetic (K=13) | VMD (converged) | 30 | 0.0294 ± 0.0041 | **0.0431 ± 0.021** | **0.0166 ± 0.0067** | **0.0127 ± 0.0053** | 0.894 ± 0.046 | 2.89 ± 0.36 |
+| Synthetic (K=13) | VMD-1 | 30 | 0.0499 ± 0.012 | 0.129 ± 0.019 | 0.0631 ± 0.0083 | 0.0208 ± 0.0052 | 0.672 ± 0.048 | 2.2 ± 0.33 |
+| Synthetic (K=13) | UVMD-1 [recon] | 30 | **0.0066 ± 0.0014** | 0.173 ± 0.025 | 0.0992 ± 0.0097 | 0.0344 ± 0.0049 | 0.645 ± 0.051 | 1.77 ± 0.23 |
+| Synthetic (K=13) | UVMD-1 [bw] | 30 | 0.00932 ± 0.0017 | 0.143 ± 0.022 | 0.0991 ± 0.015 | 0.0228 ± 0.0052 | 0.7 ± 0.044 | 2.26 ± 0.29 |
+| Synthetic (K=13) | UVMD-1 [bw+ortho] | 30 | 0.0227 ± 0.0047 | 0.126 ± 0.019 | 0.0855 ± 0.01 | 0.0197 ± 0.0051 | 0.713 ± 0.042 | 2.39 ± 0.34 |
+| Synthetic (K=13) | UVMD-1 [full] | 30 | 0.0226 ± 0.0047 | 0.126 ± 0.019 | 0.0855 ± 0.01 | 0.0197 ± 0.0051 | 0.713 ± 0.042 | 2.39 ± 0.34 |
+| Synthetic (K=13) | VMD-2 | 30 | 0.0379 ± 0.0059 | 0.0824 ± 0.017 | 0.0461 ± 0.0099 | 0.0136 ± 0.0057 | 0.788 ± 0.038 | 2.6 ± 0.34 |
+| Synthetic (K=13) | UVMD-2 [recon] | 30 | 0.0142 ± 0.0023 | 0.089 ± 0.029 | 0.0447 ± 0.0031 | 0.0318 ± 0.0037 | **0.928 ± 0.055** | 2.51 ± 0.29 |
+| Synthetic (K=13) | UVMD-2 [bw] | 30 | 0.0202 ± 0.0045 | 0.0973 ± 0.019 | 0.0515 ± 0.0044 | 0.0176 ± 0.0052 | 0.777 ± 0.04 | 2.55 ± 0.32 |
+| Synthetic (K=13) | UVMD-2 [bw+ortho] | 30 | 0.0344 ± 0.0077 | 0.0443 ± 0.011 | 0.0337 ± 0.0024 | 0.0204 ± 0.0041 | 0.887 ± 0.033 | 3.04 ± 0.44 |
+| Synthetic (K=13) | UVMD-2 [full] | 30 | 0.0259 ± 0.0046 | 0.0696 ± 0.016 | 0.0511 ± 0.0057 | 0.0138 ± 0.0054 | 0.823 ± 0.035 | 2.75 ± 0.34 |
+
+## Table 2. Each variant against the reconstruction-only UVMD of the same depth
+
+Ratio of the means, variant ÷ `[recon]`, and in brackets the share of test signals on which the variant is better. Below 1× is better in every column (energy ratio: distance from 1).
+
+| Dataset | Layers | Variant | Relative reconstruction error ↓ | Orthogonality index ↓ | Spectral overlap ↓ | Relative bandwidth (÷ Nyquist) ↓ | Energy ratio (→ 1) |
+|---|---|---|---|---|---|---|---|
+| Synthetic | 1 | bw | 1.41× (0%) | 0.82× (100%) | 1.00× (77%) | 0.66× (100%) | 0.84× (100%) |
+| Synthetic | 1 | bw+ortho | 3.43× (0%) | 0.73× (100%) | 0.86× (97%) | 0.57× (100%) | 0.81× (100%) |
+| Synthetic | 1 | full | 3.43× (0%) | 0.73× (100%) | 0.86× (97%) | 0.57× (100%) | 0.81× (100%) |
+| Synthetic | 2 | bw | 1.42× (0%) | 1.09× (30%) | 1.15× (0%) | 0.55× (100%) | 2.87× (0%) |
+| Synthetic | 2 | bw+ortho | 2.42× (0%) | 0.50× (100%) | 0.75× (100%) | 0.64× (100%) | 1.45× (20%) |
+| Synthetic | 2 | full | 1.82× (0%) | 0.78× (77%) | 1.14× (7%) | 0.43× (100%) | 2.29× (3%) |
+
+## Table 3. Synthetic data: separation against the true modes
+
+Grouped mode SNR: each estimated mode is assigned to the true mode it projects onto most, and the assigned modes are summed. This is independent of the training loss (the true modes are never used in training).
+
+| Method | Grouped mode SNR (dB) ↑ | Mode correlation ↑ | Centre-freq. error (cycles/sample) ↓ | Spurious energy share ↓ | Relative reconstruction error ↓ | Orthogonality index ↓ | Spectral overlap ↓ | Relative bandwidth (÷ Nyquist) ↓ | Energy ratio (→ 1) | Effective number of modes (guard) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| VMD (converged) | **20.7 ± 1.2** | 0.928 ± 0.023 | 0.00106 ± 0.00025 | 0.073 ± 0.034 | 0.0294 ± 0.0041 | **0.0431 ± 0.021** | **0.0166 ± 0.0067** | **0.0127 ± 0.0053** | 0.894 ± 0.046 | 2.89 ± 0.36 |
+| VMD-1 | 12.4 ± 0.76 | 0.987 ± 0.0024 | 0.0012 ± 0.00023 | 0.0361 ± 0.02 | 0.0499 ± 0.012 | 0.129 ± 0.019 | 0.0631 ± 0.0083 | 0.0208 ± 0.0052 | 0.672 ± 0.048 | 2.2 ± 0.33 |
+| UVMD-1 [recon] | 8.54 ± 0.55 | 0.963 ± 0.0074 | 0.00252 ± 0.00077 | 0.025 ± 0.012 | **0.0066 ± 0.0014** | 0.173 ± 0.025 | 0.0992 ± 0.0097 | 0.0344 ± 0.0049 | 0.645 ± 0.051 | 1.77 ± 0.23 |
+| UVMD-1 [bw] | 12.4 ± 0.54 | 0.985 ± 0.003 | 0.00164 ± 0.00042 | 0.0262 ± 0.013 | 0.00932 ± 0.0017 | 0.143 ± 0.022 | 0.0991 ± 0.015 | 0.0228 ± 0.0052 | 0.7 ± 0.044 | 2.26 ± 0.29 |
+| UVMD-1 [bw+ortho] | 13.9 ± 0.59 | 0.989 ± 0.002 | 0.00129 ± 0.0003 | 0.0268 ± 0.02 | 0.0227 ± 0.0047 | 0.126 ± 0.019 | 0.0855 ± 0.01 | 0.0197 ± 0.0051 | 0.713 ± 0.042 | 2.39 ± 0.34 |
+| UVMD-1 [full] | 13.9 ± 0.59 | 0.989 ± 0.002 | 0.00129 ± 0.0003 | 0.0268 ± 0.02 | 0.0226 ± 0.0047 | 0.126 ± 0.019 | 0.0855 ± 0.01 | 0.0197 ± 0.0051 | 0.713 ± 0.042 | 2.39 ± 0.34 |
+| VMD-2 | 18.8 ± 0.96 | 0.995 ± 0.0012 | 0.0009 ± 0.00021 | 0.0475 ± 0.03 | 0.0379 ± 0.0059 | 0.0824 ± 0.017 | 0.0461 ± 0.0099 | 0.0136 ± 0.0057 | 0.788 ± 0.038 | 2.6 ± 0.34 |
+| UVMD-2 [recon] | 7.33 ± 0.97 | 0.899 ± 0.024 | 0.00207 ± 0.00054 | 0.0388 ± 0.013 | 0.0142 ± 0.0023 | 0.089 ± 0.029 | 0.0447 ± 0.0031 | 0.0318 ± 0.0037 | **0.928 ± 0.055** | 2.51 ± 0.29 |
+| UVMD-2 [bw] | 15.2 ± 0.88 | 0.988 ± 0.0024 | 0.00107 ± 0.00025 | 0.0314 ± 0.016 | 0.0202 ± 0.0045 | 0.0973 ± 0.019 | 0.0515 ± 0.0044 | 0.0176 ± 0.0052 | 0.777 ± 0.04 | 2.55 ± 0.32 |
+| UVMD-2 [bw+ortho] | 12.7 ± 0.92 | 0.942 ± 0.013 | 0.00142 ± 0.00027 | 0.0712 ± 0.025 | 0.0344 ± 0.0077 | 0.0443 ± 0.011 | 0.0337 ± 0.0024 | 0.0204 ± 0.0041 | 0.887 ± 0.033 | 3.04 ± 0.44 |
+| UVMD-2 [full] | 19 ± 1 | **0.995 ± 0.001** | **0.000871 ± 0.00021** | **0.0143 ± 0.0098** | 0.0259 ± 0.0046 | 0.0696 ± 0.016 | 0.0511 ± 0.0057 | 0.0138 ± 0.0054 | 0.823 ± 0.035 | 2.75 ± 0.34 |
+
+## Table 4. Centre-frequency movement of the UVMD models
+
+Distance of the final omega_k from the uniform start grid, in grid spacings. For reference, converged VMD and VMD-N are in `results/omega_shift_all/omega_shift_all.md`.
+
+| Dataset | Method | Mean shift (grid spacings) | Modes moved |
+|---|---|---|---|
+| Synthetic (K=13) | UVMD-1 [recon] | 0.686 | 10 of 12 |
+| Synthetic (K=13) | UVMD-2 [recon] | 0.460 | 9 of 12 |
+| Synthetic (K=13) | UVMD-1 [bw] | 0.675 | 9 of 12 |
+| Synthetic (K=13) | UVMD-2 [bw] | 0.519 | 8 of 12 |
+| Synthetic (K=13) | UVMD-1 [bw+ortho] | 0.591 | 9 of 12 |
+| Synthetic (K=13) | UVMD-2 [bw+ortho] | 0.362 | 7 of 12 |
+| Synthetic (K=13) | UVMD-1 [full] | 0.591 | 9 of 12 |
+| Synthetic (K=13) | UVMD-2 [full] | 0.602 | 10 of 12 |
+
+## Table 5. Learned alpha
+
+| Dataset | Method | alpha min | alpha median | alpha max | alphas below 5 |
+|---|---|---|---|---|---|
+| Synthetic | UVMD-1 [recon] | 580 | 674 | 821 | 0 |
+| Synthetic | UVMD-2 [recon] | 571 | 663 | 1844 | 0 |
+| Synthetic | UVMD-1 [bw] | 593 | 670 | 2544 | 0 |
+| Synthetic | UVMD-2 [bw] | 583 | 677 | 1875 | 0 |
+| Synthetic | UVMD-1 [bw+ortho] | 591 | 735 | 3240 | 0 |
+| Synthetic | UVMD-2 [bw+ortho] | 598 | 684 | 2866 | 0 |
+| Synthetic | UVMD-1 [full] | 591 | 734 | 3240 | 0 |
+| Synthetic | UVMD-2 [full] | 563 | 665 | 3182 | 0 |
+
