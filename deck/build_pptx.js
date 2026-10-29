@@ -19,6 +19,76 @@ const DARK = "121A2B", PANEL = "1C2740", LIGHT = "F2F4F7", WHITE = "FFFFFF", ORA
   BLUE = "1F5FA8", LBLUE = "7DB8F0", MUTED = "4A5568", MUTEDL = "B8C4D9", BORDER = "D5DAE2", TXT = "2D3748";
 const MONO = "Courier New";
 
+// ---------- native PowerPoint equations (OMML) ----------
+// Equations are written as placeholder runs "@@EQ:id:size:color@@" and replaced by real <a14:m> math after the file is built.
+const esc = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const r = (t) => `<m:r>@RPR@<m:t>${esc(t)}</m:t></m:r>`;
+const rp = (t) => `<m:r><m:rPr><m:sty m:val="p"/></m:rPr>@RPR@<m:t>${esc(t)}</m:t></m:r>`; // upright text
+const sub = (b, s) => `<m:sSub><m:e>${b}</m:e><m:sub>${s}</m:sub></m:sSub>`;
+const sup = (b, s) => `<m:sSup><m:e>${b}</m:e><m:sup>${s}</m:sup></m:sSup>`;
+const subsup = (b, s, p) => `<m:sSubSup><m:e>${b}</m:e><m:sub>${s}</m:sub><m:sup>${p}</m:sup></m:sSubSup>`;
+const frac = (n, d) => `<m:f><m:num>${n}</m:num><m:den>${d}</m:den></m:f>`;
+const hat = (b) => `<m:acc><m:accPr><m:chr m:val="&#770;"/></m:accPr><m:e>${b}</m:e></m:acc>`;
+const dl = (c, a = "(", b = ")") => `<m:d><m:dPr><m:begChr m:val="${a}"/><m:endChr m:val="${b}"/></m:dPr><m:e>${c}</m:e></m:d>`;
+const nary = (chr, lo, hi, body) => `<m:nary><m:naryPr><m:chr m:val="${chr}"/><m:limLoc m:val="${chr === "∫" ? "subSup" : "undOvr"}"/>${lo ? "" : '<m:subHide m:val="1"/>'}${hi ? "" : '<m:supHide m:val="1"/>'}</m:naryPr><m:sub>${lo || ""}</m:sub><m:sup>${hi || ""}</m:sup><m:e>${body}</m:e></m:nary>`;
+const limlow = (b, l) => `<m:limLow><m:e>${b}</m:e><m:lim>${l}</m:lim></m:limLow>`;
+const EQS = {};
+const defEq = (id, omml, fallback) => { EQS[id] = { omml, fallback }; };
+const [U, W, F, L] = [r("u"), r("ω"), r("f"), r("λ")];
+const uk = sub(U, r("k")), wk = sub(W, r("k"));
+const uh = hat(U), fh = hat(F), lh = hat(L);
+const wArg = dl(W);
+const absq = (x) => dl(x, "|", "|");
+
+defEq("vmd_min", limlow(rp("min"), dl(uk, "{", "}") + r(",") + dl(wk, "{", "}")) + nary("∑", r("k"), "", subsup(dl(sub(r("∂"), r("t")) + dl(dl(r("δ(t)+") + frac(r("j"), r("πt"))) + r("∗") + uk + dl(r("t")), "[", "]") + sup(r("e"), r("−j") + wk + r("t"))), r("2"), r("2"))),
+  "min Σ_k ‖∂t[(δ(t)+j/(πt)) ∗ u_k(t)] e^(−jω_k t)‖²");
+defEq("vmd_st", rp("s.t.  ") + nary("∑", r("k"), "", uk) + r("=f"), "s.t. Σ_k u_k = f");
+defEq("admm_u", subsup(uh, r("k"), r("n+1")) + dl(W) + r("=") + frac(fh + wArg + r("−") + nary("∑", r("i≠k"), "", sub(uh, r("i")) + wArg) + r("+") + frac(lh + wArg, r("2")), r("1+2α") + sup(dl(W + r("−") + wk), r("2"))), "û_k^(n+1)(ω) = (f̂ − Σ û_i + λ̂/2) / (1 + 2α(ω−ω_k)²)");
+defEq("admm_w", subsup(W, r("k"), r("n+1")) + r("=") + frac(nary("∫", r("0"), r("∞"), W + sup(absq(sub(uh, r("k")) + wArg), r("2")) + r("dω")), nary("∫", r("0"), r("∞"), sup(absq(sub(uh, r("k")) + wArg), r("2")) + r("dω"))), "ω_k^(n+1) = ∫ ω|û_k|² dω / ∫ |û_k|² dω");
+defEq("admm_l", sup(lh, r("n+1")) + r("←") + sup(lh, r("n")) + r("+τ") + dl(fh + r("−") + nary("∑", r("k"), "", sub(uh, r("k")))), "λ̂ ← λ̂ + τ(f̂ − Σ_k û_k)");
+defEq("uvmd_u", sub(uh, r("k")) + r("=") + frac(sub(fh, r("+")) + r("−") + nary("∑", r("i≠k"), "", sub(uh, r("i"))) + r("−") + frac(sub(lh, r("n")), r("2")), r("1+softplus") + dl(sub(r("α"), r("k"))) + sup(dl(W + r("−") + wk), r("2"))), "û_k = (f̂₊ − Σ û_i − λ̂_n/2) / (1 + softplus(α_k)(ω−ω_k)²)");
+defEq("paper_u", sub(uh, r("k")) + r("=") + frac(sub(fh, r("+")) + r("−") + nary("∑", r("i≠k"), "", sub(uh, r("i"))) + r("+") + frac(sub(lh, r("n")), r("2")), r("1+2softplus") + dl(sub(r("α"), r("k"))) + sup(dl(W + r("−") + wk), r("2"))), "û_k = (f̂₊ − Σ û_i + λ̂_n/2) / (1 + 2softplus(α_k)(ω−ω_k)²)");
+defEq("uvmd_w", wk + r("=") + frac(nary("∑", r("ω"), "", W + sup(absq(sub(uh, r("k"))), r("2"))), nary("∑", r("ω"), "", sup(absq(sub(uh, r("k"))), r("2")))), "ω_k = Σ ω|û_k|² / Σ|û_k|²");
+defEq("unf_iter", r("x←T") + dl(r("x;θ")), "x ← T(x; θ)");
+defEq("unf_1", sub(r("x"), r("1")) + r("=T") + dl(sub(r("x"), r("0")) + r(";") + sub(r("θ"), r("1"))), "x₁ = T(x₀; θ₁)");
+defEq("unf_2", sub(r("x"), r("2")) + r("=T") + dl(sub(r("x"), r("1")) + r(";") + sub(r("θ"), r("2"))), "x₂ = T(x₁; θ₂)");
+defEq("unf_n", sub(r("x"), r("N")) + r("=T") + dl(sub(r("x"), r("N−1")) + r(";") + sub(r("θ"), r("N"))), "x_N = T(x_{N−1}; θ_N)");
+defEq("loss", r("𝓛=") + nary("∑", r("ω"), "", absq(nary("∑", r("k"), "", sub(uh, r("k")) + wArg) + r("−") + sub(fh, r("+")) + wArg)), "L = Σ_ω |Σ_k û_k(ω) − f̂₊(ω)|");
+defEq("ortho", rp("orthogonality = ") + frac(nary("∑", r("i<j"), "", absq(dl(sub(r("u"), r("i")) + r(",") + sub(r("u"), r("j")), "⟨", "⟩"))), sup(dl(r("x"), "‖", "‖"), r("2"))), "orthogonality = Σ_{i<j}|⟨u_i,u_j⟩| / ‖x‖²");
+defEq("energy", rp("energy ratio = ") + frac(nary("∑", r("k"), "", sup(dl(uk, "‖", "‖"), r("2"))), sup(dl(r("x"), "‖", "‖"), r("2"))), "energy ratio = Σ_k ‖u_k‖² / ‖x‖²");
+defEq("neff", sub(r("N"), rp("eff")) + r("=") + frac(r("1"), nary("∑", r("k"), "", sup(sub(r("s"), r("k")), r("2")))), "N_eff = 1 / Σ_k s_k²");
+defEq("recon", rp("rel. error = ") + frac(dl(r("x−") + nary("∑", r("k"), "", uk), "‖", "‖"), dl(r("x"), "‖", "‖")), "‖x − Σ_k u_k‖ / ‖x‖");
+
+// a text box holding native equations, one per paragraph; ids = equation ids
+function eqText(s, ids, x, y, w, h, o = {}) {
+  const size = o.size || 22, color = o.color || "F4F1EA";
+  const runs = ids.map((id, i) => ({ text: `@@EQ:${id}:${size * 100}:${color}@@`, options: { fontSize: size, color, breakLine: i < ids.length - 1, paraSpaceAfter: o.gap || 10 } }));
+  s.addText(runs, { x, y, w, h, valign: "middle", align: "left", margin: 0, isTextBox: true });
+}
+function eqCard(s, ids, x, y, w, h, o = {}) {
+  s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x, y, w, h, rectRadius: 0.1, fill: { color: o.fill || DARK }, line: { color: o.fill || DARK, width: 1 } });
+  eqText(s, ids, x + 0.3, y + 0.1, w - 0.6, h - 0.2, o);
+}
+async function injectEquations(file) {
+  const JSZip = require("jszip");
+  const zip = await JSZip.loadAsync(require("fs").readFileSync(file));
+  const re = /<a:r>(?:(?!<\/a:r>)[\s\S])*?@@EQ:(\w+):(\d+):(\w+)@@(?:(?!<\/a:r>)[\s\S])*?<\/a:r>/g;
+  for (const name of Object.keys(zip.files).filter((n) => /^ppt\/slides\/slide\d+\.xml$/.test(n))) {
+    let xml = await zip.file(name).async("string");
+    if (!xml.includes("@@EQ:")) continue;
+    xml = xml.replace(re, (_m, id, sz, col) => {
+      const e = EQS[id];
+      if (!e) throw new Error("unknown equation " + id);
+      const rpr = `<a:rPr lang="en-US" sz="${sz}" i="1"><a:solidFill><a:srgbClr val="${col}"/></a:solidFill><a:latin typeface="Cambria Math"/><a:cs typeface="Cambria Math"/></a:rPr>`;
+      const omml = e.omml.split("@RPR@").join(rpr);
+      const fb = `<a:r><a:rPr lang="en-US" sz="${sz}"><a:solidFill><a:srgbClr val="${col}"/></a:solidFill></a:rPr><a:t>${esc(e.fallback)}</a:t></a:r>`;
+      return `<mc:AlternateContent xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"><mc:Choice xmlns:a14="http://schemas.microsoft.com/office/drawing/2010/main" Requires="a14"><a14:m><m:oMathPara xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"><m:oMathParaPr><m:jc m:val="left"/></m:oMathParaPr><m:oMath>${omml}</m:oMath></m:oMathPara></a14:m></mc:Choice><mc:Fallback>${fb}</mc:Fallback></mc:AlternateContent>`;
+    });
+    zip.file(name, xml);
+  }
+  require("fs").writeFileSync(file, await zip.generateAsync({ type: "nodebuffer", compression: "DEFLATE" }));
+}
+
 const pres = new pptxgen();
 pres.layout = "LAYOUT_WIDE"; // 13.333 x 7.5
 pres.title = "VMD UVMD Comparison";
@@ -97,11 +167,8 @@ function arrow(s, x, y) { s.addText("→", { x, y, w: 0.5, h: 0.6, fontSize: 28,
 {
   const s = slide("VMD: split a signal into K narrow-band modes", { kicker: "Classic VMD", notes: "VMD minimises the summed bandwidth of K modes, each centred on its own frequency, under the constraint that the modes reconstruct the signal exactly." });
   s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.6, y: 1.9, w: 7.0, h: 3.6, rectRadius: 0.1, fill: { color: DARK }, line: { color: DARK, width: 1 } });
-  s.addText([{ text: "CONSTRAINED PROBLEM", options: { fontFace: "Calibri", fontSize: 13, bold: true, color: ORANGE, breakLine: true } },
-    { text: "min over {u_k}, {ω_k}", options: { fontFace: MONO, fontSize: 17, color: "F4F1EA", breakLine: true } },
-    { text: "Σ_k ‖ ∂t[(δ(t) + j/(πt)) ∗ u_k(t)] · e^(−jω_k t) ‖²", options: { fontFace: MONO, fontSize: 17, color: "F4F1EA", breakLine: true } },
-    { text: "subject to  Σ_k u_k = f", options: { fontFace: MONO, fontSize: 17, color: ORANGE } }],
-    { x: 0.9, y: 2.1, w: 6.4, h: 3.2, valign: "middle", margin: 0, paraSpaceAfter: 14, isTextBox: true });
+  s.addText("CONSTRAINED PROBLEM", { x: 0.9, y: 2.05, w: 6.4, h: 0.35, fontSize: 13, bold: true, color: ORANGE, margin: 0, isTextBox: true });
+  eqText(s, ["vmd_min", "vmd_st"], 0.9, 2.5, 6.4, 2.8, { size: 20, gap: 18 });
   s.addText("Reading the terms", { x: 8.0, y: 1.9, w: 4.7, h: 0.4, fontSize: 20, bold: true, color: DARK, margin: 0, isTextBox: true });
   bullets(s, ["u_k: mode k, ω_k: its centre frequency", "Hilbert term: makes u_k analytic, one-sided spectrum", "e^(−jω_k t): shifts mode k to baseband", "‖∂t ·‖²: the bandwidth of that shifted mode", "Constraint: the modes must add up to f"], 8.0, 2.4, 4.7, 3.3, 16);
   s.addText("Hyperparameters: number of modes K, bandwidth penalty α, dual step τ.", { x: 0.6, y: 6.0, w: 12, h: 0.5, fontSize: 18, color: MUTED, margin: 0, isTextBox: true });
@@ -109,14 +176,15 @@ function arrow(s, x, y) { s.addText("→", { x, y, w: 0.5, h: 0.6, fontSize: 28,
 // 4 admm
 {
   const s = slide("ADMM turns it into three closed-form updates", { kicker: "Classic VMD", notes: "Standard VMD (Dragomiretskiy and Zosso, 2014). In our benchmark tau is 0, so the multiplier stays at zero." });
-  const items = [["Mode update", "û_k = ( f̂ − Σ_{i≠k} û_i + λ̂/2 ) / ( 1 + 2α(ω − ω_k)² )"], ["Centre frequency", "ω_k = ∫₀^∞ ω |û_k(ω)|² dω / ∫₀^∞ |û_k(ω)|² dω"], ["Dual ascent", "λ̂ ← λ̂ + τ ( f̂ − Σ_k û_k )"]];
-  items.forEach((it, i) => {
-    const y = 1.8 + i * 1.2;
-    s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.6, y, w: 12.1, h: 1.02, rectRadius: 0.1, fill: { color: DARK }, line: { color: DARK, width: 1 } });
-    s.addText(it[0], { x: 0.9, y, w: 2.6, h: 1.02, fontSize: 18, bold: true, color: ORANGE, valign: "middle", margin: 0, isTextBox: true });
-    s.addText(it[1], { x: 3.6, y, w: 9.0, h: 1.02, fontFace: MONO, fontSize: 17, color: "F4F1EA", valign: "middle", margin: 0, isTextBox: true });
+  const items = [["Mode update", "admm_u", 1.45], ["Centre frequency", "admm_w", 1.45], ["Dual ascent", "admm_l", 0.8]];
+  let yy = 1.7;
+  items.forEach((it) => {
+    s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.6, y: yy, w: 12.1, h: it[2], rectRadius: 0.1, fill: { color: DARK }, line: { color: DARK, width: 1 } });
+    s.addText(it[0], { x: 0.9, y: yy, w: 2.6, h: it[2], fontSize: 18, bold: true, color: ORANGE, valign: "middle", margin: 0, isTextBox: true });
+    eqText(s, [it[1]], 3.6, yy + 0.05, 8.9, it[2] - 0.1, { size: 20 });
+    yy += it[2] + 0.15;
   });
-  bullets(s, ["The mode update is a Wiener-like filter centred on ω_k; α sets how narrow it is", "ω_k is the power-weighted mean frequency of the mode, positive half spectrum", "All updates run in the FFT domain, so the method is global and non-causal"], 0.6, 5.5, 12.1, 1.6, 17);
+  bullets(s, ["The mode update is a Wiener-like filter centred on ω_k; α sets how narrow it is", "ω_k is the power-weighted mean frequency of the mode, positive half spectrum", "All updates run in the FFT domain, so the method is global and non-causal"], 0.6, 5.85, 12.1, 1.4, 15);
 }
 // 5 loop
 {
@@ -130,9 +198,14 @@ function arrow(s, x, y) { s.addText("→", { x, y, w: 0.5, h: 0.6, fontSize: 28,
 {
   const s = slide("Unfolding: an iterative algorithm becomes a network", { dark: true, kicker: "Deep unfolding", notes: "The structure of the algorithm is kept, so the network stays interpretable: every layer is still one step of the original method." });
   card(s, 0.6, 1.9, 5.9, 2.7, "", "", { dark: true, fill: PANEL });
-  s.addText([{ text: "ITERATIVE SOLVER", options: { fontFace: "Calibri", fontSize: 13, bold: true, color: ORANGE, breakLine: true } }, { text: "repeat n = 1..500:", options: { fontFace: MONO, fontSize: 17, color: "F4F1EA", breakLine: true } }, { text: "    x ← T(x; θ)", options: { fontFace: MONO, fontSize: 17, color: "F4F1EA", breakLine: true } }, { text: "One operator T, one fixed θ (α, τ), many repetitions until convergence.", options: { fontFace: "Calibri", fontSize: 15, color: MUTEDL } }], { x: 0.85, y: 2.05, w: 5.4, h: 2.4, margin: 0, valign: "top", paraSpaceAfter: 8, isTextBox: true });
+  s.addText("ITERATIVE SOLVER", { x: 0.85, y: 2.05, w: 5.4, h: 0.3, fontSize: 13, bold: true, color: ORANGE, margin: 0, isTextBox: true });
+  s.addText("repeat for n = 1, …, 500:", { x: 0.85, y: 2.5, w: 5.4, h: 0.4, fontSize: 17, color: "F4F1EA", margin: 0, isTextBox: true });
+  eqText(s, ["unf_iter"], 0.85, 2.95, 5.4, 0.7, { size: 24 });
+  s.addText("One operator T, one fixed θ (α, τ), many repetitions until convergence.", { x: 0.85, y: 3.75, w: 5.4, h: 0.7, fontSize: 15, color: MUTEDL, margin: 0, valign: "top", isTextBox: true });
   card(s, 6.8, 1.9, 5.9, 2.7, "", "", { dark: true, fill: PANEL });
-  s.addText([{ text: "UNFOLDED NETWORK", options: { fontFace: "Calibri", fontSize: 13, bold: true, color: LBLUE, breakLine: true } }, { text: "x₁ = T(x₀; θ₁)", options: { fontFace: MONO, fontSize: 17, color: "F4F1EA", breakLine: true } }, { text: "x₂ = T(x₁; θ₂)", options: { fontFace: MONO, fontSize: 17, color: "F4F1EA", breakLine: true } }, { text: "…  x_N = T(x_{N−1}; θ_N)", options: { fontFace: MONO, fontSize: 17, color: "F4F1EA", breakLine: true } }, { text: "N copies (N small), each with its own learnable θ_n.", options: { fontFace: "Calibri", fontSize: 15, color: MUTEDL } }], { x: 7.05, y: 2.05, w: 5.4, h: 2.4, margin: 0, valign: "top", paraSpaceAfter: 6, isTextBox: true });
+  s.addText("UNFOLDED NETWORK", { x: 7.05, y: 2.05, w: 5.4, h: 0.3, fontSize: 13, bold: true, color: LBLUE, margin: 0, isTextBox: true });
+  eqText(s, ["unf_1", "unf_2", "unf_n"], 7.05, 2.4, 5.4, 1.5, { size: 20, gap: 6 });
+  s.addText("N copies (N small), each with its own learnable θ_n.", { x: 7.05, y: 3.95, w: 5.4, h: 0.5, fontSize: 15, color: MUTEDL, margin: 0, valign: "top", isTextBox: true });
   bullets(s, ["Each iteration becomes a layer; fixed depth N replaces “until convergence”", "Hyperparameters become weights that gradient descent can tune", "Origin: LISTA, which unfolded ISTA for sparse coding (Gregor and LeCun, 2010)"], 0.6, 5.0, 12.1, 1.8, 18);
 }
 // 7 unfold train
@@ -147,8 +220,8 @@ function arrow(s, x, y) { s.addText("→", { x, y, w: 0.5, h: 0.6, fontSize: 28,
   const s = slide("UVMD: one layer is one VMD sweep", { kicker: "UVMD (Ahmad et al.)", notes: "Source: Ahmad, Wesemann, Waschkowski, Khalid, arXiv 2509.00703, and the released code (OsamaAhmad369/MAGN, uvmd.py). The equation form is the code’s; the paper differs slightly." });
   const st = [["Input f", "Mirror, FFT, keep the positive half: f̂₊", false], ["Layer 1", "α_k, λ̂₁", true], ["Layer N", "α_k, λ̂_N", true], ["Modes u_k", "Inverse FFT; loss on Σ_k û_k", false]];
   st.forEach((c, i) => { card(s, 0.6 + i * 3.1, 1.8, 2.6, 1.5, c[0], c[1], { dark: c[2], fill: DARK, hs: 18, bs: 14 }); if (i < 3) arrow(s, 3.2 + i * 3.1, 2.25); });
-  eq(s, ["û_k = ( f̂₊ − Σ_{i≠k} û_i − λ̂_n/2 ) / ( 1 + softplus(α_k)(ω − ω_k)² )", "ω_k = Σ ω |û_k|² / Σ |û_k|²      (positive half, k ≥ 1)"], 0.6, 3.7, 12.1, 1.7, { size: 17 });
-  s.addText("Layer n sweeps through the K modes (Gauss-Seidel), then recomputes every ω_k from the new spectra. Mode 0 stays at DC. Written as in the released code.", { x: 0.6, y: 5.8, w: 12.1, h: 1.0, fontSize: 17, color: MUTED, margin: 0, valign: "top", isTextBox: true });
+  eqCard(s, ["uvmd_u", "uvmd_w"], 0.6, 3.6, 12.1, 2.3, { size: 20, gap: 8 });
+  s.addText("Layer n sweeps through the K modes (Gauss-Seidel), then recomputes every ω_k from the new spectra. Mode 0 stays at DC. Written as in the released code.", { x: 0.6, y: 6.1, w: 12.1, h: 1.0, fontSize: 16, color: MUTED, margin: 0, valign: "top", isTextBox: true });
 }
 // 9 params
 {
@@ -161,14 +234,20 @@ function arrow(s, x, y) { s.addText("→", { x, y, w: 0.5, h: 0.6, fontSize: 28,
 // 10 training
 {
   const s = slide("How UVMD is trained", { kicker: "UVMD (Ahmad et al.)", notes: "We use the upstream training loop unchanged. Upstream saves the best weights and then overwrites them with the last-epoch weights; the training loss was still falling at epoch 100." });
-  table(s, [["Item", "Setting"], ["Loss", "Spectral reconstruction error, Σ |Σ_k û_k − f̂₊| (L1 in the code, L2 in the paper)"], ["Supervision", "None: no ground-truth modes, the loss sees only the sum"], ["Optimiser", "Adam, learning rate 0.1, batch size 1"], ["Schedule", "Up to 100 epochs, early stopping with patience 10"], ["Data split", "70 / 15 / 15, random_state 42"], ["Model size", "K = 13 modes, N = 1 or 2 layers"], ["Initial values", "α_k = 2000, λ̂ = 0, ω on the uniform grid"]], 0.6, 1.8, 12.1, [2.6, 9.5], { size: 17, rowH: 0.52 });
-  s.addText("The learned α and λ̂ are shared by every signal of the dataset; they are not computed per signal.", { x: 0.6, y: 6.3, w: 12.1, h: 0.6, fontSize: 17, color: MUTED, margin: 0, isTextBox: true });
+  eqCard(s, ["loss"], 0.6, 1.75, 7.2, 1.0, { size: 24 });
+  s.addText("Spectral reconstruction loss (L1 in the code, L2 in the paper). No ground-truth modes: the loss sees only the sum.", { x: 8.1, y: 1.75, w: 4.6, h: 1.0, fontSize: 15, color: MUTED, margin: 0, valign: "middle", isTextBox: true });
+  table(s, [["Item", "Setting"], ["Optimiser", "Adam, learning rate 0.1, batch size 1"], ["Schedule", "Up to 100 epochs, early stopping with patience 10"], ["Data split", "70 / 15 / 15, random_state 42"], ["Model size", "K = 13 modes, N = 1 or 2 layers"], ["Initial values", "α_k = 2000, λ̂ = 0, ω on the uniform grid"]], 0.6, 3.1, 12.1, [2.6, 9.5], { size: 17, rowH: 0.52 });
+  s.addText("The learned α and λ̂ are shared by every signal of the dataset; they are not computed per signal.", { x: 0.6, y: 6.5, w: 12.1, h: 0.5, fontSize: 16, color: MUTED, margin: 0, isTextBox: true });
 }
 // 11 paper vs code
 {
   const s = slide("The paper and the released code differ", { kicker: "UVMD (Ahmad et al.)", notes: "We use the released code unchanged as the reference implementation." });
-  table(s, [["Item", "Paper", "Released code"], ["Denominator", "1 + 2·softplus(α)(ω − ω_k)²", "1 + softplus(α)(ω − ω_k)²"], ["Multiplier term", "+ λ̂/2", "− λ̂/2"], ["Loss", "L2 norm", "L1, sum of absolute values"], ["Problem statement", "No constraint, no λ update given", "λ̂ is a free trained tensor"]], 0.6, 1.8, 12.1, [2.9, 4.6, 4.6], { size: 17, rowH: 0.55 });
-  bullets(s, ["The sign of λ̂ is absorbed by training, but the factor 2 changes what α means: the same number gives a different filter width", "The headline “250× faster” is about 162× from the paper’s own timings", "“Robust” is in the title, but no noise experiments are reported", "The upstream repository carries no licence"], 0.6, 4.9, 12.1, 2.2, 17);
+  s.addText("PAPER", { x: 0.6, y: 1.6, w: 5.9, h: 0.3, fontSize: 13, bold: true, color: DORANGE, margin: 0, isTextBox: true });
+  eqCard(s, ["paper_u"], 0.6, 1.95, 5.9, 1.6, { size: 17 });
+  s.addText("RELEASED CODE", { x: 6.8, y: 1.6, w: 5.9, h: 0.3, fontSize: 13, bold: true, color: DORANGE, margin: 0, isTextBox: true });
+  eqCard(s, ["uvmd_u"], 6.8, 1.95, 5.9, 1.6, { size: 17 });
+  table(s, [["Item", "Paper", "Released code"], ["Multiplier term and factor 2", "+ λ̂/2 and 2·softplus(α)", "− λ̂/2 and softplus(α)"], ["Loss", "L2 norm", "L1, sum of absolute values"], ["Problem statement", "No constraint, no λ update given", "λ̂ is a free trained tensor"]], 0.6, 3.8, 12.1, [3.7, 4.2, 4.2], { size: 16, rowH: 0.45 });
+  bullets(s, ["The sign of λ̂ is absorbed by training, but the factor 2 changes what α means: the same number gives a different filter width", "The headline “250× faster” is about 162× from the paper’s own timings", "“Robust” is in the title, but no noise experiments are reported", "The upstream repository carries no licence"], 0.6, 5.7, 12.1, 1.6, 14);
 }
 // 12 caveat omega
 {
@@ -232,8 +311,11 @@ function arrow(s, x, y) { s.addText("→", { x, y, w: 0.5, h: 0.6, fontSize: 28,
 // 19 sep criteria
 {
   const s = slide("How separation is measured without ground truth", { kicker: "Results", notes: "Spearman correlation against grouped mode SNR over 150 points (30 signals by 5 methods). The energy ratio showed no relation (-0.14)." });
-  table(s, [["Criterion", "What it measures", "Better"], ["Orthogonality index", "Σ_{i<j} |⟨u_i, u_j⟩| / ‖x‖², content shared between modes", "lower"], ["Spectral overlap", "Share of spectrum two modes occupy together", "lower"], ["Relative bandwidth", "Energy-weighted spectral width of a mode ÷ Nyquist", "lower"], ["Energy ratio", "Σ‖u_k‖² / ‖x‖²; above 1 double counts, below 1 loses energy", "closer to 1"], ["Effective modes", "1 / Σ s_k², s_k the energy share of mode k; a guard, not a score", "not near 1"]], 0.6, 1.7, 12.1, [2.9, 7.4, 1.8], { size: 16, rowH: 0.55 });
-  s.addText("On the synthetic data, where true modes are known, relative bandwidth tracks true separation best (Spearman −0.85), orthogonality and overlap about −0.5. Reconstruction error points the wrong way (+0.52).", { x: 0.6, y: 5.5, w: 12.1, h: 1.3, fontSize: 18, color: TXT, margin: 0, valign: "top", isTextBox: true });
+  table(s, [["Criterion", "What it measures", "Better"], ["Orthogonality index", "Content shared between modes (formula below)", "lower"], ["Spectral overlap", "Share of spectrum two modes occupy together", "lower"], ["Relative bandwidth", "Energy-weighted spectral width of a mode ÷ Nyquist", "lower"], ["Energy ratio", "Above 1 the modes double count, below 1 energy is lost", "closer to 1"], ["Effective modes", "s_k: energy share of mode k; a guard, not a score", "not near 1"]], 0.6, 1.7, 12.1, [2.9, 7.4, 1.8], { size: 16, rowH: 0.5 });
+  eqCard(s, ["ortho"], 0.6, 4.85, 4.9, 1.2, { size: 16 });
+  eqCard(s, ["energy"], 5.7, 4.85, 3.9, 1.2, { size: 16 });
+  eqCard(s, ["neff"], 9.8, 4.85, 2.9, 1.2, { size: 16 });
+  s.addText("On the synthetic data, where true modes are known, relative bandwidth tracks true separation best (Spearman −0.85), orthogonality and overlap about −0.5. Reconstruction error points the wrong way (+0.52).", { x: 0.6, y: 6.2, w: 12.1, h: 1.0, fontSize: 15, color: TXT, margin: 0, valign: "top", isTextBox: true });
 }
 // 20 sep results
 {
@@ -278,5 +360,6 @@ function fit(file, bw, bh, bx, by) {
 (async () => {
   await pres.writeFile({ fileName: OUT });
   await applyTheme(OUT, THEME);
+  await injectEquations(OUT);
   console.log("wrote", OUT);
 })();
