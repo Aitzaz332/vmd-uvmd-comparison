@@ -1,0 +1,9 @@
+== Synthetic  K=13  T=1024  train/val/test = 140/30/30  device cpu
+
+[UVMD-1 [bw]] weights {'beta': 1.0, 'gamma': 0.0, 'mu': 0.0, 'nu': 0.0, 'alpha_floor': 200.0}
+/home/claude/vmd-uvmd-comparison/decomp/uvmd_sep.py:125: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  parts[k] = parts.get(k, 0.0) + float(v)
+  trained 100 epochs in 134 s
+
+[UVMD-2 [bw]] weights {'beta': 1.0, 'gamma': 0.0, 'mu': 0.0, 'nu': 0.0, 'alpha_floor': 200.0}
