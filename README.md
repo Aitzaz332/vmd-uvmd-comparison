@@ -40,6 +40,7 @@ experiments/run_traffic.py    dataset-3 benchmark (the UVMD paper's protocol)
 scripts/prepare_traffic.py    raw LargeST -> region file (GBA / GLA / SD)
 scripts/run_traffic_cluster.sh, run_traffic_paper_cases.sh   staged and ablation runs on a GPU node
 experiments/run_synthetic.py  dataset-1 benchmark (figures plus summary.md)
+experiments/separation_comparison.py   reconstruction and separation criteria, three datasets + synthetic truth -> results/separation_comparison/
 experiments/compare_datasets.py   one table and one figure across the three datasets -> results/comparison/
 scripts/run_all_node7.sh      runs every missing stage on node 7, builds the comparison, commits and pushes results
 tests/                        equivalence and integrity tests
@@ -187,6 +188,14 @@ All three datasets should be run with the paper's K = 13 so the rows are compara
 the saved parameters (no retraining), decomposes the same test signals, and measures how far each ω_k ends up from the
 uniform start grid, in grid spacings so that the datasets are comparable. It writes `results/omega_shift_all/`
 (`omega_shift_all.md`, `.csv`, `omega_per_mode.csv`, `.png`). Moving more is not the same as moving to the right place.
+
+**Reconstruction and separation side by side:** `experiments/separation_comparison.py` rebuilds the trained UVMD models from
+the saved parameters (no retraining) and scores converged VMD, VMD-N and trained UVMD-N on the benchmark runs' own test
+signals with criteria that need no ground truth: relative reconstruction error, orthogonality index, spectral overlap,
+relative bandwidth, energy ratio and the effective number of modes (a guard against one mode holding everything). It writes
+`results/separation_comparison/`: `separation_comparison.md` (Table A all datasets, A2 what training changed, B synthetic
+ground-truth criteria, C how well each criterion tracks the true separation quality), `comparison_bars.png`,
+`synthetic_proxy_vs_truth.png` and CSV files. Converged VMD dominates the runtime (about 13 s per traffic sensor).
 
 ```bash
 H5=~/data/LargeST/sd_his_2019.h5 REG=sd bash scripts/run_all_node7.sh    # runs what is missing, saves each stage to GitHub

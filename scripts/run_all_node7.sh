@@ -61,6 +61,12 @@ if [ "$FORCE" = "1" ] || [ ! -f results/omega_shift_all/omega_shift_all.md ]; th
   save "node7: centre-frequency movement across the three datasets"
 fi
 
+if [ "$FORCE" = "1" ] || [ ! -f results/separation_comparison/separation_comparison.md ]; then
+  python experiments/separation_comparison.py --traffic results/traffic_${REG}_bounded --traffic-data "$H5" \
+      --cwru-data "$CWRU" --device "$DEV" --out results/separation_comparison 2>&1 | tee results/separation_comparison.log
+  save "node7: reconstruction and separation comparison across the three datasets"
+fi
+
 if [ "${FULL:-0}" = "1" ] && want results/traffic_${REG}_full; then
   python experiments/run_traffic.py --data "$H5" --region "$REG" --device "$DEV" \
       --out results/traffic_${REG}_full 2>&1 | tee results/traffic_${REG}_full.log
