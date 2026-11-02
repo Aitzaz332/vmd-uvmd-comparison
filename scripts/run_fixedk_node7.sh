@@ -6,7 +6,8 @@
 #   bash scripts/run_fixedk_node7.sh
 #
 # Data paths default to the ones used before (override with CWRU_DATA=... TRAFFIC_DATA=...).
-# Optional: DATASETS=cwru,traffic  K_CWRU=4  K_TRAFFIC=6  DEV=cuda:0  PUSH=0
+# Setting: alpha = 500 (ALPHA=...), UVMD with 5 layers.
+# Optional: DATASETS=cwru,traffic  K_CWRU=4  K_TRAFFIC=6  ALPHA=500  DEV=cuda:0  PUSH=0
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -14,6 +15,7 @@ DEV=${DEV:-cuda:0}
 DATASETS=${DATASETS:-cwru,traffic}
 K_CWRU=${K_CWRU:-4}
 K_TRAFFIC=${K_TRAFFIC:-6}
+ALPHA=${ALPHA:-500}
 CWRU_DATA=${CWRU_DATA:-$HOME/data/CWRU}
 TRAFFIC_DATA=${TRAFFIC_DATA:-$HOME/data/LargeST/sd_his_2019.h5}
 PUSH=${PUSH:-1}
@@ -33,12 +35,12 @@ for ds in ${DATASETS//,/ }; do
   case "$ds" in
     cwru)
       python experiments/run_cwru.py --data "$CWRU_DATA" --K "$K_CWRU" --device "$DEV" \
-          --layers 3 5 --vmd-iters 3 5 --sweep-windows 20 --out results/cwru_K${K_CWRU} 2>&1 | tee results/cwru_K${K_CWRU}.log
+          --alpha "$ALPHA" --layers 5 --vmd-iters 5 --sweep-windows 20 --out results/cwru_K${K_CWRU} 2>&1 | tee results/cwru_K${K_CWRU}.log
       python experiments/mode_figures.py cwru --dir results/cwru_K${K_CWRU} --data "$CWRU_DATA"
       save "node7: CWRU K=${K_CWRU}, VMD vs UVMD modes" ;;
     traffic)
       python experiments/run_traffic.py --data "$TRAFFIC_DATA" --region sd --K "$K_TRAFFIC" --device "$DEV" \
-          --max-train-nodes 100 --max-test-nodes 30 --layers 3 5 --vmd-iters 3 5 --sweep-nodes 3 \
+          --max-train-nodes 100 --max-test-nodes 30 --alpha "$ALPHA" --layers 5 --vmd-iters 5 --sweep-nodes 3 \
           --out results/traffic_K${K_TRAFFIC} 2>&1 | tee results/traffic_K${K_TRAFFIC}.log
       python experiments/mode_figures.py traffic --dir results/traffic_K${K_TRAFFIC} --data "$TRAFFIC_DATA"
       save "node7: traffic K=${K_TRAFFIC}, VMD vs UVMD modes" ;;

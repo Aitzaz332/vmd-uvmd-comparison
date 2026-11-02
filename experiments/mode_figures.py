@@ -41,6 +41,7 @@ COLOR = {"Original": TRUTH, "VMD": VMD_C}
 _UV = [UVMD_C, UVMD1_C, "#6250d6", "#eda100"]
 
 
+BOX = dict(facecolor="white", edgecolor="none", alpha=0.85, pad=1.5)
 DEPTHS: list = []     # set by main() from the saved parameter files; fixes one colour per UVMD depth
 
 
@@ -64,9 +65,11 @@ def _style(ax, bottom=False):
 
 
 # ------------------------------------------------------------------ decompositions
-def find_depths(d: Path):
-    """UVMD depths (number of layers) that have saved parameters in the results folder."""
+def find_depths(d: Path, only=None):
+    """UVMD depths (number of layers) that have saved parameters in the results folder (optionally only some)."""
     ns = sorted(int(f.stem.split("_N")[1]) for f in d.glob("uvmd_params_N*.npz"))
+    if only:
+        ns = [n for n in ns if n in set(only)]
     if not ns:
         raise FileNotFoundError(f"no uvmd_params_N*.npz in {d}")
     return ns
@@ -108,7 +111,7 @@ def synthetic(a):
     idx = np.arange(S["n_signals"])
     _, te = train_test_split(idx, test_size=0.3, random_state=42, shuffle=True)
     _, te = train_test_split(te, test_size=0.5, random_state=42, shuffle=True)
-    depths = find_depths(d)
+    depths = find_depths(d, a.depths)
     DEPTHS[:] = depths
     Ps = {N: load_params(d, N) for N in depths}
     names = D["meta"]["mode_names"]
@@ -195,7 +198,7 @@ def side_by_side_synthetic(path, D, i, dec, names, K, N, alpha):
         ax.plot(t, clean, color=FAINT, lw=1.0)
         ax.plot(t, u.sum(0), color=color_of(m), lw=1.1)
         ax.text(0.99, 0.93, f"error vs sum of true modes {100 * e:.1f} %", transform=ax.transAxes, ha="right",
-                va="top", fontsize=9, color=INK)
+                va="top", fontsize=9, color=INK, bbox=BOX)
     axes[0, 0].set_title("Original", fontsize=12, color=INK, loc="left", fontweight="bold")
     axes[0, 1].set_title("VMD (classic ADMM)", fontsize=12, color=VMD_C, loc="left", fontweight="bold")
     axes[0, 2].set_title(f"UVMD ({N} layers, trained)", fontsize=12, color=UVMD_C, loc="left", fontweight="bold")
@@ -211,7 +214,7 @@ def side_by_side_synthetic(path, D, i, dec, names, K, N, alpha):
             ax.plot(t, matched[m][j], color=color_of(m), lw=1.1)
             nr = np.sqrt(np.mean((truth[j] - matched[m][j]) ** 2)) / np.std(truth[j])
             ax.text(0.99, 0.93, f"error {100 * nr:.0f} %", transform=ax.transAxes, ha="right", va="top",
-                    fontsize=9, color=INK)
+                    fontsize=9, color=INK, bbox=BOX)
         for c in range(3):
             axes[r, c].set_ylim(-lim, lim)
     # last row: the extra mode
@@ -228,7 +231,7 @@ def side_by_side_synthetic(path, D, i, dec, names, K, N, alpha):
         share = sum(np.sum(u[k] ** 2) for k in extra) / np.sum(u ** 2)
         ax.set_ylim(-1.15 * np.abs(truth).max(), 1.15 * np.abs(truth).max())
         ax.text(0.99, 0.93, f"extra mode: {100 * share:.1f} % of the energy", transform=ax.transAxes, ha="right",
-                va="top", fontsize=9, color=INK)
+                va="top", fontsize=9, color=INK, bbox=BOX)
     axes[r, 1].set_ylabel("extra", fontsize=10, color=INK)
     for rr in range(J + 2):
         for c in range(3):
@@ -265,7 +268,7 @@ def error_bars_synthetic(path, df, names, order, K, alpha):
             a1.text(j + (q - (len(order) - 1) / 2) * w, mean[j] + 1.5, f"{mean[j]:.0f}", ha="center", fontsize=8.5, color=INK)
         mc = 100 * s.sum_vs_clean_rel_err.mean()
         a2.bar(q, mc, 0.7, color=color_of(m))
-        a2.text(q, mc + 0.3, f"{mc:.1f}", ha="center", fontsize=9, color=INK)
+        a2.text(q, mc + 0.3, f"{mc:.1f}", ha="center", fontsize=9, color=INK, bbox=BOX)
     a1.set_xticks(range(J), names)
     a1.set_ylabel("error vs true mode (% of mode size)", color=MUTED)
     a1.set_title("Error of each recovered mode (lower is better)", loc="left", fontsize=11, color=INK)
@@ -298,14 +301,14 @@ def two_column(path, x, dec, labels, unit_fn, xaxis, xlabel, title, zoom=None, n
         ax.plot(xaxis[sl], x[sl], color=FAINT, lw=1.3)
         ax.plot(xaxis[sl], u.sum(0)[sl], color=color_of(m), lw=0.9)
         ax.text(0.99, 0.93, f"input (grey) and sum of modes   |   reconstruction error {100 * err:.1f} %",
-                transform=ax.transAxes, ha="right", va="top", fontsize=9, color=INK)
+                transform=ax.transAxes, ha="right", va="top", fontsize=9, color=INK, bbox=BOX)
         ax.set_title(labels[m], loc="left", fontsize=12, color=color_of(m), fontweight="bold")
         for r, k in enumerate(order):
             ax = axes[r + 1, c]
             ax.plot(xaxis[sl], u[k][sl], color=color_of(m), lw=0.9)
             ax.text(0.99, 0.93, unit_fn(om[k]), transform=ax.transAxes, ha="right", va="top", fontsize=9,
-                    color=INK)
-            ax.set_ylabel(f"mode {r + 1}", fontsize=9, color=INK)
+                    color=INK, bbox=BOX)
+            ax.set_ylabel(f"mode {r + 1}", fontsize=9, color=INK, bbox=BOX)
     for r in range(K + 1):
         lo = min(axes[r, c].get_ylim()[0] for c in range(len(meths)))
         hi = max(axes[r, c].get_ylim()[1] for c in range(len(meths)))
@@ -329,7 +332,7 @@ def cwru(a):
     K = S["K"]
     D = load_cwru(a.data or S["data"], S["T"], S["windows_per_file"], not S.get("no_standardize", False))
     _, _, te = split_indices(D, S["split"])
-    depths = find_depths(d)
+    depths = find_depths(d, a.depths)
     DEPTHS[:] = depths
     Ps = {N: load_params(d, N) for N in depths}
     out = Path(a.out or d / "readable")
@@ -360,7 +363,7 @@ def traffic(a):
     _, _, te = split_nodes(D["x"].shape[0])
     if S.get("max_test_nodes"):
         te = te[: S["max_test_nodes"]]
-    depths = find_depths(d)
+    depths = find_depths(d, a.depths)
     DEPTHS[:] = depths
     Ps = {N: load_params(d, N) for N in depths}
     out = Path(a.out or d / "readable")
@@ -391,9 +394,13 @@ def main():
     p.add_argument("dataset", choices=["synthetic", "cwru", "traffic"])
     p.add_argument("--dir", required=True, help="results folder of the benchmark run (summary.json, uvmd_params_N*.npz)")
     p.add_argument("--data", default=None, help="data path (cwru folder / traffic h5); default: the one in summary.json")
-    p.add_argument("--layers", type=int, default=3, help="UVMD depth drawn in the big figure (must be a trained depth)")
+    p.add_argument("--depths", type=int, nargs="+", default=None,
+                   help="use only these UVMD depths (default: every trained depth in the folder)")
+    p.add_argument("--layers", type=int, default=None, help="UVMD depth drawn in the big figure (default: the deepest used)")
     p.add_argument("--out", default=None)
     a = p.parse_args()
+    if a.layers is None:
+        a.layers = (a.depths or [3])[-1]
     {"synthetic": synthetic, "cwru": cwru, "traffic": traffic}[a.dataset](a)
 
 
