@@ -113,6 +113,8 @@ def synthetic(a):
     _, te = train_test_split(te, test_size=0.5, random_state=42, shuffle=True)
     depths = find_depths(d, a.depths)
     DEPTHS[:] = depths
+    if a.layers is None or a.layers not in depths:
+        a.layers = depths[-1]
     Ps = {N: load_params(d, N) for N in depths}
     names = D["meta"]["mode_names"]
     J = len(names)
@@ -334,6 +336,8 @@ def cwru(a):
     _, _, te = split_indices(D, S["split"])
     depths = find_depths(d, a.depths)
     DEPTHS[:] = depths
+    if a.layers is None or a.layers not in depths:
+        a.layers = depths[-1]
     Ps = {N: load_params(d, N) for N in depths}
     out = Path(a.out or d / "readable")
     out.mkdir(parents=True, exist_ok=True)
@@ -365,6 +369,8 @@ def traffic(a):
         te = te[: S["max_test_nodes"]]
     depths = find_depths(d, a.depths)
     DEPTHS[:] = depths
+    if a.layers is None or a.layers not in depths:
+        a.layers = depths[-1]
     Ps = {N: load_params(d, N) for N in depths}
     out = Path(a.out or d / "readable")
     out.mkdir(parents=True, exist_ok=True)
@@ -399,8 +405,6 @@ def main():
     p.add_argument("--layers", type=int, default=None, help="UVMD depth drawn in the big figure (default: the deepest used)")
     p.add_argument("--out", default=None)
     a = p.parse_args()
-    if a.layers is None:
-        a.layers = (a.depths or [3])[-1]
     {"synthetic": synthetic, "cwru": cwru, "traffic": traffic}[a.dataset](a)
 
 
