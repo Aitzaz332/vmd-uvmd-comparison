@@ -1,0 +1,256 @@
+# Synthetic benchmark - VMD vs UVMD
+
+200 signals, T=1024, 4 true modes, noise std 0.1, K=5, alpha=2000.0, tau=0.0. Test set: 30 unseen signals. Mean over test signals.
+
+## Accuracy
+
+| method | recon_rmse | recon_rel_err | recon_snr_db | spec_l1 | denoise_rmse | mean_mode_nrmse | mean_mode_corr | mean_mode_snr_db | grouped_mean_snr_db | mean_omega_err | ortho_index |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| VMD (converged) | 0.2058 | 0.1651 | 19.06 | 3189 | 0.2017 | 0.2459 | 0.8804 | 17.27 | 18.76 | 0.02883 | 0.008221 |
+| VMD-3 | 0.4793 | 0.379 | 8.503 | 4393 | 0.4784 | 0.3718 | 0.7798 | 12.07 | 12.5 | 0.05474 | 0.01351 |
+| VMD-5 | 0.4787 | 0.3785 | 8.514 | 4398 | 0.4776 | 0.3749 | 0.7817 | 11.96 | 12.59 | 0.05583 | 0.01416 |
+| UVMD-3 untrained | 0.4793 | 0.379 | 8.503 | 4393 | 0.4784 | 0.3718 | 0.7798 | 12.07 | 12.5 | 0.05474 | 0.01351 |
+| UVMD-3 | 0.2344 | 0.1852 | 14.72 | 2110 | 0.2452 | 0.4663 | 0.7448 | 8.697 | 8.703 | 0.0708 | 0.03784 |
+| UVMD-5 untrained | 0.4787 | 0.3785 | 8.514 | 4398 | 0.4776 | 0.3749 | 0.7817 | 11.96 | 12.59 | 0.05583 | 0.01416 |
+| UVMD-5 | 0.2318 | 0.1832 | 14.82 | 2065 | 0.243 | 0.4605 | 0.7522 | 9.058 | 9.063 | 0.07302 | 0.03756 |
+
+## Cost (per signal unless stated)
+
+| method                    |   iterations_or_layers |   trainable_params |   flops_per_signal |   median_ms_per_signal |   train_time_s |   train_flops |
+|:--------------------------|-----------------------:|-------------------:|-------------------:|-----------------------:|---------------:|--------------:|
+| VMD (converged)           |                  200.2 |                  0 |          5.399e+07 |                 53.26  |            0   |     0         |
+| vmdpy package (converged) |                  200.2 |                  0 |          5.399e+07 |                 79.99  |            0   |     0         |
+| VMD-3                     |                    3   |                  0 |          1.475e+06 |                  1.619 |            0   |     0         |
+| VMD-5                     |                    5   |                  0 |          2.007e+06 |                  2.449 |            0   |     0         |
+| UVMD-3 untrained          |                    3   |              16389 |          1.26e+06  |                  4.438 |            0   |     0         |
+| UVMD-3                    |                    3   |              16389 |          1.26e+06  |                  4.258 |          207   |     5.29e+10  |
+| UVMD-5 untrained          |                    5   |              24581 |          1.649e+06 |                  6.497 |            0   |     0         |
+| UVMD-5                    |                    5   |              24581 |          1.649e+06 |                  7.739 |          328.1 |     6.924e+10 |
+
+Environment: {'python': '3.13.17', 'platform': 'Linux-6.18.44-fc-v185-x86_64-with-glibc2.39', 'numpy': '2.5.3', 'processor': 'x86_64', 'torch': '2.14.1+cpu', 'torch_threads': 2}
+
+
+## Log
+```
+synthetic: 200 signals, T=1024, noise std=0.1, K=5 | train/val/test = 140/30/30
+
+[VMD converged]
+  mean iterations 200.2, recon_rel_err 0.1651, mode SNR 17.27 dB, median 53.26 ms
+  vmdpy package median 79.99 ms (stores all 500 iterates)
+
+[VMD-n sweep]
+  n=  3: recon_rel_err 0.3790  mode SNR  12.07 dB  omega err 0.0547  1.62 ms
+  n=  5: recon_rel_err 0.3785  mode SNR  11.96 dB  omega err 0.0558  2.45 ms
+
+[UVMD N=3]  upstream Unfolding, K=5
+  trainable params: 8197 entries (16389 real DOF)
+  UVMD-3 untrained: recon_rel_err 0.3790  mode SNR 12.07 dB  median 4.44 ms  (numpy replica dev 6.2e-07)
+  epoch   1/100  train 4301.9025  val 4335.8639
+  epoch   2/100  train 4280.8924  val 4323.5773
+  epoch   3/100  train 4263.9089  val 4306.3447
+  epoch   4/100  train 4246.8730  val 4297.4839
+  epoch   5/100  train 4228.1978  val 4279.7142
+  epoch   6/100  train 4209.8888  val 4262.1272
+  epoch   7/100  train 4193.0992  val 4244.4715
+  epoch   8/100  train 4175.7098  val 4232.3156
+  epoch   9/100  train 4160.5156  val 4216.8875
+  epoch  10/100  train 4144.1343  val 4206.1420
+  epoch  11/100  train 4128.8782  val 4192.6274
+  epoch  12/100  train 4113.3353  val 4174.2454
+  epoch  13/100  train 4098.5036  val 4160.2382
+  epoch  14/100  train 4083.7484  val 4145.2619
+  epoch  15/100  train 4068.1824  val 4129.9968
+  epoch  16/100  train 4053.3992  val 4118.3351
+  epoch  17/100  train 4038.2490  val 4101.0700
+  epoch  18/100  train 4022.4571  val 4087.9772
+  epoch  19/100  train 4008.3443  val 4070.9933
+  epoch  20/100  train 3992.5631  val 4055.2367
+  epoch  21/100  train 3977.2865  val 4042.3505
+  epoch  22/100  train 3962.3796  val 4024.0786
+  epoch  23/100  train 3947.0682  val 4011.6329
+  epoch  24/100  train 3931.5438  val 3993.5641
+  epoch  25/100  train 3916.9997  val 3979.3258
+  epoch  26/100  train 3900.2102  val 3961.5231
+  epoch  27/100  train 3885.9372  val 3947.1088
+  epoch  28/100  train 3869.5883  val 3934.0854
+  epoch  29/100  train 3853.7936  val 3916.3088
+  epoch  30/100  train 3838.6175  val 3898.8564
+  epoch  31/100  train 3822.1251  val 3880.4682
+  epoch  32/100  train 3805.6435  val 3867.7739
+  epoch  33/100  train 3788.7265  val 3850.3963
+  epoch  34/100  train 3773.2325  val 3832.1159
+  epoch  35/100  train 3756.3252  val 3814.9888
+  epoch  36/100  train 3739.9897  val 3802.2934
+  epoch  37/100  train 3722.6777  val 3781.8457
+  epoch  38/100  train 3705.8675  val 3762.0529
+  epoch  39/100  train 3688.9092  val 3747.6439
+  epoch  40/100  train 3671.5783  val 3729.4470
+  epoch  41/100  train 3654.2356  val 3710.7149
+  epoch  42/100  train 3637.0839  val 3692.9147
+  epoch  43/100  train 3619.1399  val 3674.2119
+  epoch  44/100  train 3600.6674  val 3656.7659
+  epoch  45/100  train 3582.8875  val 3638.7333
+  epoch  46/100  train 3563.8866  val 3621.5146
+  epoch  47/100  train 3546.4148  val 3598.5224
+  epoch  48/100  train 3526.7412  val 3580.6028
+  epoch  49/100  train 3507.3570  val 3560.8973
+  epoch  50/100  train 3488.4920  val 3545.2721
+  epoch  51/100  train 3468.4884  val 3521.1738
+  epoch  52/100  train 3449.2038  val 3499.8208
+  epoch  53/100  train 3429.1695  val 3482.7877
+  epoch  54/100  train 3409.2107  val 3461.3422
+  epoch  55/100  train 3389.3105  val 3443.5920
+  epoch  56/100  train 3367.7676  val 3421.8367
+  epoch  57/100  train 3348.1338  val 3397.1226
+  epoch  58/100  train 3326.3420  val 3376.8339
+  epoch  59/100  train 3305.3538  val 3358.0510
+  epoch  60/100  train 3283.0352  val 3331.2662
+  epoch  61/100  train 3261.0450  val 3306.7593
+  epoch  62/100  train 3239.3283  val 3289.1799
+  epoch  63/100  train 3217.3599  val 3265.3746
+  epoch  64/100  train 3193.4970  val 3240.9488
+  epoch  65/100  train 3170.9565  val 3220.1813
+  epoch  66/100  train 3147.5584  val 3198.6416
+  epoch  67/100  train 3125.4252  val 3168.1654
+  epoch  68/100  train 3100.1786  val 3142.1447
+  epoch  69/100  train 3075.2215  val 3118.7618
+  epoch  70/100  train 3050.2075  val 3099.8087
+  epoch  71/100  train 3025.4620  val 3068.3013
+  epoch  72/100  train 2999.2494  val 3040.6000
+  epoch  73/100  train 2973.4744  val 3015.2687
+  epoch  74/100  train 2947.7312  val 2985.5589
+  epoch  75/100  train 2921.0429  val 2964.6500
+  epoch  76/100  train 2893.5923  val 2936.3197
+  epoch  77/100  train 2866.5600  val 2905.7298
+  epoch  78/100  train 2837.9686  val 2881.1875
+  epoch  79/100  train 2810.7553  val 2848.8276
+  epoch  80/100  train 2782.4746  val 2818.1489
+  epoch  81/100  train 2753.0911  val 2790.1531
+  epoch  82/100  train 2724.3625  val 2761.2633
+  epoch  83/100  train 2693.1489  val 2727.1851
+  epoch  84/100  train 2662.9100  val 2697.7263
+  epoch  85/100  train 2631.7251  val 2665.2015
+  epoch  86/100  train 2601.1905  val 2634.3076
+  epoch  87/100  train 2568.6138  val 2600.6776
+  epoch  88/100  train 2535.9281  val 2569.9330
+  epoch  89/100  train 2503.8110  val 2530.3152
+  epoch  90/100  train 2471.7050  val 2497.1728
+  epoch  91/100  train 2436.0031  val 2461.4717
+  epoch  92/100  train 2400.5083  val 2432.5366
+  epoch  93/100  train 2365.8421  val 2398.5566
+  epoch  94/100  train 2331.1496  val 2356.9093
+  epoch  95/100  train 2294.5773  val 2320.5063
+  epoch  96/100  train 2257.2116  val 2283.5863
+  epoch  97/100  train 2218.9233  val 2247.2597
+  epoch  98/100  train 2181.1833  val 2200.3348
+  epoch  99/100  train 2141.2550  val 2160.1720
+  epoch 100/100  train 2102.0391  val 2119.9094
+  training: 100 epochs, 207.0 s
+  UVMD-3: recon_rel_err 0.1852  mode SNR 8.70 dB  median 4.26 ms  (numpy replica dev 4.2e-07)
+
+[UVMD N=5]  upstream Unfolding, K=5
+  trainable params: 12293 entries (24581 real DOF)
+  UVMD-5 untrained: recon_rel_err 0.3785  mode SNR 11.96 dB  median 6.50 ms  (numpy replica dev 7.9e-07)
+  epoch   1/100  train 4302.8536  val 4336.2294
+  epoch   2/100  train 4267.4384  val 4298.7842
+  epoch   3/100  train 4224.9285  val 4264.6763
+  epoch   4/100  train 4193.9036  val 4248.0187
+  epoch   5/100  train 4174.7979  val 4231.5694
+  epoch   6/100  train 4159.0832  val 4215.5637
+  epoch   7/100  train 4144.2508  val 4200.9444
+  epoch   8/100  train 4128.4994  val 4190.9266
+  epoch   9/100  train 4113.9962  val 4175.9937
+  epoch  10/100  train 4098.9307  val 4167.0048
+  epoch  11/100  train 4085.0243  val 4154.2344
+  epoch  12/100  train 4070.5718  val 4136.7176
+  epoch  13/100  train 4056.7785  val 4124.4612
+  epoch  14/100  train 4043.1076  val 4111.5864
+  epoch  15/100  train 4028.9074  val 4096.3858
+  epoch  16/100  train 4015.3856  val 4086.7974
+  epoch  17/100  train 4001.4323  val 4072.1638
+  epoch  18/100  train 3986.5314  val 4060.1341
+  epoch  19/100  train 3973.6114  val 4043.9964
+  epoch  20/100  train 3958.7008  val 4030.3424
+  epoch  21/100  train 3944.3760  val 4018.2014
+  epoch  22/100  train 3930.1001  val 4000.3879
+  epoch  23/100  train 3916.1430  val 3989.3145
+  epoch  24/100  train 3900.9840  val 3973.0305
+  epoch  25/100  train 3887.2531  val 3959.5104
+  epoch  26/100  train 3871.0635  val 3941.0283
+  epoch  27/100  train 3857.2044  val 3926.5632
+  epoch  28/100  train 3841.3070  val 3916.9038
+  epoch  29/100  train 3825.9809  val 3898.5974
+  epoch  30/100  train 3811.3485  val 3882.5537
+  epoch  31/100  train 3795.2076  val 3864.5414
+  epoch  32/100  train 3779.3445  val 3852.8349
+  epoch  33/100  train 3762.6838  val 3835.2723
+  epoch  34/100  train 3747.4448  val 3817.5154
+  epoch  35/100  train 3730.7546  val 3800.8256
+  epoch  36/100  train 3714.5565  val 3788.4340
+  epoch  37/100  train 3697.7282  val 3768.0051
+  epoch  38/100  train 3680.8661  val 3749.9102
+  epoch  39/100  train 3664.1294  val 3736.3008
+  epoch  40/100  train 3646.8328  val 3718.4017
+  epoch  41/100  train 3629.6242  val 3698.2624
+  epoch  42/100  train 3612.7575  val 3682.3621
+  epoch  43/100  train 3594.7205  val 3664.6648
+  epoch  44/100  train 3576.2734  val 3644.5726
+  epoch  45/100  train 3558.7036  val 3624.6258
+  epoch  46/100  train 3539.5939  val 3610.0209
+  epoch  47/100  train 3522.0860  val 3586.9494
+  epoch  48/100  train 3502.6197  val 3570.2158
+  epoch  49/100  train 3483.2155  val 3550.2821
+  epoch  50/100  train 3464.0575  val 3535.0412
+  epoch  51/100  train 3444.2716  val 3510.8203
+  epoch  52/100  train 3424.7136  val 3487.2627
+  epoch  53/100  train 3404.7830  val 3471.5186
+  epoch  54/100  train 3384.8055  val 3448.7401
+  epoch  55/100  train 3364.6722  val 3432.5806
+  epoch  56/100  train 3342.8861  val 3408.0064
+  epoch  57/100  train 3323.4964  val 3385.9976
+  epoch  58/100  train 3301.1857  val 3364.6660
+  epoch  59/100  train 3280.3547  val 3345.8380
+  epoch  60/100  train 3257.8151  val 3317.9149
+  epoch  61/100  train 3235.7268  val 3291.5827
+  epoch  62/100  train 3213.7567  val 3277.1277
+  epoch  63/100  train 3191.3966  val 3252.3996
+  epoch  64/100  train 3167.3655  val 3228.4008
+  epoch  65/100  train 3144.6830  val 3207.5882
+  epoch  66/100  train 3121.1318  val 3185.4483
+  epoch  67/100  train 3098.2047  val 3152.2843
+  epoch  68/100  train 3073.2326  val 3129.1432
+  epoch  69/100  train 3047.9571  val 3104.4035
+  epoch  70/100  train 3022.6353  val 3085.0862
+  epoch  71/100  train 2997.6268  val 3053.9061
+  epoch  72/100  train 2971.3041  val 3025.6233
+  epoch  73/100  train 2945.0993  val 2999.2811
+  epoch  74/100  train 2918.8637  val 2968.3613
+  epoch  75/100  train 2892.0294  val 2946.1198
+  epoch  76/100  train 2864.3115  val 2920.8016
+  epoch  77/100  train 2836.9989  val 2887.4539
+  epoch  78/100  train 2807.7192  val 2864.3885
+  epoch  79/100  train 2780.3878  val 2832.2353
+  epoch  80/100  train 2751.5045  val 2797.9091
+  epoch  81/100  train 2721.7805  val 2769.8307
+  epoch  82/100  train 2692.3206  val 2740.2092
+  epoch  83/100  train 2660.9492  val 2705.0858
+  epoch  84/100  train 2630.2081  val 2676.9168
+  epoch  85/100  train 2598.0403  val 2641.9507
+  epoch  86/100  train 2567.0587  val 2609.8314
+  epoch  87/100  train 2533.8657  val 2573.8145
+  epoch  88/100  train 2500.5552  val 2545.1100
+  epoch  89/100  train 2467.8022  val 2502.5143
+  epoch  90/100  train 2434.9421  val 2471.8213
+  epoch  91/100  train 2398.3977  val 2433.5351
+  epoch  92/100  train 2362.5884  val 2403.5846
+  epoch  93/100  train 2327.0000  val 2368.2674
+  epoch  94/100  train 2291.4314  val 2324.2168
+  epoch  95/100  train 2253.9069  val 2285.8237
+  epoch  96/100  train 2216.4063  val 2249.9227
+  epoch  97/100  train 2176.8641  val 2212.3129
+  epoch  98/100  train 2138.5466  val 2166.6577
+  epoch  99/100  train 2097.8233  val 2122.8841
+  epoch 100/100  train 2057.6703  val 2082.5972
+  training: 100 epochs, 328.1 s
+  UVMD-5: recon_rel_err 0.1832  mode SNR 9.06 dB  median 7.74 ms  (numpy replica dev 3.2e-07)
+```
