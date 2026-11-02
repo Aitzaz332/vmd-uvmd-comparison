@@ -1,0 +1,5 @@
+method,iterations_or_layers,trainable_params,flops_per_window,median_ms_per_window,train_time_s,train_flops
+VMD (converged),98.1,0,43017830.4,27.213810943067074,0.0,0.0
+VMD-5,5.0,0,3358720.0,2.2262590937316418,0.0,0.0
+UVMD-5 untrained,5.0,49156,2785280.0,5.526384804397821,0.0,0.0
+UVMD-5,5.0,49156,2785280.0,5.564086139202118,1007.2132157627493,240247111680.0

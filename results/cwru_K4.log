@@ -1,0 +1,63 @@
+CWRU: 40 files, 1199 windows of 2048 samples (171 ms) | split 'load': train/val/test = 599/300/300 | K=4
+
+[VMD converged]
+  mean iters 98.1 (99% converged), rel err 0.1669, fault SNR 7.41 dB, hit 0.70, 27.2 ms
+
+[VMD-n sweep]
+  n=  5 (300 win): rel err 0.2022  fault SNR   8.59 dB  hit 0.72  2.23 ms
+
+[UVMD N=5] upstream Unfolding, K=4, device cuda:0
+  UVMD-5 untrained: rel err 0.2022  fault SNR 8.59 dB  hit 0.72  5.53 ms  alpha [500.0, 500.0, 500.0, 500.0]
+  epoch   1/100  train 12160.9509  val 12104.2199
+  epoch   2/100  train 11467.5824  val 11351.4388
+  epoch   3/100  train 10715.6166  val 10505.7314
+  epoch   4/100  train 9861.7810  val 9524.4250
+  epoch   5/100  train 8830.5486  val 8294.4974
+  epoch   6/100  train 7403.6281  val 6438.8914
+  epoch   7/100  train 3165.3933  val 19.2530
+  epoch   8/100  train 16.5522  val 15.1281
+  epoch   9/100  train 14.6216  val 14.0836
+  epoch  10/100  train 13.7040  val 13.4286
+  epoch  11/100  train 13.3015  val 13.1465
+  epoch  12/100  train 12.7425  val 12.5568
+  epoch  13/100  train 12.1969  val 12.0176
+  epoch  14/100  train 11.7503  val 11.5700
+  epoch  15/100  train 11.4109  val 10.9702
+  epoch  16/100  train 11.0942  val 11.0908
+  epoch  17/100  train 10.7840  val 10.7572
+  epoch  18/100  train 10.4197  val 10.2960
+  epoch  19/100  train 10.3263  val 10.2116
+  epoch  20/100  train 10.1474  val 9.8826
+  epoch  21/100  train 9.9629  val 9.8958
+  epoch  22/100  train 9.7437  val 9.6025
+  epoch  23/100  train 9.7155  val 9.6390
+  epoch  24/100  train 9.6001  val 9.5974
+  epoch  25/100  train 9.5477  val 9.4295
+  epoch  26/100  train 9.5421  val 9.6327
+  epoch  27/100  train 9.4963  val 9.4288
+  epoch  28/100  train 9.4933  val 9.3760
+  epoch  29/100  train 9.3863  val 9.4849
+  epoch  30/100  train 9.3309  val 9.4598
+  epoch  31/100  train 9.4209  val 9.5727
+  epoch  32/100  train 9.4024  val 9.6057
+  epoch  33/100  train 9.4336  val 9.5259
+  epoch  34/100  train 9.4428  val 9.4964
+  epoch  35/100  train 9.4739  val 9.5531
+  epoch  36/100  train 9.4727  val 9.6766
+  epoch  37/100  train 9.5067  val 9.4715
+  epoch  38/100  train 9.3834  val 9.3747
+  epoch  39/100  train 9.3529  val 9.4937
+  epoch  40/100  train 9.3828  val 9.4424
+  epoch  41/100  train 9.5292  val 9.5716
+  epoch  42/100  train 9.5104  val 9.5917
+  epoch  43/100  train 9.5544  val 9.4709
+  epoch  44/100  train 9.5210  val 9.4955
+  epoch  45/100  train 9.5363  val 9.4693
+  epoch  46/100  train 9.4852  val 9.5109
+  epoch  47/100  train 9.4172  val 9.4872
+  epoch  48/100  train 9.4382  val 9.5578
+  early stopping triggered
+  training: 48 epochs, 1007.2 s
+  UVMD-5: rel err 0.0004  fault SNR 8.57 dB  hit 0.71  5.56 ms  alpha [85.0, 233.0, 268.0, 0.0]
+
+results written to results/cwru_K4

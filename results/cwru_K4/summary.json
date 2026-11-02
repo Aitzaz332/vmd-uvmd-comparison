@@ -1,0 +1,139 @@
+{
+  "args": {
+    "data": "/home/aitzaz/data/CWRU",
+    "T": 2048,
+    "windows_per_file": 30,
+    "split": "load",
+    "no_standardize": false,
+    "K": 4,
+    "alpha": 500.0,
+    "tau": 0.0,
+    "tol": 1e-07,
+    "max_iter": 499,
+    "vmd_iters": [
+      5
+    ],
+    "sweep_windows": 20,
+    "layers": [
+      5
+    ],
+    "epochs": 100,
+    "lr": 0.1,
+    "patience": 10,
+    "restore_best": false,
+    "harmonics": 3,
+    "device": "cuda:0",
+    "seed": 0,
+    "skip_uvmd": false,
+    "quick": false,
+    "out": "results/cwru_K4"
+  },
+  "env": {
+    "python": "3.13.12",
+    "platform": "Linux-5.15.0-190-generic-x86_64-with-glibc2.35",
+    "numpy": "2.5.4",
+    "torch": "2.14.1+cu130",
+    "cuda": true,
+    "gpu": "NVIDIA GeForce RTX 3060"
+  },
+  "data": {
+    "name": "cwru",
+    "fs": 12000,
+    "T": 2048,
+    "windows_per_file": 30,
+    "standardize": true,
+    "n_files": 40,
+    "missing_files": []
+  },
+  "summary": {
+    "raw signal": {
+      "fault_snr_db": 8.896137791401213,
+      "envelope_hit": 0.6962962962962963,
+      "sel_kurtosis": 7.986771928672899,
+      "normal_max_fault_snr_db": 6.374178425042442
+    },
+    "VMD (converged)": {
+      "recon_rmse": 0.1668721417961029,
+      "recon_rel_err": 0.16687214179610294,
+      "recon_snr_db": 15.916097190628735,
+      "spec_l1": 11772.858539452258,
+      "energy_ratio": 0.754636327501809,
+      "ortho_index": 0.05007683385042824,
+      "fault_snr_db": 7.40955807822647,
+      "envelope_hit": 0.6962962962962963,
+      "oracle_fault_snr_db": 10.332543988570361,
+      "sel_kurtosis": 8.005078422610529,
+      "normal_max_fault_snr_db": 5.950985477058729,
+      "mean_iters": 98.1,
+      "converged_frac": 0.99,
+      "median_ms": 27.213810943067074
+    },
+    "VMD-5": {
+      "recon_rmse": 0.20218003820097127,
+      "recon_rel_err": 0.20218003820097127,
+      "recon_snr_db": 14.144447458776948,
+      "spec_l1": 13138.193606185187,
+      "energy_ratio": 0.6210989497580915,
+      "ortho_index": 0.09032293028063104,
+      "fault_snr_db": 8.59030645553178,
+      "envelope_hit": 0.7185185185185186,
+      "oracle_fault_snr_db": 10.391654492438446,
+      "sel_kurtosis": 8.384604545716735,
+      "normal_max_fault_snr_db": 5.2514173095515675,
+      "n_iter": 5,
+      "median_ms": 2.2262590937316418,
+      "n_windows": 300
+    },
+    "UVMD-5 untrained": {
+      "recon_rmse": 0.20218008766418777,
+      "recon_rel_err": 0.20218008766418777,
+      "recon_snr_db": 14.144445240288984,
+      "spec_l1": 13138.193605603265,
+      "energy_ratio": 0.6210988017152353,
+      "ortho_index": 0.09032290536239351,
+      "fault_snr_db": 8.590305917624299,
+      "envelope_hit": 0.7185185185185186,
+      "oracle_fault_snr_db": 10.391654355520991,
+      "sel_kurtosis": 8.384604589807008,
+      "normal_max_fault_snr_db": 5.2514178005808505,
+      "median_ms": 5.526384804397821,
+      "params": {
+        "numel": 24580,
+        "real_dof": 49156
+      },
+      "alpha_learned": [
+        500.0,
+        500.0,
+        500.0,
+        500.0
+      ]
+    },
+    "UVMD-5": {
+      "recon_rmse": 0.0004000519554627129,
+      "recon_rel_err": 0.0004000519554627129,
+      "recon_snr_db": 78.72305853902054,
+      "spec_l1": 9.557799211215467,
+      "energy_ratio": 0.6408418685997691,
+      "ortho_index": 0.18003805106404897,
+      "fault_snr_db": 8.5727478849758,
+      "envelope_hit": 0.7148148148148148,
+      "oracle_fault_snr_db": 10.54925553061885,
+      "sel_kurtosis": 8.242003039530362,
+      "normal_max_fault_snr_db": 4.8966599519606255,
+      "median_ms": 5.564086139202118,
+      "params": {
+        "numel": 24580,
+        "real_dof": 49156
+      },
+      "alpha_learned": [
+        85.44774627685547,
+        233.32440185546875,
+        268.1235656738281,
+        3.6400895169208525e-06
+      ],
+      "train_time_s": 1007.2132157627493,
+      "epochs_run": 48,
+      "best_val_loss": 9.374732128779094
+    }
+  }
+}
