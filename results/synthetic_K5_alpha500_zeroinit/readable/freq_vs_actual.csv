@@ -1,0 +1,5 @@
+method,trend,tone,AM tone,chirp,mean
+VMD uniform,0.003,0.001,0.000,0.000,0.001
+VMD zero,0.003,0.000,0.000,0.000,0.001
+UVMD uniform,0.003,0.045,0.024,0.080,0.038
+UVMD zero,0.003,0.000,0.008,0.030,0.010
