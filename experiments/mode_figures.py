@@ -167,14 +167,14 @@ def synthetic(a):
     u2 = df[df.method == f"UVMD-{a.layers}"].assign(m=lambda x: x[[f"nrmse_{j}" for j in range(J)]].mean(axis=1))
     ex = int(u2.iloc[(u2.m - u2.m.median()).abs().argmin()].signal)
     dec = cache[ex]
-    side_by_side_synthetic(out / "synthetic_side_by_side.png", D, ex, dec, names, K, a.layers)
-    error_bars_synthetic(out / "synthetic_error_bars.png", df, names, order, K)
+    side_by_side_synthetic(out / "synthetic_side_by_side.png", D, ex, dec, names, K, a.layers, S["alpha"])
+    error_bars_synthetic(out / "synthetic_error_bars.png", df, names, order, K, S["alpha"])
     print(f"example signal (median UVMD error): {ex}")
     print(T1.to_string(index=False, float_format=lambda v: f"{v:.3g}"))
     print("written to", out)
 
 
-def side_by_side_synthetic(path, D, i, dec, names, K, N):
+def side_by_side_synthetic(path, D, i, dec, names, K, N, alpha):
     x, clean, truth = D["x"][i], D["clean"][i], D["modes"][i]
     t = np.arange(len(x))
     J = len(truth)
@@ -238,7 +238,7 @@ def side_by_side_synthetic(path, D, i, dec, names, K, N):
         axes[J + 1, c].set_xlabel("sample", color=MUTED)
     fig.text(0.005, 0.005, "Grey line behind each estimate = the true mode. Error = RMSE to the true mode, as % of "
              "its standard deviation. Same vertical scale in every row.", fontsize=8.5, color=MUTED)
-    fig.suptitle(f"Synthetic signal, K = {K}: original modes, VMD and UVMD side by side", x=0.005, ha="left",
+    fig.suptitle(f"Synthetic signal, K = {K}, alpha = {alpha:g}: original modes, VMD and UVMD side by side", x=0.005, ha="left",
                  fontsize=13, color=INK, fontweight="bold")
     fig.tight_layout(rect=(0, 0.015, 1, 0.97))
     fig.savefig(path, dpi=140)
@@ -253,7 +253,7 @@ def _matched_idx(u, truth):
     return set(rows.tolist())
 
 
-def error_bars_synthetic(path, df, names, order, K):
+def error_bars_synthetic(path, df, names, order, K, alpha):
     J = len(names)
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(13, 4.6), gridspec_kw={"width_ratios": [3, 1.35]})
     w = 0.8 / len(order)
@@ -275,7 +275,7 @@ def error_bars_synthetic(path, df, names, order, K):
     a2.set_title("Summed modes vs the clean signal", loc="left", fontsize=11, color=INK)
     for ax in (a1, a2):
         _style(ax, bottom=True)
-    fig.suptitle(f"Synthetic data, K = {K}, mean over the unseen test signals", x=0.005, ha="left", fontsize=13,
+    fig.suptitle(f"Synthetic data, K = {K}, alpha = {alpha:g}, mean over the unseen test signals", x=0.005, ha="left", fontsize=13,
                  color=INK, fontweight="bold")
     fig.tight_layout(rect=(0, 0, 1, 0.94))
     fig.savefig(path, dpi=140)
