@@ -22,7 +22,9 @@ PUSH=${PUSH:-1}
 branch=$(git rev-parse --abbrev-ref HEAD)
 
 save() {
-  git add results/cwru_K${K_CWRU} results/traffic_K${K_TRAFFIC} results/*.log 2>/dev/null || true
+  for p in results/cwru_K${K_CWRU} results/traffic_K${K_TRAFFIC} results/cwru_K${K_CWRU}.log results/traffic_K${K_TRAFFIC}.log; do
+    if [ -e "$p" ]; then git add "$p"; fi
+  done
   if git diff --cached --quiet; then echo "[save] nothing new for: $1"; return 0; fi
   git commit -q -m "$1"
   if [ "$PUSH" = "1" ]; then
