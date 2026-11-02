@@ -1,0 +1,120 @@
+  epoch   1/100  train 3138.6086  val 3112.6089
+  epoch   2/100  train 3009.6008  val 2961.1950
+  epoch   3/100  train 2811.3003  val 2711.1663
+  epoch   4/100  train 2524.8296  val 2355.3500
+  epoch   5/100  train 2296.0979  val 2101.8920
+  epoch   6/100  train 2094.3389  val 2002.8599
+  epoch   7/100  train 2003.8879  val 1973.1100
+  epoch   8/100  train 1968.7097  val 1955.5036
+  epoch   9/100  train 1944.3232  val 1933.7669
+  epoch  10/100  train 1921.8852  val 1913.5880
+  epoch  11/100  train 1903.4051  val 1902.0630
+  epoch  12/100  train 1885.5150  val 1877.1173
+  epoch  13/100  train 1868.3977  val 1856.1428
+  epoch  14/100  train 1853.2868  val 1837.4879
+  epoch  15/100  train 1836.9212  val 1820.4233
+  epoch  16/100  train 1820.5071  val 1805.4335
+  epoch  17/100  train 1805.4241  val 1787.3328
+  epoch  18/100  train 1788.5624  val 1770.8755
+  epoch  19/100  train 1773.6984  val 1753.8937
+  epoch  20/100  train 1756.2760  val 1737.3731
+  epoch  21/100  train 1736.6417  val 1716.0482
+  epoch  22/100  train 1717.7969  val 1702.1722
+  epoch  23/100  train 1699.1253  val 1690.5179
+  epoch  24/100  train 1676.8616  val 1665.5153
+  epoch  25/100  train 1655.9999  val 1640.2002
+  epoch  26/100  train 1630.9862  val 1611.1066
+  epoch  27/100  train 1605.1273  val 1586.5117
+  epoch  28/100  train 1575.9513  val 1551.0380
+  epoch  29/100  train 1538.3805  val 1507.7417
+  epoch  30/100  train 1498.3599  val 1469.2008
+  epoch  31/100  train 1455.3345  val 1431.6661
+  epoch  32/100  train 1409.5938  val 1385.1659
+  epoch  33/100  train 1350.5484  val 1326.3576
+  epoch  34/100  train 1278.6430  val 1237.2659
+  epoch  35/100  train 1179.3588  val 1126.1703
+  epoch  36/100  train 1050.5521  val 972.3975
+  epoch  37/100  train 846.7501  val 657.0624
+  epoch  38/100  train 189.9703  val 10.4685
+  epoch  39/100  train 9.3397  val 8.6255
+  epoch  40/100  train 8.3400  val 7.9496
+  epoch  41/100  train 7.7784  val 7.5364
+  epoch  42/100  train 7.4313  val 7.2732
+  epoch  43/100  train 7.1972  val 6.8912
+  epoch  44/100  train 7.0300  val 6.8809
+  epoch  45/100  train 7.0105  val 6.9506
+  epoch  46/100  train 7.0444  val 7.0129
+  epoch  47/100  train 6.8637  val 6.6614
+  epoch  48/100  train 6.7037  val 6.6119
+  epoch  49/100  train 6.5142  val 6.4453
+  epoch  50/100  train 6.3857  val 6.2624
+  epoch  51/100  train 6.2701  val 6.1323
+  epoch  52/100  train 6.2634  val 6.2689
+  epoch  53/100  train 6.2482  val 6.1496
+  epoch  54/100  train 6.1912  val 6.3665
+  epoch  55/100  train 6.2207  val 6.2272
+  epoch  56/100  train 6.1750  val 6.1363
+  epoch  57/100  train 6.0592  val 6.0112
+  epoch  58/100  train 5.9238  val 6.0839
+  epoch  59/100  train 5.9220  val 6.0401
+  epoch  60/100  train 5.8073  val 5.8627
+  epoch  61/100  train 5.7348  val 5.8165
+  epoch  62/100  train 5.7556  val 5.7727
+  epoch  63/100  train 5.7596  val 5.6976
+  epoch  64/100  train 5.7316  val 5.5766
+  epoch  65/100  train 5.7774  val 5.8639
+  epoch  66/100  train 5.7543  val 5.7375
+  epoch  67/100  train 5.7019  val 5.7480
+  epoch  68/100  train 5.6718  val 5.7538
+  epoch  69/100  train 5.5965  val 5.6557
+  epoch  70/100  train 5.5151  val 5.5461
+  epoch  71/100  train 5.5085  val 5.5982
+  epoch  72/100  train 5.5261  val 5.4793
+  epoch  73/100  train 5.5366  val 5.6416
+  epoch  74/100  train 5.5329  val 5.3867
+  epoch  75/100  train 5.5032  val 5.4694
+  epoch  76/100  train 5.5992  val 5.6389
+  epoch  77/100  train 5.5048  val 5.5446
+  epoch  78/100  train 5.4427  val 5.3378
+  epoch  79/100  train 5.4026  val 5.2378
+  epoch  80/100  train 5.2504  val 5.2255
+  epoch  81/100  train 5.2413  val 5.2594
+  epoch  82/100  train 5.2094  val 5.0170
+  epoch  83/100  train 5.1404  val 5.1605
+  epoch  84/100  train 5.1010  val 5.0983
+  epoch  85/100  train 5.1714  val 5.1648
+  epoch  86/100  train 5.1444  val 5.0505
+  epoch  87/100  train 5.0236  val 4.9222
+  epoch  88/100  train 5.0047  val 4.9993
+  epoch  89/100  train 4.9803  val 4.9320
+  epoch  90/100  train 4.9661  val 5.0166
+  epoch  91/100  train 5.0203  val 5.0036
+  epoch  92/100  train 4.9775  val 4.9645
+  epoch  93/100  train 4.9025  val 4.9036
+  epoch  94/100  train 4.9065  val 4.9423
+  epoch  95/100  train 4.8744  val 4.8011
+  epoch  96/100  train 4.8070  val 4.8922
+  epoch  97/100  train 4.7929  val 4.8134
+  epoch  98/100  train 4.8189  val 4.7536
+  epoch  99/100  train 4.8014  val 4.7264
+  epoch 100/100  train 4.7587  val 4.6800
+training 429 s, 100 epochs
+# Starting all centre frequencies at zero (synthetic, K=5, alpha=500)
+
+| method        | start   |   reconstruction error % |   error vs true modes % (mean of 4) |   trend % |   tone % |   AM tone % |   chirp % |
+|:--------------|:--------|-------------------------:|------------------------------------:|----------:|---------:|------------:|----------:|
+| VMD converged | uniform |                    3.71  |                                10.3 |      5.14 |    10.9  |        9.94 |      15.4 |
+| VMD converged | zero    |                    4.74  |                                13.2 |      4.55 |     8.56 |       27.7  |      11.9 |
+| VMD-5         | uniform |                   17.2   |                                45.8 |     28.7  |    94.6  |       44.4  |      15.4 |
+| VMD-5         | zero    |                   12.5   |                                35   |      9.87 |    25.2  |       41.3  |      63.5 |
+| UVMD-5        | uniform |                    0.147 |                                84.5 |     47.4  |    98.7  |       91.7  |     100   |
+| UVMD-5        | zero    |                    0.147 |                                58.5 |     10.2  |    30.1  |       66.6  |     127   |
+
+Mean final centre frequencies (cycles/sample, modes sorted), zero start:
+
+- VMD converged: [0.    0.045 0.098 0.104 0.234]
+- VMD-5: [0.    0.047 0.101 0.105 0.178]
+- UVMD-5: [0.    0.045 0.109 0.159 0.204]
+
+Learned alpha, UVMD zero start: [1.9751e-04 3.2985e+02 3.8066e+02 3.9562e+02 4.1333e+02]
+
