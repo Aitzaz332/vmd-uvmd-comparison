@@ -193,7 +193,9 @@ def main():
                 if tag == "trained":
                     t0 = time.perf_counter()
                     h = uvmd_magn.train_uvmd(model, X[tr], X[va], a.epochs, a.lr, a.patience, a.device, a.seed,
-                                             a.restore_best, log=log)
+                                             a.restore_best, log=log,
+                                             epoch_eval=uvmd_magn.recon_eval_fn(X[te[:10]], a.device))
+                    json.dump(h, open(out / f"uvmd_history_N{N_l}.json", "w"))
                     train_s = time.perf_counter() - t0
                     hists[f"UVMD-{N_l}"] = h
                     log(f"  training: {h['epochs_run']} epochs, {train_s:.1f} s")

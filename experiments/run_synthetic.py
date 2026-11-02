@@ -184,8 +184,13 @@ def main():
             for tag in ("untrained", "trained"):
                 if tag == "trained":
                     t0 = time.perf_counter()
+                    def _modes(j, u, om, _te=te):
+                        m = evaluate(X[_te[j]], u, omega=om, true_modes=D["modes"][_te[j]], true_fc=D["centre_freq"][_te[j]])
+                        return {"mode_nrmse": m["mean_mode_nrmse"]}
                     h = uvmd_magn.train_uvmd(model, X[tr], X[va], a.epochs, a.lr, a.patience, a.device,
-                                             a.seed, a.restore_best, log=log)
+                                             a.seed, a.restore_best, log=log,
+                                             epoch_eval=uvmd_magn.recon_eval_fn(X[te], a.device, _modes))
+                    json.dump(h, open(out / f"uvmd_history_N{N}.json", "w"))
                     train_s = time.perf_counter() - t0
                     hists[f"UVMD-{N}"] = h
                     log(f"  training: {h['epochs_run']} epochs, {train_s:.1f} s")

@@ -37,12 +37,14 @@ for ds in ${DATASETS//,/ }; do
       python experiments/run_cwru.py --data "$CWRU_DATA" --K "$K_CWRU" --device "$DEV" \
           --alpha "$ALPHA" --layers 5 --vmd-iters 5 --sweep-windows 20 --out results/cwru_K${K_CWRU} 2>&1 | tee results/cwru_K${K_CWRU}.log
       python experiments/mode_figures.py cwru --dir results/cwru_K${K_CWRU} --data "$CWRU_DATA"
+      python experiments/trend_figures.py cwru --dir results/cwru_K${K_CWRU} --data "$CWRU_DATA"
       save "node7: CWRU K=${K_CWRU}, VMD vs UVMD modes" ;;
     traffic)
       python experiments/run_traffic.py --data "$TRAFFIC_DATA" --region sd --K "$K_TRAFFIC" --device "$DEV" \
           --max-train-nodes 100 --max-test-nodes 30 --alpha "$ALPHA" --layers 5 --vmd-iters 5 --sweep-nodes 3 \
           --out results/traffic_K${K_TRAFFIC} 2>&1 | tee results/traffic_K${K_TRAFFIC}.log
       python experiments/mode_figures.py traffic --dir results/traffic_K${K_TRAFFIC} --data "$TRAFFIC_DATA"
+      python experiments/trend_figures.py traffic --dir results/traffic_K${K_TRAFFIC} --data "$TRAFFIC_DATA"
       save "node7: traffic K=${K_TRAFFIC}, VMD vs UVMD modes" ;;
     *) echo "unknown dataset $ds" ;;
   esac

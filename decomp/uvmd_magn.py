@@ -91,15 +91,39 @@ def _epoch(model, X, optimizer, device, train: bool, rng: np.random.Generator | 
     return total / len(X)
 
 
+def recon_eval_fn(X_eval, device="cpu", extra=None):
+    """Callable for ``train_uvmd(epoch_eval=...)``: per-signal relative reconstruction error ||x - sum u|| / ||x||
+    of the model on ``X_eval`` (and, if given, ``extra(i, u, omega) -> dict`` of more per-signal numbers)."""
+    def fn(model):
+        import torch
+        model.eval()
+        out = {"recon_rel_err": []}
+        with torch.no_grad():
+            for i, x in enumerate(X_eval):
+                u, om, _ = model(torch.as_tensor(x, dtype=torch.float32, device=device))
+                u = u.cpu().numpy().astype(np.float64)
+                xx = np.asarray(x, dtype=np.float64)[: u.shape[1]]
+                out["recon_rel_err"].append(float(np.linalg.norm(xx - u.sum(0)) / np.linalg.norm(xx)))
+                if extra is not None:
+                    for k, v in extra(i, u, om[-1].cpu().numpy().astype(np.float64)).items():
+                        out.setdefault(k, []).append(float(v))
+        return out
+    return fn
+
+
 def train_uvmd(model, X_train, X_val, epochs=100, lr=0.1, patience=10, device="cpu",
-               seed=0, restore_best=False, log=print):
-    """Upstream training loop (see module docstring). Returns history dict."""
+               seed=0, restore_best=False, log=print, epoch_eval=None):
+    """Upstream training loop (see module docstring). Returns history dict.
+    ``epoch_eval(model) -> dict`` (optional) is called before training (epoch 0) and after every epoch; its results
+    are stored in ``hist["curve"]``. It does not touch the training itself."""
     import torch
     torch.manual_seed(seed)
     rng = np.random.default_rng(seed)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     best_val, counter, best_state = float("inf"), 0, None
     hist = {"train_loss": [], "val_loss": [], "epoch_time_s": []}
+    if epoch_eval is not None:
+        hist["curve"] = [{"epoch": 0, **epoch_eval(model)}]
     for epoch in range(epochs):
         t0 = time.perf_counter()
         tr = _epoch(model, X_train, optimizer, device, True, rng)
@@ -107,6 +131,8 @@ def train_uvmd(model, X_train, X_val, epochs=100, lr=0.1, patience=10, device="c
         va = _epoch(model, X_val, None, device, False, None)
         hist["train_loss"].append(tr)
         hist["val_loss"].append(va)
+        if epoch_eval is not None:
+            hist["curve"].append({"epoch": epoch + 1, **epoch_eval(model)})
         log(f"  epoch {epoch + 1:>3}/{epochs}  train {tr:.4f}  val {va:.4f}")
         if va < best_val:
             best_val, counter = va, 0
