@@ -74,7 +74,7 @@ def main():
         m = evaluate(X[i], u, omega=om)
         if a.dataset == "cwru":
             f = fault_eval(u, X[i], D["cls"][i], FF[i], FS, om, S.get("harmonics", 3))
-            m.update(fault_snr_db=f["fault_snr_db"], envelope_hit=f["envelope_hit"])
+            m.update(fault_snr_db=f.get("fault_snr_db", np.nan), envelope_hit=f.get("envelope_hit", np.nan))
         else:
             s = spectral_metrics(X[i], u, STEPS_PER_DAY)
             m.update(mode_overlap=s["mode_overlap"], daily_ownership=s["daily_ownership"])
