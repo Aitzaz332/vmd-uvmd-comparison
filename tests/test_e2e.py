@@ -99,7 +99,7 @@ def test_full_run_on_fake_cwru(tmp_path):
     data, out = tmp_path / "cwru", tmp_path / "out"
     write_fake_cwru(data, seconds=1.2)
     base = ["--data", str(data), "--T", "256", "--quick", "--layers", "2", "--out", str(out), "--epochs", "4",
-            "--early-epochs", "1"]
+            "--early-epochs", "1", "--pipelines", *run_cwru_e2e.ALL]
     runs = run_cwru_e2e.main(base)
     assert set(runs.pipeline) == set(run_cwru_e2e.ALL)
     assert runs.test_acc.between(0, 1).all() and np.isfinite(runs.test_ce).all()
@@ -114,9 +114,41 @@ def test_full_run_on_fake_cwru(tmp_path):
     assert P["alpha"].shape == (4,) and P["lambda"].shape == (2, 512) and P["omega0"].shape == (4,)
     # reuse the saved early parameters explicitly, only the cheap pipelines
     out2 = tmp_path / "out2"
-    run_cwru_e2e.main(base[:-6] + ["--out", str(out2), "--epochs", "2", "--pipelines", "uvmd_early", "uvmd_e2e",
+    run_cwru_e2e.main(base[:7] + ["--out", str(out2), "--epochs", "2", "--pipelines", "uvmd_early", "uvmd_e2e",
                                    "--early-params", str(early), "--e2e-init", "early"])
     assert (out2 / "runs.csv").exists() and not list(out2.glob("early_uvmd_params*"))
     with pytest.raises(ValueError):                                  # parameters of another configuration are refused
         run_cwru_e2e.main(["--data", str(data), "--T", "256", "--quick", "--layers", "3", "--out", str(tmp_path / "o3"),
                            "--pipelines", "uvmd_early", "--early-params", str(early)])
+
+
+def test_defaults_are_vmd_vs_uvmd5_k4_alpha500():
+    a = run_cwru_e2e.parse(["--data", "x"])
+    assert (a.K, a.layers, a.alpha, a.pipelines) == (4, 5, 500.0, ["vmd", "uvmd_e2e"])
+
+
+def test_default_run_exports_modes_and_per_window_loss(tmp_path):
+    data, out = tmp_path / "cwru", tmp_path / "out"
+    write_fake_cwru(data, seconds=1.2)
+    runs = run_cwru_e2e.main(["--data", str(data), "--T", "256", "--quick", "--epochs", "3", "--out", str(out)])
+    assert set(runs.pipeline) == {"vmd", "uvmd_e2e"}                    # defaults: converged VMD vs end-to-end UVMD, K=4, N=5
+    assert not list(out.glob("early_uvmd_params*"))                      # the slow recon-trained UVMD is not needed
+    pr = pd.read_csv(out / "predictions.csv")
+    assert {"p_true", "window_ce"} <= set(pr.columns) and np.allclose(pr.p_true, np.exp(-pr.window_ce))
+    S = json.load(open(out / "summary.json"))
+    assert S["args"]["alpha"] == 500.0 and S["args"]["layers"] == 5 and S["args"]["K"] == 4
+    # exported modes: test windows, with metadata, and they are exactly what the saved parameters produce
+    m = np.load(out / "uvmd_e2e_modes_test_seed0.npz")
+    n_test = pr[pr.pipeline == "uvmd_e2e"].window.nunique()
+    assert m["modes"].shape == (n_test, 4, 256) and m["omega"].shape == (n_test, 4) and m["signal"].shape == (n_test, 256)
+    assert {"window", "recording", "cls", "load", "label", "class_names", "alpha", "lambda"} <= set(m.files)
+    assert m["lambda"].shape == (5, 512) and np.allclose(m["alpha"].shape, (4,))
+    from e2e.export import decompose_params
+    P = dict(np.load(out / "uvmd_e2e_params_N5_seed0.npz"))
+    again, _ = decompose_params(P, m["signal"], torch.device("cpu"))
+    np.testing.assert_allclose(again, m["modes"], atol=1e-4 * np.abs(m["modes"]).max())
+    v = np.load(out / "vmd_modes_test.npz")
+    assert v["modes"].shape == m["modes"].shape and np.array_equal(v["window"], m["window"])
+    assert "alpha" not in v.files                                         # VMD has no learned parameters
+    # the sum of VMD modes approximates the (standardised) window
+    assert np.abs(v["modes"].sum(1) - v["signal"]).mean() < np.abs(v["signal"]).mean()

@@ -35,7 +35,7 @@ def test_compare_on_fake_run(tmp_path):
     res = cm.main(["--run", str(run), "--data", str(data), "--n-windows", "12"])
     out = run / "mode_comparison"
     for f in ("mode_comparison.md", "parameters.csv", "similarity.csv", "quality.csv", "per_window.csv",
-              "figures/example_modes.png", "figures/mode_spectra.png", "figures/parameters_and_similarity.png"):
+              "figures/example_modes.png", "figures/mode_spectra.png", "figures/centre_frequencies_and_similarity.png"):
         assert (out / f).exists(), f
     st = res["similarity"].set_index(["A", "B"])
     row = st.loc[(cm.E2E_, cm.EARLY)]
@@ -59,4 +59,15 @@ def test_identical_parameters_give_identical_modes(tmp_path):
     row = res["similarity"].set_index(["A", "B"]).loc[(cm.E2E_, cm.EARLY)]
     assert row.aligned_mean == pytest.approx(1.0, abs=1e-4) and row.matched_mean_abs == pytest.approx(1.0, abs=1e-4)
     p = res["parameters"].set_index("model")
-    assert p.loc[f"{cm.E2E_} seed 0", "lambda_change_vs_early"] == pytest.approx(0.0, abs=1e-5)
+    assert p.loc[f"{cm.E2E_} seed 0", "lambda_change_vs_recon_trained"] == pytest.approx(0.0, abs=1e-5)
+
+
+def test_compare_without_recon_trained_parameters(tmp_path):
+    data, run = tmp_path / "cwru", tmp_path / "run"
+    write_fake_cwru(data, seconds=1.2)
+    run_cwru_e2e.main(["--data", str(data), "--T", "256", "--quick", "--layers", "2", "--out", str(run), "--epochs", "3"])
+    res = cm.main(["--run", str(run), "--data", str(data), "--n-windows", "10"])
+    assert list(res["similarity"].B) == [cm.VMDC] and cm.EARLY not in set(res["quality"].index)
+    assert (run / "mode_comparison" / "figures" / "centre_frequencies_and_similarity.png").exists()
+    md = (run / "mode_comparison" / "mode_comparison.md").read_text()
+    assert "bandwidth penalty" in md and "start (untrained UVMD)" in md

@@ -2,12 +2,16 @@
 
 Question: does it help to train UVMD **through** a classifier, instead of on the reconstruction loss alone?
 
-## The five pipelines
+## Default comparison: VMD → CNN vs end-to-end UVMD → CNN
+Defaults: K = 4, alpha = 500, converged VMD vs a **5-layer** UVMD trained by the CNN loss. Only `vmd` and `uvmd_e2e` run unless you pass `--pipelines`. The recon-trained UVMD is *not* retrained here (upstream training is slow, batch size 1); you supply yours for the mode comparison (below).
+`alpha_k` is the bandwidth penalty of mode k: the mode filter is `1/(1+alpha_k (f - omega_k)^2)`, so larger alpha = narrower mode, alpha ~ 0 = the mode passes everything.
+
+## The five pipelines available
 One 1D-CNN (`e2e/cnn1d.py`), one training loop (`e2e/train.py::fit`), one split, one model-selection rule. Only the CNN input changes.
 
 | key | input to the CNN | is the decomposition updated by a loss? |
 |---|---|---|
-| `vmd` | modes of classic ADMM VMD, run to convergence (alpha 2000, tau 0) | no, computed once |
+| `vmd` | modes of classic ADMM VMD, run to convergence (alpha = `--alpha`, default 500, tau 0) | no, computed once |
 | `vmd_n` | modes of VMD stopped after N iterations = untrained N-layer UVMD | no, computed once |
 | `uvmd_early` | modes of the UVMD trained earlier on reconstruction only (upstream recipe) | no, frozen |
 | `uvmd_e2e` | modes of a UVMD trained **together with the CNN** | yes: `CE + rec_weight * rel. spectral L1 residual` updates `alpha_k` and `lambda` |
@@ -27,14 +31,16 @@ Only `alpha_raw` (K values, through softplus) and `lam` (N x 2T complex) of the 
 ```bash
 git fetch origin && git checkout e2e-uvmd-cnn && git pull
 ARGS="--quick" bash scripts/run_cwru_e2e_node7.sh      # smoke run, nothing committed
-bash scripts/run_cwru_e2e_node7.sh                     # K=4, N=3, 3 seeds; commits results/cwru_e2e_K4_N3 and pushes the branch
-K=5 LAYERS=3 SEEDS="0 1 2 3 4" bash scripts/run_cwru_e2e_node7.sh
-# reuse the early UVMD you already have (K=4, N=2) instead of retraining one:
-LAYERS=2 EARLY=results/cwru/uvmd_params_N2.npz bash scripts/run_cwru_e2e_node7.sh
+bash scripts/run_cwru_e2e_node7.sh                     # K=4, N=5, alpha 500, 3 seeds; commits results/cwru_e2e_K4_N5 and pushes the branch
+K=4 LAYERS=5 ALPHA=500 SEEDS="0 1 2 3 4" bash scripts/run_cwru_e2e_node7.sh
+# also compare the modes with your recon-trained UVMD (same K, N, alpha; T=2048):
+RECON=results/cwru/uvmd_params_N5.npz bash scripts/run_cwru_e2e_node7.sh
 ```
-If no early parameter file is given, the early UVMD for that K and N is **trained first with the upstream recipe** (Adam lr 0.1, batch size 1, up to 100 epochs). That is the slow part (the earlier N=2 run took about 10 minutes on cuda). It is saved as `early_uvmd_params_N<N>_K<K>.npz` in the output folder and reused when the folder is reused.
+(Only with `--pipelines uvmd_early` or `--e2e-init early`: if no early parameter file is given, the early UVMD for that K and N is **trained first with the upstream recipe** (Adam lr 0.1, batch size 1, up to 100 epochs). That is the slow part (the earlier N=2 run took about 10 minutes on cuda). It is saved as `early_uvmd_params_N<N>_K<K>.npz` in the output folder and reused when the folder is reused.
 
-Or call the two programs directly: `experiments/run_cwru_e2e.py` and `experiments/compare_uvmd_modes.py --run <out> --data <cwru>`.
+Programs: `experiments/run_cwru_e2e.py`, `experiments/compare_predictions.py --run <out>` (loss / accuracy / confusion matrices, VMD vs e2e UVMD), `experiments/compare_uvmd_modes.py --run <out> --data <cwru> [--early-params <recon uvmd npz>]`, and `experiments/extract_uvmd_modes.py --params <npz> | --vmd --data <cwru> --out <npz>` (modes of ANY UVMD parameter file on the same windows, so yours and the e2e one are directly comparable).
+
+Train your own recon-only UVMD for the comparison with the repo's `experiments/run_cwru.py` (K=4, alpha 500, 5 layers; check `--help` for the exact flags).
 
 ## Outputs (`results/cwru_e2e_K<K>_N<N>/`)
 * `summary.md`, `summary.json`, `runs.csv`: test accuracy and macro-F1 per pipeline (mean ± std over seeds), validation accuracy, recon error, cost; per-class recall.
@@ -42,6 +48,9 @@ Or call the two programs directly: `experiments/run_cwru_e2e.py` and `experiment
 * `histories.json`, `figures/`: per-epoch curves, including the alpha of the end-to-end UVMD.
 * `uvmd_e2e_params_N<N>_seed<s>.npz`: the trained end-to-end UVMD, in the upstream export format (`alpha`, `lambda`, `omega0`; plus `alpha_raw`).
 * `mode_comparison/mode_comparison.md` (+ csv, `figures/`): modes of the end-to-end UVMD against the early UVMD, VMD-N and converged VMD on the same test windows: learned alpha, lambda change, centre frequencies, mode-by-mode correlation, energy share, reconstruction error, orthogonality, envelope-spectrum fault SNR.
+
+* `prediction_comparison/prediction_comparison.md` (+ csv, `figures/confusion_matrices.png`, `figures/loss_and_accuracy.png`): test CE, accuracy, macro-F1, per-class P/R/F1, confusion matrices, paired right/wrong with McNemar.
+* `vmd_modes_test.npz`, `uvmd_e2e_modes_test_seed<s>.npz`: the test-window modes (n, K, T), centre frequencies, the input window, metadata, and for UVMD the alpha/lambda. Files are ~4 MB per 100 windows; check size before committing many.
 
 ## What was verified (`pytest`)
 * `tests/test_uvmd_torch.py`: the batched UVMD equals `decomp/vmd_numpy.py` to 1e-15 in float64 (random alpha and complex lambda), and equals the upstream `Unfolding` bit for bit in float32 with random learned parameters; a batch equals one window at a time; gradients reach `alpha_raw` and `lam`; two deliberately wrong variants are caught.

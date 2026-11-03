@@ -64,15 +64,18 @@ def make_labels(D, mode="fault10"):
 
 
 # ------------------------------------------------------------------------------------------------ frozen features
-def vmd_modes(X, K, alpha=2000.0, n_iter=None, tol=1e-7, max_iter=499):
+def vmd_modes(X, K, alpha=2000.0, n_iter=None, tol=1e-7, max_iter=499, return_omega=False):
     """Classic ADMM VMD on every window. n_iter=None: run to convergence; n_iter=N: exactly N iterations
-    (this equals an untrained N-layer UVMD). Returns (n, K, T) float32 and the mean number of iterations."""
-    out, its = [], []
+    (this equals an untrained N-layer UVMD). Returns (n, K, T) float32 and the mean number of iterations
+    (and, with return_omega, the final centre frequencies (n, K) as a third value)."""
+    out, its, om = [], [], []
     for f in X:
         r = vmd(f, alpha, 0.0, K, True, 1, -1.0 if n_iter else tol, n_iter if n_iter else max_iter)
         out.append(r["u"])
         its.append(r["n_iter"])
-    return np.stack(out).astype(np.float32), float(np.mean(its))
+        om.append(r["omega"])
+    res = (np.stack(out).astype(np.float32), float(np.mean(its)))
+    return res + (np.stack(om),) if return_omega else res
 
 
 @torch.no_grad()

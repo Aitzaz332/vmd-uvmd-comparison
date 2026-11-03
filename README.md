@@ -47,6 +47,7 @@ decomp/uvmd_torch.py          batched, differentiable UVMD (same arithmetic as u
 e2e/                          the shared 1D-CNN and the training loop (branch e2e-uvmd-cnn)
 experiments/run_cwru_e2e.py   CWRU classification: VMD / UVMD / end-to-end UVMD -> the same 1D-CNN
 experiments/compare_uvmd_modes.py   modes of the end-to-end UVMD vs the early UVMD and VMD
+experiments/compare_predictions.py, extract_uvmd_modes.py, compare_uvmd_modes.py  VMD vs e2e-UVMD results, mode export
 scripts/run_cwru_e2e_node7.sh run the above on node 7 and push the results to the branch
 tests/                        equivalence and integrity tests
 ```

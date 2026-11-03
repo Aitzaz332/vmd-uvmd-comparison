@@ -1,8 +1,8 @@
 """CWRU fault classification with one 1D-CNN fed by five different representations.
 
     bash scripts/download_cwru.sh ~/data/CWRU
-    python experiments/run_cwru_e2e.py --data ~/data/CWRU --device cuda:0                 # K=4, N=3 layers
-    python experiments/run_cwru_e2e.py --data ~/data/CWRU --K 5 --layers 3 --seeds 0 1 2 3 4
+    python experiments/run_cwru_e2e.py --data ~/data/CWRU --device cuda:0   # K=4, alpha=500, N=5; VMD vs end-to-end UVMD
+    python experiments/run_cwru_e2e.py --data ~/data/CWRU --pipelines raw vmd vmd_n uvmd_early uvmd_e2e   # + references
     python experiments/run_cwru_e2e.py --data ~/data/CWRU --quick                          # smoke run
 
 Pipelines (the CNN, its training loop, the split and the model selection are identical; only the input differs)
@@ -27,8 +27,9 @@ The early UVMD is read from ``--early-params`` (an ``uvmd_params_N*.npz`` writte
 results/cwru/uvmd_params_N2.npz for K=4, N=2) or, when none is given, trained here with the upstream recipe
 (Adam lr 0.1, batch size 1, up to 100 epochs; slow) and saved to <out>/early_uvmd_params_N<N>_K<K>.npz for reuse.
 
-Outputs in --out: summary.md/json, runs.csv, predictions.csv, histories.json, confusion_<pipeline>.csv,
-uvmd_e2e_params_N<N>_seed<s>.npz (same format as the upstream export), figures/.
+Outputs in --out: summary.md/json, runs.csv, predictions.csv (per window: predicted class, probability of the true class,
+CE), histories.json, confusion_<pipeline>.csv, uvmd_e2e_params_N<N>_seed<s>.npz (upstream export format),
+uvmd_e2e_modes_test_seed<s>.npz and vmd_modes_test.npz (the modes of the test windows, see e2e/export.py), figures/.
 """
 from __future__ import annotations
 
@@ -52,6 +53,7 @@ from datasets.cwru import FS, load_cwru, split_indices  # noqa: E402
 from decomp.uvmd_torch import BatchedUVMD  # noqa: E402
 from decomp.vmd_numpy import uvmd_forward_numpy  # noqa: E402
 from e2e.cnn1d import Fault1DCNN  # noqa: E402
+from e2e.export import decompose_with, save_modes  # noqa: E402
 from e2e.train import E2E, fit, make_labels, predict, score, uvmd_modes, vmd_modes  # noqa: E402
 
 ALL = ["raw", "vmd", "vmd_n", "uvmd_early", "uvmd_e2e"]
@@ -73,9 +75,10 @@ def parse(argv=None):
     p.add_argument("--split", choices=["load", "time"], default="load")
     p.add_argument("--labels", choices=["fault10", "fault4"], default="fault10")
     p.add_argument("--K", type=int, default=4)
-    p.add_argument("--layers", type=int, default=3, help="UVMD layers N (also the iteration count of vmd_n)")
-    p.add_argument("--alpha", type=float, default=2000.0, help="initial / VMD bandwidth penalty")
-    p.add_argument("--pipelines", nargs="+", choices=ALL, default=ALL)
+    p.add_argument("--layers", type=int, default=5, help="UVMD layers N (also the iteration count of vmd_n)")
+    p.add_argument("--alpha", type=float, default=500.0, help="VMD bandwidth penalty = initial alpha of the UVMD")
+    p.add_argument("--pipelines", nargs="+", choices=ALL, default=["vmd", "uvmd_e2e"],
+                   help="default: converged VMD -> CNN and end-to-end UVMD -> CNN; the others are optional references")
     p.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2])
     p.add_argument("--epochs", type=int, default=60)
     p.add_argument("--patience", type=int, default=15)
@@ -93,6 +96,7 @@ def parse(argv=None):
     p.add_argument("--vmd-tol", type=float, default=1e-7)
     p.add_argument("--vmd-max-iter", type=int, default=499)
     p.add_argument("--device", default="cpu")
+    p.add_argument("--no-export-modes", action="store_true", help="do not save the modes of the test windows")
     p.add_argument("--quick", action="store_true", help="6 windows/file, 3 epochs, 1 seed, 1 early epoch")
     p.add_argument("--out", default=str(ROOT / "results" / "cwru_e2e"))
     a = p.parse_args(argv)
@@ -184,9 +188,12 @@ def main(argv=None):
         feats["raw"] = X[:, None, :].astype(np.float32)
     if "vmd" in a.pipelines:
         t0 = time.perf_counter()
-        feats["vmd"], it = vmd_modes(X, K, a.alpha, None, a.vmd_tol, a.vmd_max_iter)
+        feats["vmd"], it, om_vmd = vmd_modes(X, K, a.alpha, None, a.vmd_tol, a.vmd_max_iter, return_omega=True)
         info["vmd"] = {"mean_iters": it, "feature_time_s": time.perf_counter() - t0}
-        log(f"[vmd] converged VMD on {len(X)} windows: mean {it:.1f} iterations, {info['vmd']['feature_time_s']:.0f} s")
+        log(f"[vmd] converged VMD (alpha {a.alpha:g}) on {len(X)} windows: mean {it:.1f} iterations, "
+            f"{info['vmd']['feature_time_s']:.0f} s")
+        if not a.no_export_modes:
+            save_modes(out / "vmd_modes_test.npz", feats["vmd"][te], om_vmd[te], D, te, y, cls_names, "test")
     if "vmd_n" in a.pipelines:
         t0 = time.perf_counter()
         feats["vmd_n"], _ = vmd_modes(X, K, a.alpha, N)
@@ -235,8 +242,13 @@ def main(argv=None):
             rows.append(row)
             hists[f"{pipe}_seed{seed}"] = {k: v for k, v in h.items() if k != "epoch_s"}
             conf[pipe] = conf.get(pipe, 0) + sc["confusion"]
-            for w, yt, yp in zip(te, y[te], sc["pred"]):
-                preds.append((pipe, seed, int(w), cls_names[yt], cls_names[yp]))
+            lp = torch.log_softmax(torch.as_tensor(logits), 1).numpy()
+            wce = -lp[np.arange(len(te)), y[te]]
+            for w, yt, yp, ce_w in zip(te, y[te], sc["pred"], wce):
+                preds.append((pipe, seed, int(w), cls_names[yt], cls_names[yp], float(np.exp(-ce_w)), float(ce_w)))
+            if pipe == "uvmd_e2e" and not a.no_export_modes:
+                mo, om = decompose_with(model.uvmd, X[te], dev)
+                save_modes(out / f"uvmd_e2e_modes_test_seed{seed}.npz", mo, om, D, te, y, cls_names, "test", P)
             log(f"  -> test acc {sc['acc']:.4f}  macro-F1 {sc['macro_f1']:.4f}  CE {sc['ce']:.4f}  "
                 f"(best val acc {h['best_val_acc']:.4f} @ epoch {h['best_epoch']}, {h['train_time_s']:.0f} s)"
                 + (f"  test recon rel. L1 {row['test_rec_rel']:.4f}  alpha {row['alpha']}" if pipe == "uvmd_e2e" else ""))
@@ -244,7 +256,7 @@ def main(argv=None):
     # ---- save
     runs = pd.DataFrame(rows)
     runs.to_csv(out / "runs.csv", index=False)
-    pr = pd.DataFrame(preds, columns=["pipeline", "seed", "window", "true", "pred"]).merge(te_meta, on="window")
+    pr = pd.DataFrame(preds, columns=["pipeline", "seed", "window", "true", "pred", "p_true", "window_ce"]).merge(te_meta, on="window")
     pr.to_csv(out / "predictions.csv", index=False)
     json.dump(hists, open(out / "histories.json", "w"), default=float)
     for pipe, cm in conf.items():
@@ -337,7 +349,7 @@ def figures(out, a, runs, hists, PN):
         for k in range(al.shape[1]):
             ax.plot(ep, al[:, k], label=f"mode {k}", lw=1)
         ax.set_xlabel("epoch")
-        ax.set_ylabel("alpha_k = softplus(alpha_raw_k)")
+        ax.set_ylabel("bandwidth penalty alpha_k (larger = narrower mode)")
         ax.legend(fontsize=6)
         plots._style(ax)
     fig.suptitle(f"seed {seed}", x=0.01, ha="left", fontsize=9)
