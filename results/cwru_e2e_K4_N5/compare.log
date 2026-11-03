@@ -1,0 +1,3 @@
+no recon-trained UVMD parameters found: comparing the end-to-end UVMD with converged VMD only
+300 test windows | K=4, N=5, alpha=500 | recon-trained UVMD: none | e2e seeds [0, 1, 2]
+written to results/cwru_e2e_K4_N5/mode_comparison
