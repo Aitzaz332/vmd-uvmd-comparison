@@ -33,7 +33,7 @@ OUT=${OUT:-results/cwru_lolo_K${K}_N${LAYERS}}
 PUSH=${PUSH:-1}
 
 python - <<'PY'
-import importlib, sys
+import importlib.util, sys
 missing = [m for m in ("torch", "numpy", "scipy", "sklearn", "pandas", "matplotlib", "tabulate", "pytest") if importlib.util.find_spec(m) is None]
 if missing:
     sys.exit("missing Python packages: " + ", ".join(missing) + "  ->  pip install " + " ".join("scikit-learn" if m == "sklearn" else m for m in missing))
