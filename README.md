@@ -43,6 +43,11 @@ experiments/run_synthetic.py  dataset-1 benchmark (figures plus summary.md)
 experiments/separation_comparison.py   reconstruction and separation criteria, three datasets + synthetic truth -> results/separation_comparison/
 experiments/compare_datasets.py   one table and one figure across the three datasets -> results/comparison/
 scripts/run_all_node7.sh      runs every missing stage on node 7, builds the comparison, commits and pushes results
+decomp/uvmd_torch.py          batched, differentiable UVMD (same arithmetic as upstream, tested equal) for end-to-end training
+e2e/                          the shared 1D-CNN and the training loop (branch e2e-uvmd-cnn)
+experiments/run_cwru_e2e.py   CWRU classification: VMD / UVMD / end-to-end UVMD -> the same 1D-CNN
+experiments/compare_uvmd_modes.py   modes of the end-to-end UVMD vs the early UVMD and VMD
+scripts/run_cwru_e2e_node7.sh run the above on node 7 and push the results to the branch
 tests/                        equivalence and integrity tests
 ```
 
@@ -158,6 +163,11 @@ What the numbers show:
   The best mode (oracle SNR) is clearer than the raw signal for every method except UVMD-2, but max
   kurtosis does not always pick that mode. Ball faults stay hard for every method (hit rate ≈0.3–0.4), as in the CWRU literature.
 * **Cost:** a trained UVMD window costs 3–4 ms, against 43 ms for converged VMD. Training takes 4.5–8.5 minutes on CPU.
+
+## UVMD trained through a classifier (branch `e2e-uvmd-cnn`)
+The runs above train UVMD on reconstruction only. The branch `e2e-uvmd-cnn` adds the other option: UVMD in front of a 1D-CNN,
+trained with the classification loss plus a small reconstruction term, compared on CWRU with VMD -> CNN (modes not updated) and
+with the early UVMD. See **[docs/E2E.md](docs/E2E.md)**.
 
 ## Dataset 3: LargeST traffic (the UVMD paper's data)
 The paper's protocol: one signal per sensor (the year 2019 at 15 minutes, 35,040 samples), K=13, 1–2 UVMD
