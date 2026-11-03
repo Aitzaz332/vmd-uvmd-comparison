@@ -99,14 +99,25 @@ def load_cwru(data_dir, T=2048, windows_per_file=30, standardize=True, files=Non
     return out
 
 
-def split_indices(D, mode="load", seed=42):
+# leave-one-load-out folds: test load -> (train loads, validation load); the validation load is never the test load
+LOLO_FOLDS = {0: ([1, 2], 3), 1: ([0, 3], 2), 2: ([0, 1], 3), 3: ([0, 1], 2)}
+
+
+def split_indices(D, mode="load", seed=42, fold=3):
     """'load': train on 0-1 HP, validate on 2 HP, test on 3 HP (no recording shared between sets).
+    'lolo': leave-one-load-out, ``fold`` = the held-out test load (0-3 HP); the other loads are split into train
+    and validation as listed in LOLO_FOLDS (fold 3 equals 'load').
     'time': every recording split in time, first 70% / next 15% / last 15% of its windows."""
     n = len(D["x"])
     if mode == "load":
         tr = np.where(np.isin(D["load"], [0, 1]))[0]
         va = np.where(D["load"] == 2)[0]
         te = np.where(D["load"] == 3)[0]
+    elif mode == "lolo":
+        train_loads, val_load = LOLO_FOLDS[int(fold)]
+        tr = np.where(np.isin(D["load"], train_loads))[0]
+        va = np.where(D["load"] == val_load)[0]
+        te = np.where(D["load"] == int(fold))[0]
     elif mode == "time":
         tr, va, te = [], [], []
         for f in np.unique(D["file"]):

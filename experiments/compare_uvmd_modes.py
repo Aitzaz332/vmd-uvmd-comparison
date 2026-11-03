@@ -101,7 +101,7 @@ def main(argv=None):
     run = Path(ar.run)
     S = json.load(open(run / "summary.json"))
     a = {k: S["args"][k] for k in ("T", "windows_per_file", "split", "K", "layers", "alpha")}
-    a.update(vmd_tol=S["args"]["vmd_tol"], vmd_max_iter=S["args"]["vmd_max_iter"])
+    a.update(vmd_tol=S["args"]["vmd_tol"], vmd_max_iter=S["args"]["vmd_max_iter"], fold=S["args"].get("fold", 3))
     K, N = a["K"], a["layers"]
     out = Path(ar.out) if ar.out else run / "mode_comparison"
     (out / "figures").mkdir(parents=True, exist_ok=True)
@@ -124,7 +124,7 @@ def main(argv=None):
     e2e = {int(f.stem.split("seed")[1]): dict(np.load(f)) for f in e2e_files}
 
     D = load_cwru(ar.data, a["T"], a["windows_per_file"], True)
-    _, _, te = split_indices(D, a["split"])
+    _, _, te = split_indices(D, a["split"], fold=a["fold"])
     if ar.n_windows:
         te = te[:ar.n_windows]
     X = D["x"][te]

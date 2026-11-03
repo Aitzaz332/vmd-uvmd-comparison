@@ -6,6 +6,14 @@ Question: does it help to train UVMD **through** a classifier, instead of on the
 Defaults: K = 4, alpha = 500, converged VMD vs a **5-layer** UVMD trained by the CNN loss. Only `vmd` and `uvmd_e2e` run unless you pass `--pipelines`. The recon-trained UVMD is *not* retrained here (upstream training is slow, batch size 1); you supply yours for the mode comparison (below).
 `alpha_k` is the bandwidth penalty of mode k: the mode filter is `1/(1+alpha_k (f - omega_k)^2)`, so larger alpha = narrower mode, alpha ~ 0 = the mode passes everything.
 
+## Recommended evaluation: leave-one-load-out (`scripts/run_cwru_lolo_node7.sh`)
+The default split (train 0-1 HP, test 3 HP) is dominated by two odd 3 HP recordings (files 172 and 225), which every method, including a raw-signal CNN, gets wrong; a time split shares recordings between train and test, so every method reaches ~100 %. Leave-one-load-out holds each load (0, 1, 2, 3 HP) out once (train/validation loads: `datasets/cwru.py::LOLO_FOLDS`), with the same CNN, K=4, N=5, alpha 500 and seeds in every fold.
+```bash
+ARGS="--quick" bash scripts/run_cwru_lolo_node7.sh   # smoke test, nothing committed
+bash scripts/run_cwru_lolo_node7.sh                  # full run -> results/cwru_lolo_K4_N5, committed and pushed
+```
+Output: `lolo_summary.md/.png/.csv` (accuracy and loss per held-out load, VMD vs end-to-end UVMD) and, per fold, `test_<L>HP/` with `prediction_comparison/`, `training_curves/`, `modes_figures/` (1 modes of one window, 2 mode spectra, 3 centre frequencies, 4 alpha_k and loss over training; `alpha_table.csv`, `centre_frequencies.csv`) and the mode files `vmd_modes_test.npz`, `uvmd_e2e_modes_test_seed<s>.npz` of that fold's held-out load. `experiments/plot_modes_clean.py --run <folder>` redraws the mode figures of any run folder.
+
 ## The five pipelines available
 One 1D-CNN (`e2e/cnn1d.py`), one training loop (`e2e/train.py::fit`), one split, one model-selection rule. Only the CNN input changes.
 

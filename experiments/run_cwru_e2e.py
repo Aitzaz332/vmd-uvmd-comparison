@@ -59,6 +59,9 @@ from e2e.train import E2E, fit, make_labels, predict, score, uvmd_modes, vmd_mod
 ALL = ["raw", "vmd", "vmd_n", "uvmd_early", "uvmd_e2e"]
 
 
+_VMD_CACHE = {}
+
+
 def names(N):
     return {"raw": "raw signal -> CNN",
             "vmd": "VMD (converged) -> CNN",
@@ -72,7 +75,9 @@ def parse(argv=None):
     p.add_argument("--data", required=True, help="folder with the CWRU .mat files")
     p.add_argument("--T", type=int, default=2048)
     p.add_argument("--windows-per-file", type=int, default=30)
-    p.add_argument("--split", choices=["load", "time"], default="load")
+    p.add_argument("--split", choices=["load", "time", "lolo"], default="load",
+                   help="load: train 0-1 HP / val 2 / test 3; lolo: leave-one-load-out, see --fold; time: split in time")
+    p.add_argument("--fold", type=int, choices=[0, 1, 2, 3], default=3, help="split lolo: the held-out test load (HP)")
     p.add_argument("--labels", choices=["fault10", "fault4"], default="fault10")
     p.add_argument("--K", type=int, default=4)
     p.add_argument("--layers", type=int, default=5, help="UVMD layers N (also the iteration count of vmd_n)")
@@ -166,12 +171,12 @@ def main(argv=None):
 
     dev = torch.device(a.device)
     D = load_cwru(a.data, a.T, a.windows_per_file, True)
-    tr, va, te = split_indices(D, a.split)
+    tr, va, te = split_indices(D, a.split, fold=a.fold)
     X = D["x"]
     y, cls_names = make_labels(D, a.labels)
     C, K, N = len(cls_names), a.K, a.layers
     PN = names(N)
-    log(f"CWRU: {D['meta']['n_files']} files, {len(X)} windows x {a.T} samples | split '{a.split}': "
+    log(f"CWRU: {D['meta']['n_files']} files, {len(X)} windows x {a.T} samples | split '{a.split}'" + (f" (test load {a.fold} HP)" if a.split == "lolo" else "") + ": "
         f"train/val/test = {len(tr)}/{len(va)}/{len(te)} | {C} classes ({a.labels}) | K={K}, N={N} layers | "
         f"seeds {a.seeds} | device {a.device}")
     for nm, idx in (("train", tr), ("val", va), ("test", te)):
@@ -188,7 +193,10 @@ def main(argv=None):
         feats["raw"] = X[:, None, :].astype(np.float32)
     if "vmd" in a.pipelines:
         t0 = time.perf_counter()
-        feats["vmd"], it, om_vmd = vmd_modes(X, K, a.alpha, None, a.vmd_tol, a.vmd_max_iter, return_omega=True)
+        key = (str(a.data), a.T, a.windows_per_file, K, a.alpha, a.vmd_tol, a.vmd_max_iter)
+        if key not in _VMD_CACHE:                    # converged VMD does not depend on the split: reuse it across folds
+            _VMD_CACHE[key] = vmd_modes(X, K, a.alpha, None, a.vmd_tol, a.vmd_max_iter, return_omega=True)
+        feats["vmd"], it, om_vmd = _VMD_CACHE[key]
         info["vmd"] = {"mean_iters": it, "feature_time_s": time.perf_counter() - t0}
         log(f"[vmd] converged VMD (alpha {a.alpha:g}) on {len(X)} windows: mean {it:.1f} iterations, "
             f"{info['vmd']['feature_time_s']:.0f} s")

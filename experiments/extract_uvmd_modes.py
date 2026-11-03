@@ -43,7 +43,8 @@ def main(argv=None):
     p.add_argument("--data", required=True, help="folder with the CWRU .mat files")
     p.add_argument("--T", type=int, default=2048)
     p.add_argument("--windows-per-file", type=int, default=30)
-    p.add_argument("--split", choices=["load", "time"], default="load")
+    p.add_argument("--split", choices=["load", "time", "lolo"], default="load")
+    p.add_argument("--fold", type=int, default=3, help="split lolo: held-out test load (HP)")
     p.add_argument("--subset", choices=["train", "val", "test", "all"], default="test")
     p.add_argument("--labels", choices=["fault10", "fault4"], default="fault10")
     p.add_argument("--device", default="cpu")
@@ -51,7 +52,7 @@ def main(argv=None):
     a = p.parse_args(argv)
 
     D = load_cwru(a.data, a.T, a.windows_per_file, True)
-    tr, va, te = split_indices(D, a.split)
+    tr, va, te = split_indices(D, a.split, fold=a.fold)
     idx = {"train": tr, "val": va, "test": te, "all": np.arange(len(D["x"]))}[a.subset]
     y, names = make_labels(D, a.labels)
     X = D["x"][idx]
