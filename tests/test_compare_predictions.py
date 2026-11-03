@@ -68,3 +68,18 @@ def test_extract_modes_from_any_parameter_file(fake_run, tmp_path):
     with pytest.raises(ValueError, match="samples"):         # window length of the file must match --T
         ex.main(["--params", str(run / "uvmd_e2e_params_N2_seed0.npz"), "--data", str(data), "--T", "512",
                  "--out", str(tmp_path / "bad.npz")])
+
+
+def test_training_curves_figures(tmp_path):
+    from experiments import plot_training_curves as pc
+    from experiments import run_cwru_e2e
+    from tests.fake_cwru import write_fake_cwru
+    data, run = tmp_path / "cwru", tmp_path / "run"
+    write_fake_cwru(data, seconds=1.2)
+    run_cwru_e2e.main(["--data", str(data), "--T", "256", "--quick", "--layers", "2", "--epochs", "3", "--out", str(run)])
+    out = pc.main(["--run", str(run)])
+    for f in ("training_loss", "validation_loss", "training_accuracy", "validation_accuracy", "overview_2x2"):
+        assert (out / f"{f}.png").stat().st_size > 5000, f
+    c = pd.read_csv(out / "curves.csv")
+    assert set(c.panel) == {"train_loss", "val_loss", "train_acc", "val_acc"} and set(c.pipeline) == {"vmd", "uvmd_e2e"}
+    assert c.value.between(0, 50).all()

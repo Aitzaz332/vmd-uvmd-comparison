@@ -41,6 +41,7 @@ CMP=()
 mkdir -p "$OUT"
 python experiments/run_cwru_e2e.py --data "$CWRU" --device "$DEV" --K "$K" --layers "$LAYERS" --alpha "$ALPHA" --labels "$LABELS" \
     --seeds $SEEDS --out "$OUT" ${ARGS:-} 2>&1 | tee "$OUT/run.log"
+python experiments/plot_training_curves.py --run "$OUT" 2>&1 | tee "$OUT/plot_curves.log"
 python experiments/compare_predictions.py --run "$OUT" 2>&1 | tee "$OUT/compare_predictions.log"
 python experiments/compare_uvmd_modes.py --run "$OUT" --data "$CWRU" --device "$DEV" ${CMP[@]+"${CMP[@]}"} 2>&1 | tee "$OUT/compare.log"
 

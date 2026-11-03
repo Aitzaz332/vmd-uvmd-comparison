@@ -50,6 +50,7 @@ Train your own recon-only UVMD for the comparison with the repo's `experiments/r
 * `mode_comparison/mode_comparison.md` (+ csv, `figures/`): modes of the end-to-end UVMD against the early UVMD, VMD-N and converged VMD on the same test windows: learned alpha, lambda change, centre frequencies, mode-by-mode correlation, energy share, reconstruction error, orthogonality, envelope-spectrum fault SNR.
 
 * `prediction_comparison/prediction_comparison.md` (+ csv, `figures/confusion_matrices.png`, `figures/loss_and_accuracy.png`): test CE, accuracy, macro-F1, per-class P/R/F1, confusion matrices, paired right/wrong with McNemar.
+* `training_curves/` (`experiments/plot_training_curves.py --run <out>`): slide-sized `training_loss.png`, `validation_loss.png`, `training_accuracy.png`, `validation_accuracy.png`, a 2x2 `overview_2x2.png` and `curves.csv`; mean over seeds with min-max band, dot = selected epoch. Training numbers are measured in eval mode (no dropout) so they are comparable with validation.
 * `vmd_modes_test.npz`, `uvmd_e2e_modes_test_seed<s>.npz`: the test-window modes (n, K, T), centre frequencies, the input window, metadata, and for UVMD the alpha/lambda. Files are ~4 MB per 100 windows; check size before committing many.
 
 ## What was verified (`pytest`)

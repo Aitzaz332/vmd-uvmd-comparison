@@ -136,7 +136,8 @@ def fit(model, Xtr, ytr, Xva, yva, *, n_classes, device, seed, epochs=60, patien
     opt = torch.optim.Adam(groups)
     Xtr_t = torch.as_tensor(Xtr, dtype=torch.float32, device=device)
     ytr_t = torch.as_tensor(ytr, device=device)
-    hist = {"train_ce": [], "train_rec": [], "val_ce": [], "val_acc": [], "val_rec": [], "alpha": [], "epoch_s": []}
+    hist = {"train_ce": [], "train_rec": [], "val_ce": [], "val_acc": [], "val_rec": [],
+            "train_eval_ce": [], "train_eval_acc": [], "alpha": [], "epoch_s": []}
     best, best_state, bad = (-1.0, 0.0), None, 0
     for ep in range(epochs):
         t0 = time.perf_counter()
@@ -162,6 +163,10 @@ def fit(model, Xtr, ytr, Xva, yva, *, n_classes, device, seed, epochs=60, patien
             n_seen += len(idx)
         va_logits, va_rec = predict(model, Xva, device)
         sc = score(yva, va_logits, n_classes)
+        tr_logits, _ = predict(model, Xtr, device)          # training set in eval mode (no dropout), comparable to val
+        tsc = score(ytr, tr_logits, n_classes)
+        hist["train_eval_ce"].append(tsc["ce"])
+        hist["train_eval_acc"].append(tsc["acc"])
         hist["train_ce"].append(ce_sum / n_seen)
         hist["train_rec"].append(rec_sum / n_seen if e2e else None)
         hist["val_ce"].append(sc["ce"])
