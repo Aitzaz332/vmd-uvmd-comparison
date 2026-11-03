@@ -1,0 +1,104 @@
+{
+  "args": {
+    "data": "/home/aitzaz/data/CWRU",
+    "T": 2048,
+    "windows_per_file": 30,
+    "split": "lolo",
+    "fold": 0,
+    "labels": "fault10",
+    "K": 4,
+    "layers": 5,
+    "alpha": 500.0,
+    "pipelines": [
+      "vmd",
+      "uvmd_e2e"
+    ],
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "epochs": 60,
+    "patience": 15,
+    "batch": 32,
+    "lr_cnn": 0.001,
+    "lr_alpha": 2.0,
+    "lr_lam": 0.05,
+    "rec_weight": 0.1,
+    "e2e_init": "untrained",
+    "early_params": null,
+    "early_epochs": 100,
+    "early_lr": 0.1,
+    "early_patience": 10,
+    "vmd_tol": 1e-07,
+    "vmd_max_iter": 499,
+    "device": "cuda:0",
+    "no_export_modes": false,
+    "quick": false,
+    "out": "results/cwru_lolo_K4_N5/test_0HP"
+  },
+  "env": {
+    "python": "3.13.12",
+    "platform": "Linux-5.15.0-190-generic-x86_64-with-glibc2.35",
+    "torch": "2.14.1+cu130",
+    "cuda": true,
+    "gpu": "NVIDIA GeForce RTX 3060",
+    "commit": "2c45abff0517a11ed951c2cda391e403e72bb1e9"
+  },
+  "data": {
+    "name": "cwru",
+    "fs": 12000,
+    "T": 2048,
+    "windows_per_file": 30,
+    "standardize": true,
+    "n_files": 40,
+    "missing_files": []
+  },
+  "classes": [
+    "normal",
+    "inner_0.007",
+    "inner_0.014",
+    "inner_0.021",
+    "ball_0.007",
+    "ball_0.014",
+    "ball_0.021",
+    "outer_0.007",
+    "outer_0.014",
+    "outer_0.021"
+  ],
+  "features": {
+    "vmd": {
+      "mean_iters": 145.48457047539617,
+      "feature_time_s": 60.65327871032059
+    }
+  },
+  "summary": {
+    "vmd": {
+      "test_acc": 0.9866220735785953,
+      "test_acc_std": 0.005792812065447746,
+      "macro_f1": 0.9863694873825967,
+      "macro_f1_std": 0.00606599528164122,
+      "test_ce": 0.0793115608394146,
+      "val_acc": 0.9,
+      "train_time_s": 2.3292098632082343,
+      "cnn_params": 112818,
+      "uvmd_params": 0,
+      "rec_rel": NaN
+    },
+    "uvmd_e2e": {
+      "test_acc": 0.9910813823857302,
+      "test_acc_std": 0.00696209364369942,
+      "macro_f1": 0.9909861742478681,
+      "macro_f1_std": 0.007104617380710325,
+      "test_ce": 0.04158915579319,
+      "val_acc": 0.9,
+      "train_time_s": 15.081726314499974,
+      "cnn_params": 112818,
+      "uvmd_params": 40964,
+      "rec_rel": 0.1807893713315328
+    }
+  },
+  "test_size": 299,
+  "train_size": 600,
+  "val_size": 300
+}

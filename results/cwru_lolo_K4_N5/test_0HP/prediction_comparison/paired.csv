@@ -1,0 +1,4 @@
+seed,both right,only A right,only B right,both wrong,McNemar exact p,mean CE A - CE B per window
+0,296,0,2,1,0.5,0.04585048493632913
+1,296,0,1,2,1.0,0.03152315907163178
+2,290,3,4,2,1.0,0.035793581764123415

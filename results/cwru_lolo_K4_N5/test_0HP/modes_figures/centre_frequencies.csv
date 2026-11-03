@@ -1,0 +1,17 @@
+method,mode,mean_Hz,std_Hz
+VMD (converged),1,0.0,0.0
+VMD (converged),2,1714.1305,909.16895
+VMD (converged),3,3056.2266,268.43222
+VMD (converged),4,3617.5535,380.79398
+UVMD end-to-end (seed 0),1,0.0,0.0
+UVMD end-to-end (seed 0),2,1930.0042,660.3768
+UVMD end-to-end (seed 0),3,3162.9585,189.49753
+UVMD end-to-end (seed 0),4,3640.883,339.51892
+UVMD end-to-end (seed 1),1,0.0,0.0
+UVMD end-to-end (seed 1),2,1913.1858,660.1523
+UVMD end-to-end (seed 1),3,3158.786,191.59026
+UVMD end-to-end (seed 1),4,3654.5857,337.35663
+UVMD end-to-end (seed 2),1,0.0,0.0
+UVMD end-to-end (seed 2),2,1900.8427,667.11206
+UVMD end-to-end (seed 2),3,3153.9128,194.46796
+UVMD end-to-end (seed 2),4,3675.8408,330.30438

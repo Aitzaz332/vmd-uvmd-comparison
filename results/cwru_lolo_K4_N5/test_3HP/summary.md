@@ -1,0 +1,286 @@
+# CWRU: one 1D-CNN, five input representations
+
+1199 windows x 2048 samples (12 kHz), split 'lolo' (train/val/test = 599/300/300), 10 classes (fault10), K=4, N=5, seeds [0, 1, 2]. Same CNN, training loop, split and model selection (best validation accuracy) in every row; only the CNN input differs. uvmd_e2e: loss = CE + 0.1 x relative spectral L1 residual, lr(alpha)=2.0, lr(lambda)=0.05, start from 'untrained' UVMD.
+
+## Test results (3 HP recordings, unseen load)
+
+|                            | test acc (mean ± std over seeds)   | macro-F1        |   test CE |   best val acc |   recon rel. L1 (test) |   CNN params |   UVMD params |   train s |
+|:---------------------------|:-----------------------------------|:----------------|----------:|---------------:|-----------------------:|-------------:|--------------:|----------:|
+| VMD (converged) -> CNN     | 0.7933 ± 0.0000                    | 0.7433 ± 0.0000 |    1.1397 |         0.9967 |               nan      |       112818 |             0 |         3 |
+| UVMD-5 end-to-end with CNN | 0.8000 ± 0.0000                    | 0.7500 ± 0.0000 |    1.0469 |         1      |                 0.1734 |       112818 |         40964 |        18 |
+
+## Per-class recall (summed over seeds)
+
+|             |   VMD (converged) -> CNN |   UVMD-5 end-to-end with CNN |
+|:------------|-------------------------:|-----------------------------:|
+| normal      |                    1     |                            1 |
+| inner_0.007 |                    1     |                            1 |
+| inner_0.014 |                    0     |                            0 |
+| inner_0.021 |                    1     |                            1 |
+| ball_0.007  |                    1     |                            1 |
+| ball_0.014  |                    1     |                            1 |
+| ball_0.021  |                    0     |                            0 |
+| outer_0.007 |                    1     |                            1 |
+| outer_0.014 |                    0.933 |                            1 |
+| outer_0.021 |                    1     |                            1 |
+
+Environment: {'python': '3.13.12', 'platform': 'Linux-5.15.0-190-generic-x86_64-with-glibc2.35', 'torch': '2.14.1+cu130', 'cuda': True, 'gpu': 'NVIDIA GeForce RTX 3060', 'commit': 'f1dfec1a9d7b1f7a1e2864ee11673d8316f57c70'}
+
+
+## Log
+```
+CWRU: 40 files, 1199 windows x 2048 samples | split 'lolo' (test load 3 HP): train/val/test = 599/300/300 | 10 classes (fault10) | K=4, N=5 layers | seeds [0, 1, 2] | device cuda:0
+  train windows per class: normal:59, inner_0.007:60, inner_0.014:60, inner_0.021:60, ball_0.007:60, ball_0.014:60, ball_0.021:60, outer_0.007:60, outer_0.014:60, outer_0.021:60
+    val windows per class: normal:30, inner_0.007:30, inner_0.014:30, inner_0.021:30, ball_0.007:30, ball_0.014:30, ball_0.021:30, outer_0.007:30, outer_0.014:30, outer_0.021:30
+   test windows per class: normal:30, inner_0.007:30, inner_0.014:30, inner_0.021:30, ball_0.007:30, ball_0.014:30, ball_0.021:30, outer_0.007:30, outer_0.014:30, outer_0.021:30
+[vmd] converged VMD (alpha 500) on 1199 windows: mean 145.5 iterations, 60 s
+
+[VMD (converged) -> CNN] seed 0
+    epoch   1  train CE 1.0990  val CE 1.2945  val acc 0.897
+    epoch   2  train CE 0.3578  val CE 0.2505  val acc 0.997
+    epoch   3  train CE 0.1754  val CE 0.1129  val acc 0.997
+    epoch   4  train CE 0.0897  val CE 0.0629  val acc 0.997
+    epoch   5  train CE 0.0705  val CE 0.0688  val acc 0.997
+    epoch   6  train CE 0.0452  val CE 0.0427  val acc 0.997
+    epoch   7  train CE 0.0317  val CE 0.0414  val acc 0.997
+    epoch   8  train CE 0.0272  val CE 0.0391  val acc 0.997
+    epoch   9  train CE 0.0242  val CE 0.0494  val acc 0.997
+    epoch  10  train CE 0.0212  val CE 0.0365  val acc 0.997
+    epoch  11  train CE 0.0168  val CE 0.0339  val acc 0.997
+    epoch  12  train CE 0.0133  val CE 0.0274  val acc 0.993
+    epoch  13  train CE 0.0115  val CE 0.0330  val acc 0.997
+    epoch  14  train CE 0.0148  val CE 0.0217  val acc 0.997
+    epoch  15  train CE 0.0105  val CE 0.0232  val acc 0.997
+    epoch  16  train CE 0.0093  val CE 0.0222  val acc 0.997
+    epoch  17  train CE 0.0080  val CE 0.0215  val acc 0.997
+    epoch  18  train CE 0.0066  val CE 0.0236  val acc 0.997
+    epoch  19  train CE 0.0068  val CE 0.0202  val acc 0.997
+    epoch  20  train CE 0.0060  val CE 0.0235  val acc 0.997
+    epoch  21  train CE 0.0059  val CE 0.0233  val acc 0.997
+    epoch  22  train CE 0.0051  val CE 0.0374  val acc 0.997
+    epoch  23  train CE 0.0083  val CE 3.2009  val acc 0.310
+    epoch  24  train CE 0.0189  val CE 0.0479  val acc 0.997
+    epoch  25  train CE 0.0555  val CE 0.7560  val acc 0.650
+    epoch  26  train CE 0.0305  val CE 0.1107  val acc 0.980
+    epoch  27  train CE 0.0141  val CE 0.0943  val acc 0.970
+    epoch  28  train CE 0.0076  val CE 0.0339  val acc 0.987
+    epoch  29  train CE 0.0048  val CE 0.0338  val acc 0.987
+    epoch  30  train CE 0.0044  val CE 0.0238  val acc 0.997
+    epoch  31  train CE 0.0038  val CE 0.0242  val acc 0.993
+    epoch  32  train CE 0.0032  val CE 0.0217  val acc 0.997
+    epoch  33  train CE 0.0040  val CE 0.0217  val acc 0.997
+    epoch  34  train CE 0.0033  val CE 0.0232  val acc 0.997
+    early stopping
+  -> test acc 0.7933  macro-F1 0.7433  CE 1.1626  (best val acc 0.9967 @ epoch 19, 3 s)
+
+[VMD (converged) -> CNN] seed 1
+    epoch   1  train CE 1.1133  val CE 1.3123  val acc 0.793
+    epoch   2  train CE 0.3544  val CE 0.2239  val acc 0.990
+    epoch   3  train CE 0.1758  val CE 0.1562  val acc 0.993
+    epoch   4  train CE 0.1169  val CE 0.1455  val acc 0.980
+    epoch   5  train CE 0.0710  val CE 0.0723  val acc 0.993
+    epoch   6  train CE 0.0437  val CE 0.0531  val acc 0.993
+    epoch   7  train CE 0.0355  val CE 0.1826  val acc 0.903
+    epoch   8  train CE 0.0297  val CE 0.0467  val acc 0.997
+    epoch   9  train CE 0.0218  val CE 0.0364  val acc 0.993
+    epoch  10  train CE 0.0201  val CE 0.0305  val acc 0.993
+    epoch  11  train CE 0.0165  val CE 0.0290  val acc 0.993
+    epoch  12  train CE 0.0152  val CE 0.0336  val acc 0.993
+    epoch  13  train CE 0.0134  val CE 0.0291  val acc 0.997
+    epoch  14  train CE 0.0136  val CE 0.0670  val acc 0.983
+    epoch  15  train CE 0.0097  val CE 0.0289  val acc 0.993
+    epoch  16  train CE 0.0111  val CE 0.0351  val acc 0.997
+    epoch  17  train CE 0.0076  val CE 0.0243  val acc 0.993
+    epoch  18  train CE 0.0064  val CE 0.0243  val acc 0.993
+    epoch  19  train CE 0.0080  val CE 0.0277  val acc 0.993
+    epoch  20  train CE 0.0059  val CE 0.0240  val acc 0.997
+    epoch  21  train CE 0.0048  val CE 0.0251  val acc 0.997
+    epoch  22  train CE 0.0054  val CE 0.0251  val acc 0.993
+    epoch  23  train CE 0.0045  val CE 0.0284  val acc 0.997
+    epoch  24  train CE 0.0045  val CE 0.0262  val acc 0.993
+    epoch  25  train CE 0.0043  val CE 0.0235  val acc 0.997
+    epoch  26  train CE 0.0074  val CE 0.0269  val acc 0.993
+    epoch  27  train CE 0.0064  val CE 0.0327  val acc 0.993
+    epoch  28  train CE 0.0045  val CE 0.0345  val acc 0.990
+    epoch  29  train CE 0.0036  val CE 0.0249  val acc 0.993
+    epoch  30  train CE 0.0051  val CE 0.0254  val acc 0.993
+    epoch  31  train CE 0.0030  val CE 0.0272  val acc 0.993
+    epoch  32  train CE 0.0035  val CE 0.0213  val acc 0.997
+    epoch  33  train CE 0.0030  val CE 0.0290  val acc 0.993
+    epoch  34  train CE 0.0024  val CE 0.0219  val acc 0.997
+    epoch  35  train CE 0.0021  val CE 0.0218  val acc 0.997
+    epoch  36  train CE 0.0027  val CE 0.0264  val acc 0.993
+    epoch  37  train CE 0.0026  val CE 0.0236  val acc 0.993
+    epoch  38  train CE 0.0131  val CE 0.3589  val acc 0.850
+    epoch  39  train CE 0.0076  val CE 0.0203  val acc 0.993
+    epoch  40  train CE 0.0040  val CE 0.0261  val acc 0.997
+    epoch  41  train CE 0.0023  val CE 0.0460  val acc 0.993
+    epoch  42  train CE 0.0021  val CE 0.0216  val acc 0.993
+    epoch  43  train CE 0.0018  val CE 0.0215  val acc 0.997
+    epoch  44  train CE 0.0028  val CE 0.0340  val acc 0.997
+    epoch  45  train CE 0.0204  val CE 1.6460  val acc 0.530
+    epoch  46  train CE 0.0271  val CE 0.6536  val acc 0.643
+    epoch  47  train CE 0.0116  val CE 0.0888  val acc 0.977
+    early stopping
+  -> test acc 0.7933  macro-F1 0.7433  CE 1.0478  (best val acc 0.9967 @ epoch 32, 4 s)
+
+[VMD (converged) -> CNN] seed 2
+    epoch   1  train CE 1.1898  val CE 1.3906  val acc 0.777
+    epoch   2  train CE 0.4509  val CE 0.3970  val acc 0.917
+    epoch   3  train CE 0.1946  val CE 0.1409  val acc 0.997
+    epoch   4  train CE 0.1160  val CE 0.1953  val acc 0.907
+    epoch   5  train CE 0.0764  val CE 0.0794  val acc 0.993
+    epoch   6  train CE 0.0553  val CE 0.0661  val acc 0.997
+    epoch   7  train CE 0.0435  val CE 0.0473  val acc 0.997
+    epoch   8  train CE 0.0343  val CE 0.0825  val acc 0.987
+    epoch   9  train CE 0.0267  val CE 0.0374  val acc 0.997
+    epoch  10  train CE 0.0206  val CE 0.0552  val acc 0.997
+    epoch  11  train CE 0.0162  val CE 0.0251  val acc 0.997
+    epoch  12  train CE 0.0158  val CE 0.0383  val acc 0.997
+    epoch  13  train CE 0.0117  val CE 0.0230  val acc 0.997
+    epoch  14  train CE 0.0127  val CE 0.1709  val acc 0.910
+    epoch  15  train CE 0.0107  val CE 0.0203  val acc 0.997
+    epoch  16  train CE 0.0093  val CE 0.0324  val acc 0.997
+    epoch  17  train CE 0.0090  val CE 0.0644  val acc 0.980
+    epoch  18  train CE 0.0076  val CE 0.0177  val acc 0.997
+    epoch  19  train CE 0.0086  val CE 0.0212  val acc 0.997
+    epoch  20  train CE 0.0061  val CE 0.0246  val acc 0.997
+    epoch  21  train CE 0.0059  val CE 0.0203  val acc 0.997
+    epoch  22  train CE 0.0058  val CE 0.0382  val acc 0.997
+    epoch  23  train CE 0.0060  val CE 0.0526  val acc 0.993
+    epoch  24  train CE 0.0063  val CE 0.0348  val acc 0.997
+    epoch  25  train CE 0.0056  val CE 0.0290  val acc 0.997
+    epoch  26  train CE 0.0050  val CE 0.0373  val acc 0.997
+    epoch  27  train CE 0.0039  val CE 0.0209  val acc 0.997
+    epoch  28  train CE 0.0034  val CE 0.0253  val acc 0.997
+    epoch  29  train CE 0.0037  val CE 0.0284  val acc 0.997
+    epoch  30  train CE 0.0050  val CE 0.0171  val acc 0.997
+    epoch  31  train CE 0.0040  val CE 0.0349  val acc 0.997
+    epoch  32  train CE 0.0028  val CE 0.0164  val acc 0.997
+    epoch  33  train CE 0.0032  val CE 0.0259  val acc 0.997
+    epoch  34  train CE 0.0027  val CE 0.0205  val acc 0.997
+    epoch  35  train CE 0.0029  val CE 0.0198  val acc 0.997
+    epoch  36  train CE 0.0022  val CE 0.0258  val acc 0.997
+    epoch  37  train CE 0.0022  val CE 0.0167  val acc 0.997
+    epoch  38  train CE 0.0021  val CE 0.0218  val acc 0.997
+    epoch  39  train CE 0.0030  val CE 0.0181  val acc 0.997
+    epoch  40  train CE 0.0215  val CE 0.1901  val acc 0.910
+    epoch  41  train CE 0.0123  val CE 0.4274  val acc 0.900
+    epoch  42  train CE 0.0064  val CE 0.0416  val acc 0.987
+    epoch  43  train CE 0.0030  val CE 0.0243  val acc 0.997
+    epoch  44  train CE 0.0033  val CE 0.0283  val acc 0.997
+    epoch  45  train CE 0.0024  val CE 0.0208  val acc 0.997
+    epoch  46  train CE 0.0019  val CE 0.0201  val acc 0.997
+    epoch  47  train CE 0.0021  val CE 0.0234  val acc 0.997
+    early stopping
+  -> test acc 0.7933  macro-F1 0.7433  CE 1.2088  (best val acc 0.9967 @ epoch 32, 4 s)
+
+[UVMD-5 end-to-end with CNN] seed 0
+    epoch   1  train CE 1.1254  val CE 1.3960  val acc 0.483  rec 0.2063/0.2117
+    epoch   2  train CE 0.3850  val CE 0.3575  val acc 1.000  rec 0.2071/0.2121
+    epoch   3  train CE 0.1857  val CE 0.1361  val acc 0.997  rec 0.2070/0.2113
+    epoch   4  train CE 0.0931  val CE 0.1134  val acc 0.970  rec 0.2060/0.2099
+    epoch   5  train CE 0.0705  val CE 0.1102  val acc 0.973  rec 0.2048/0.2083
+    epoch   6  train CE 0.0480  val CE 0.0977  val acc 0.973  rec 0.2033/0.2066
+    epoch   7  train CE 0.0344  val CE 0.0492  val acc 1.000  rec 0.2016/0.2045
+    epoch   8  train CE 0.0285  val CE 0.0863  val acc 0.967  rec 0.1996/0.2023
+    epoch   9  train CE 0.0220  val CE 0.0883  val acc 0.960  rec 0.1975/0.1998
+    epoch  10  train CE 0.0212  val CE 0.0644  val acc 0.967  rec 0.1952/0.1975
+    epoch  11  train CE 0.0176  val CE 0.0890  val acc 0.980  rec 0.1931/0.1948
+    epoch  12  train CE 0.0135  val CE 0.0529  val acc 0.990  rec 0.1904/0.1919
+    epoch  13  train CE 0.0125  val CE 0.0810  val acc 0.957  rec 0.1878/0.1885
+    epoch  14  train CE 0.0120  val CE 0.0286  val acc 1.000  rec 0.1847/0.1852
+    epoch  15  train CE 0.0093  val CE 0.1011  val acc 0.943  rec 0.1812/0.1812
+    epoch  16  train CE 0.0084  val CE 0.0268  val acc 1.000  rec 0.1784/0.1779
+    epoch  17  train CE 0.0084  val CE 0.0469  val acc 0.993  rec 0.1748/0.1737
+    epoch  18  train CE 0.0076  val CE 0.0979  val acc 0.983  rec 0.1711/0.1690
+    epoch  19  train CE 0.0094  val CE 0.0723  val acc 0.987  rec 0.1666/0.1656
+    epoch  20  train CE 0.0098  val CE 0.0787  val acc 0.960  rec 0.1654/0.1641
+    epoch  21  train CE 0.0071  val CE 0.0559  val acc 0.987  rec 0.1630/0.1609
+    epoch  22  train CE 0.0054  val CE 0.0586  val acc 0.990  rec 0.1597/0.1572
+    epoch  23  train CE 0.0069  val CE 0.5664  val acc 0.860  rec 0.1558/0.1523
+    epoch  24  train CE 0.0083  val CE 0.1521  val acc 0.953  rec 0.1515/0.1476
+    epoch  25  train CE 0.0050  val CE 0.0947  val acc 0.950  rec 0.1464/0.1420
+    epoch  26  train CE 0.0049  val CE 0.0522  val acc 0.997  rec 0.1407/0.1345
+    epoch  27  train CE 0.0058  val CE 0.1206  val acc 0.940  rec 0.1352/0.1330
+    epoch  28  train CE 0.0152  val CE 0.8752  val acc 0.887  rec 0.1365/0.1345
+    epoch  29  train CE 0.0101  val CE 0.1828  val acc 0.927  rec 0.1363/0.1323
+    epoch  30  train CE 0.0059  val CE 0.0223  val acc 1.000  rec 0.1327/0.1282
+    epoch  31  train CE 0.0032  val CE 0.1016  val acc 0.947  rec 0.1285/0.1233
+    epoch  32  train CE 0.0031  val CE 0.0887  val acc 0.953  rec 0.1232/0.1172
+    epoch  33  train CE 0.0039  val CE 0.0418  val acc 0.997  rec 0.1166/0.1108
+    epoch  34  train CE 0.0032  val CE 0.0796  val acc 0.970  rec 0.1119/0.1063
+    epoch  35  train CE 0.0027  val CE 0.0921  val acc 0.953  rec 0.1040/0.0957
+    epoch  36  train CE 0.0029  val CE 0.0380  val acc 1.000  rec 0.0940/0.0914
+    epoch  37  train CE 0.0024  val CE 0.1096  val acc 0.947  rec 0.0878/0.0788
+    epoch  38  train CE 0.0032  val CE 0.0752  val acc 0.987  rec 0.0749/0.0676
+    epoch  39  train CE 0.0030  val CE 0.1009  val acc 0.953  rec 0.0735/0.0740
+    epoch  40  train CE 0.0032  val CE 0.0720  val acc 0.970  rec 0.0703/0.0716
+    epoch  41  train CE 0.0028  val CE 0.1234  val acc 0.947  rec 0.0683/0.0579
+    epoch  42  train CE 0.0186  val CE 0.6702  val acc 0.890  rec 0.0701/0.0877
+    epoch  43  train CE 0.0165  val CE 0.1712  val acc 0.917  rec 0.0951/0.0968
+    epoch  44  train CE 0.0264  val CE 0.5661  val acc 0.813  rec 0.0968/0.0921
+    epoch  45  train CE 0.0105  val CE 0.2075  val acc 0.920  rec 0.0928/0.0921
+    early stopping
+  -> test acc 0.8000  macro-F1 0.7500  CE 1.3758  (best val acc 1.0000 @ epoch 30, 24 s)  test recon rel. L1 0.1267  alpha [352.19, 505.83, 191.09, 103.99]
+
+[UVMD-5 end-to-end with CNN] seed 1
+    epoch   1  train CE 1.1395  val CE 1.5705  val acc 0.537  rec 0.2064/0.2114
+    epoch   2  train CE 0.3744  val CE 0.2892  val acc 0.970  rec 0.2065/0.2111
+    epoch   3  train CE 0.1714  val CE 0.2139  val acc 0.940  rec 0.2060/0.2099
+    epoch   4  train CE 0.1125  val CE 0.2130  val acc 0.940  rec 0.2050/0.2086
+    epoch   5  train CE 0.0711  val CE 0.1516  val acc 0.947  rec 0.2038/0.2071
+    epoch   6  train CE 0.0454  val CE 0.0886  val acc 0.977  rec 0.2025/0.2057
+    epoch   7  train CE 0.0345  val CE 0.2316  val acc 0.877  rec 0.2013/0.2043
+    epoch   8  train CE 0.0274  val CE 0.0826  val acc 0.993  rec 0.1999/0.2026
+    epoch   9  train CE 0.0210  val CE 0.0463  val acc 1.000  rec 0.1984/0.2008
+    epoch  10  train CE 0.0193  val CE 0.0928  val acc 0.960  rec 0.1968/0.1991
+    epoch  11  train CE 0.0166  val CE 0.0586  val acc 0.993  rec 0.1951/0.1970
+    epoch  12  train CE 0.0147  val CE 0.0731  val acc 0.983  rec 0.1932/0.1946
+    epoch  13  train CE 0.0125  val CE 0.0791  val acc 0.987  rec 0.1911/0.1923
+    epoch  14  train CE 0.0095  val CE 0.0654  val acc 0.980  rec 0.1889/0.1896
+    epoch  15  train CE 0.0089  val CE 0.1096  val acc 0.950  rec 0.1866/0.1870
+    epoch  16  train CE 0.0108  val CE 0.0434  val acc 0.997  rec 0.1842/0.1840
+    epoch  17  train CE 0.0074  val CE 0.1007  val acc 0.953  rec 0.1815/0.1810
+    epoch  18  train CE 0.0064  val CE 0.0726  val acc 0.980  rec 0.1786/0.1774
+    epoch  19  train CE 0.0077  val CE 0.0722  val acc 0.983  rec 0.1755/0.1738
+    epoch  20  train CE 0.0055  val CE 0.0750  val acc 0.987  rec 0.1720/0.1692
+    epoch  21  train CE 0.0056  val CE 0.0960  val acc 0.957  rec 0.1676/0.1643
+    epoch  22  train CE 0.0054  val CE 0.0767  val acc 0.990  rec 0.1634/0.1589
+    epoch  23  train CE 0.0047  val CE 0.1341  val acc 0.937  rec 0.1579/0.1526
+    epoch  24  train CE 0.0052  val CE 0.0631  val acc 0.993  rec 0.1519/0.1463
+    early stopping
+  -> test acc 0.8000  macro-F1 0.7500  CE 0.9169  (best val acc 1.0000 @ epoch 9, 13 s)  test recon rel. L1 0.2035  alpha [571.01, 576.74, 431.76, 348.3]
+
+[UVMD-5 end-to-end with CNN] seed 2
+    epoch   1  train CE 1.1751  val CE 1.4522  val acc 0.490  rec 0.2065/0.2115
+    epoch   2  train CE 0.4139  val CE 0.4318  val acc 0.900  rec 0.2067/0.2111
+    epoch   3  train CE 0.1761  val CE 0.1478  val acc 0.997  rec 0.2061/0.2097
+    epoch   4  train CE 0.1066  val CE 0.1179  val acc 1.000  rec 0.2050/0.2083
+    epoch   5  train CE 0.0702  val CE 0.1433  val acc 0.953  rec 0.2038/0.2067
+    epoch   6  train CE 0.0507  val CE 0.1386  val acc 0.940  rec 0.2023/0.2050
+    epoch   7  train CE 0.0425  val CE 0.1188  val acc 0.990  rec 0.2008/0.2031
+    epoch   8  train CE 0.0327  val CE 0.0966  val acc 0.983  rec 0.1990/0.2011
+    epoch   9  train CE 0.0252  val CE 0.0647  val acc 1.000  rec 0.1971/0.1988
+    epoch  10  train CE 0.0203  val CE 0.1030  val acc 0.970  rec 0.1949/0.1962
+    epoch  11  train CE 0.0156  val CE 0.0657  val acc 1.000  rec 0.1928/0.1936
+    epoch  12  train CE 0.0153  val CE 0.1238  val acc 0.977  rec 0.1902/0.1905
+    epoch  13  train CE 0.0122  val CE 0.0438  val acc 1.000  rec 0.1877/0.1879
+    epoch  14  train CE 0.0113  val CE 0.0625  val acc 1.000  rec 0.1850/0.1843
+    epoch  15  train CE 0.0087  val CE 0.0775  val acc 1.000  rec 0.1818/0.1804
+    epoch  16  train CE 0.0092  val CE 0.1286  val acc 0.947  rec 0.1780/0.1758
+    epoch  17  train CE 0.0082  val CE 0.0787  val acc 0.987  rec 0.1740/0.1712
+    epoch  18  train CE 0.0076  val CE 0.0983  val acc 0.990  rec 0.1698/0.1659
+    epoch  19  train CE 0.0086  val CE 0.1099  val acc 0.950  rec 0.1648/0.1602
+    epoch  20  train CE 0.0069  val CE 0.0925  val acc 0.970  rec 0.1592/0.1535
+    epoch  21  train CE 0.0071  val CE 0.1259  val acc 0.933  rec 0.1522/0.1463
+    epoch  22  train CE 0.0080  val CE 0.2606  val acc 0.910  rec 0.1453/0.1390
+    epoch  23  train CE 0.0096  val CE 0.0986  val acc 0.993  rec 0.1395/0.1330
+    epoch  24  train CE 0.0066  val CE 0.1982  val acc 0.910  rec 0.1332/0.1235
+    epoch  25  train CE 0.0071  val CE 0.1120  val acc 0.940  rec 0.1224/0.1132
+    epoch  26  train CE 0.0064  val CE 0.1510  val acc 0.937  rec 0.1119/0.1072
+    epoch  27  train CE 0.0043  val CE 0.1027  val acc 0.953  rec 0.1051/0.0940
+    epoch  28  train CE 0.0039  val CE 0.2614  val acc 0.867  rec 0.0932/0.0923
+    early stopping
+  -> test acc 0.8000  macro-F1 0.7500  CE 0.8479  (best val acc 1.0000 @ epoch 13, 16 s)  test recon rel. L1 0.1901  alpha [555.08, 569.24, 362.16, 292.77]
+```
