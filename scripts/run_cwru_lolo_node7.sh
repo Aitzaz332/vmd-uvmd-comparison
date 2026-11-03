@@ -15,6 +15,7 @@
 #   FOLDS="0 1 2 3"        held-out test loads
 #   OUT=results/cwru_lolo_K${K}_N${LAYERS}   output folder
 #   ARGS="..."             extra arguments for run_cwru_e2e.py (e.g. --lr-alpha 0.5, --epochs 60, --quick)
+#   RESUME=1               keep finished folds in $OUT (skip their training), run only the missing ones
 #   PUSH=0                 commit only, do not push
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -41,9 +42,11 @@ PY
 [ "$(ls "$CWRU"/*.mat 2>/dev/null | wc -l)" -ge 40 ] || bash scripts/download_cwru.sh "$CWRU"
 python -m pytest -q tests/test_uvmd_torch.py tests/test_e2e.py tests/test_compare_uvmd_modes.py tests/test_compare_predictions.py tests/test_lolo.py
 
+RES=()
+[ "${RESUME:-0}" = "1" ] && RES=(--resume)
 mkdir -p "$OUT"
 python experiments/run_cwru_lolo.py --data "$CWRU" --device "$DEV" --K "$K" --layers "$LAYERS" --alpha "$ALPHA" \
-    --seeds $SEEDS --folds $FOLDS --out "$OUT" ${ARGS:-} 2>&1 | tee "$OUT/run.log"
+    --seeds $SEEDS --folds $FOLDS --out "$OUT" ${RES[@]+"${RES[@]}"} ${ARGS:-} 2>&1 | tee "$OUT/run.log"
 
 if [[ "${ARGS:-}" == *--quick* ]]; then
   echo "done (--quick smoke run: results are in $OUT and are NOT committed)."

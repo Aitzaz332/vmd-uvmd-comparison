@@ -118,29 +118,38 @@ def fig_centres(V, Us, out):
     pd.DataFrame(rows, columns=["method", "mode", "mean_Hz", "std_Hz"]).to_csv(out / "centre_frequencies.csv", index=False)
 
 
+def pad(curves, n):
+    """Stack curves of different length (early stopping) into (S, n, ...) filled with NaN."""
+    out = np.full((len(curves), n) + np.asarray(curves[0]).shape[1:], np.nan)
+    for i, c in enumerate(curves):
+        c = np.asarray(c, float)
+        out[i, :len(c)] = c
+    return out
+
+
 def fig_alpha_loss(H, out, alpha0):
     seeds = sorted(k for k in H if k.startswith("uvmd_e2e_seed"))
     if not seeds:
         return
-    n = min(len(H[k]["alpha"]) for k in seeds)
-    A = np.stack([np.asarray(H[k]["alpha"][:n]) for k in seeds])                  # (S, n, K)
-    tr = np.stack([np.asarray(H[k].get("train_eval_ce") or H[k]["train_ce"])[:n] for k in seeds])
-    va = np.stack([np.asarray(H[k]["val_ce"][:n]) for k in seeds])
+    n = max(len(H[k]["alpha"]) for k in seeds)                                     # seeds stop at different epochs
+    A = pad([H[k]["alpha"] for k in seeds], n)                                      # (S, n, K)
+    tr = pad([H[k].get("train_eval_ce") or H[k]["train_ce"] for k in seeds], n)
+    va = pad([H[k]["val_ce"] for k in seeds], n)
     best = [H[k].get("best_epoch") for k in seeds]
     K = A.shape[2]
     x = np.arange(1, n + 1)
     fig, (a1, a2) = plt.subplots(2, 1, figsize=(10.5, 8), dpi=150, sharex=True, gridspec_kw={"height_ratios": [1, 1.2]})
     for M, nm, ls in ((tr, "training loss", "--"), (va, "validation loss", "-")):
-        a1.plot(x, M.mean(0), ls, lw=2.5, color="#222", label=nm)
-        a1.fill_between(x, M.min(0), M.max(0), color="#222", alpha=0.08, lw=0)
+        a1.plot(x, np.nanmean(M, 0), ls, lw=2.5, color="#222", label=nm)
+        a1.fill_between(x, np.nanmin(M, 0), np.nanmax(M, 0), color="#222", alpha=0.08, lw=0)
     a1.set_ylabel("cross-entropy", fontsize=13)
     a1.set_title("Loss and alpha during end-to-end training", fontsize=15, fontweight="bold", loc="left")
     a1.legend(frameon=False, fontsize=12)
     a1.set_ylim(bottom=0)
     style(a1)
     for k in range(K):
-        a2.plot(x, A[:, :, k].mean(0), lw=2.5, color=MODE_C[k], label=f"mode {k + 1}")
-        a2.fill_between(x, A[:, :, k].min(0), A[:, :, k].max(0), color=MODE_C[k], alpha=0.12, lw=0)
+        a2.plot(x, np.nanmean(A[:, :, k], 0), lw=2.5, color=MODE_C[k], label=f"mode {k + 1}")
+        a2.fill_between(x, np.nanmin(A[:, :, k], 0), np.nanmax(A[:, :, k], 0), color=MODE_C[k], alpha=0.12, lw=0)
     a2.axhline(alpha0, color="#999", lw=1.2, ls=":")
     a2.text(n, alpha0, " start", va="bottom", ha="right", fontsize=10, color="#777")
     a2.set_ylabel(r"$\alpha_k$  (larger = narrower mode)", fontsize=13)
@@ -151,16 +160,17 @@ def fig_alpha_loss(H, out, alpha0):
         for b in best:
             if b:
                 a.axvline(b, color="#aaa", lw=1, alpha=0.6)
-    a2.text(0.01, 0.03, "line = mean over seeds, band = min-max; grey verticals = epoch of the selected model (one per seed)",
+    a2.text(0.01, 0.03, "line = mean over seeds that are still training, band = min-max; grey verticals = epoch of the selected model (one per seed)",
             transform=a2.transAxes, fontsize=10, color="#666")
     fig.tight_layout()
     fig.savefig(out / "4_alpha_and_loss.png")
     plt.close(fig)
     rows = []
     for s, k_ in enumerate(seeds):
-        b = (best[s] or n) - 1
+        last = int(np.sum(~np.isnan(A[s, :, 0]))) - 1                               # last epoch this seed ran
+        b = min((best[s] or last + 1) - 1, last)
         for k in range(K):
-            rows.append((k_, k + 1, alpha0, A[s, 0, k], A[s, b, k], A[s, -1, k], tr[s, b], va[s, b]))
+            rows.append((k_, k + 1, alpha0, A[s, 0, k], A[s, b, k], A[s, last, k], tr[s, b], va[s, b]))
     pd.DataFrame(rows, columns=["run", "mode", "alpha_start", "alpha_after_epoch1", "alpha_selected_epoch", "alpha_last_epoch",
                                 "train_ce_selected", "val_ce_selected"]).to_csv(out / "alpha_table.csv", index=False)
 

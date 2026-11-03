@@ -43,3 +43,29 @@ def test_lolo_driver_and_figures(tmp_path):
     assert (out / "lolo_summary.png").stat().st_size > 5000 and (out / "lolo_summary.md").exists()
     a = pd.read_csv(out / "test_0HP" / "modes_figures" / "alpha_table.csv")
     assert {"alpha_start", "alpha_selected_epoch", "alpha_last_epoch"} <= set(a.columns) and (a.alpha_start == 500.0).all()
+
+
+def test_figures_with_seeds_of_different_length(tmp_path):
+    """Early stopping gives every seed its own number of epochs; the selected epoch may lie beyond the shortest run."""
+    from experiments import plot_modes_clean as pm
+    from experiments import plot_training_curves as pc
+    rng = np.random.default_rng(0)
+
+    def hist(n, best):
+        return {"alpha": (500 + rng.standard_normal((n, 4)) * 10).tolist(), "train_ce": rng.random(n).tolist(),
+                "train_eval_ce": rng.random(n).tolist(), "val_ce": rng.random(n).tolist(),
+                "val_acc": rng.random(n).tolist(), "train_eval_acc": rng.random(n).tolist(), "best_epoch": best}
+    H = {"uvmd_e2e_seed0": hist(40, 25), "uvmd_e2e_seed1": hist(17, 2), "uvmd_e2e_seed2": hist(18, 3),
+         "vmd_seed0": hist(30, 10), "vmd_seed1": hist(12, 11), "vmd_seed2": hist(20, 5)}
+    pm.fig_alpha_loss(H, tmp_path, 500.0)
+    t = pd.read_csv(tmp_path / "alpha_table.csv")
+    assert len(t) == 12 and t.alpha_selected_epoch.notna().all() and t.alpha_last_epoch.notna().all()
+    assert (tmp_path / "4_alpha_and_loss.png").stat().st_size > 5000
+    run = tmp_path / "run"
+    run.mkdir()
+    import json
+    json.dump(H, open(run / "histories.json", "w"))
+    json.dump({"args": {"layers": 5}}, open(run / "summary.json", "w"))
+    out = pc.main(["--run", str(run)])
+    c = pd.read_csv(out / "curves.csv")
+    assert c[(c.pipeline == "uvmd_e2e") & (c.panel == "val_loss")].epoch.max() == 40 and not c.value.isna().any()

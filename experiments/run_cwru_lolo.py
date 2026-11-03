@@ -100,6 +100,7 @@ def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--out", required=True)
     p.add_argument("--folds", type=int, nargs="+", default=[0, 1, 2, 3])
+    p.add_argument("--resume", action="store_true", help="skip the training of folds whose summary.json already exists (figures are redrawn)")
     a, rest = p.parse_known_args(argv)
     for flag in ("--split", "--fold", "--pipelines"):
         if flag in rest:
@@ -109,7 +110,10 @@ def main(argv=None):
     for f in a.folds:
         d = out / f"test_{f}HP"
         print(f"\n=== fold: test load {f} HP ===", flush=True)
-        run_cwru_e2e.main(rest + ["--split", "lolo", "--fold", str(f), "--pipelines", "vmd", "uvmd_e2e", "--out", str(d)])
+        if a.resume and (d / "summary.json").exists():
+            print(f"fold {f}: results found in {d}, not retrained (--resume)", flush=True)
+        else:
+            run_cwru_e2e.main(rest + ["--split", "lolo", "--fold", str(f), "--pipelines", "vmd", "uvmd_e2e", "--out", str(d)])
         compare_predictions.main(["--run", str(d)])
         plot_training_curves.main(["--run", str(d)])
         plot_modes_clean.main(["--run", str(d)])

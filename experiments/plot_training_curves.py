@@ -45,8 +45,11 @@ def collect(H, pipe, keys):
     for key in keys:
         curves = [np.asarray(h[key], float) for _, h in runs if h.get(key)]
         if len(curves) == len(runs) and curves:
-            n = min(len(c) for c in curves)
-            return np.stack([c[:n] for c in curves]), [h.get("best_epoch") for _, h in runs], key
+            n = max(len(c) for c in curves)                      # seeds stop at different epochs: pad with NaN
+            C = np.full((len(curves), n), np.nan)
+            for i, c in enumerate(curves):
+                C[i, :len(c)] = c
+            return C, [h.get("best_epoch") for _, h in runs], key
     return None, None, None
 
 
@@ -58,8 +61,8 @@ def draw(ax, H, pipes, lab, keys, title, ylabel, big=False, rows=None, tag=None)
             continue
         drawn = True
         x = np.arange(1, C.shape[1] + 1)
-        m = C.mean(0)
-        ax.fill_between(x, C.min(0), C.max(0), color=COLORS[pipe], alpha=0.18, lw=0)
+        m = np.nanmean(C, 0)
+        ax.fill_between(x, np.nanmin(C, 0), np.nanmax(C, 0), color=COLORS[pipe], alpha=0.18, lw=0)
         ax.plot(x, m, color=COLORS[pipe], lw=3 if big else 2, label=lab[pipe])
         b = [e for e in best if e and e <= C.shape[1]]
         if b:
@@ -68,7 +71,8 @@ def draw(ax, H, pipes, lab, keys, title, ylabel, big=False, rows=None, tag=None)
         if rows is not None:
             for s, c in enumerate(C):
                 for e, v in enumerate(c):
-                    rows.append((tag, pipe, s, e + 1, v))
+                    if not np.isnan(v):
+                        rows.append((tag, pipe, s, e + 1, v))
     if not drawn:
         ax.text(0.5, 0.5, "not recorded in this run", ha="center", va="center", transform=ax.transAxes, color="#777")
     fs = 17 if big else 12
@@ -105,7 +109,7 @@ def main(argv=None):
     for tag, title, yl, keys in PANELS:
         fig, ax = plt.subplots(figsize=(10, 6), dpi=150)
         draw(ax, H, pipes, lab, keys, title, yl, big=True, rows=rows, tag=tag)
-        fig.text(0.01, 0.005, "line: mean over seeds · band: min–max · dot: epoch of the selected model (one per seed)", fontsize=10, color="#666")
+        fig.text(0.01, 0.005, "line: mean over the seeds still training · band: min–max · dot: epoch of the selected model (one per seed)", fontsize=10, color="#666")
         fig.tight_layout(rect=(0, 0.03, 1, 1))
         fig.savefig(out / f"{ {'train_loss': 'training_loss', 'val_loss': 'validation_loss', 'train_acc': 'training_accuracy', 'val_acc': 'validation_accuracy'}[tag] }.png")
         plt.close(fig)
