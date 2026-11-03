@@ -1,0 +1,13 @@
+method,mode,alpha,centre_Hz,centre_std_Hz
+VMD (converged),1,500.0,0.0,0.0
+VMD (converged),2,500.0,1563.5671,742.0903
+VMD (converged),3,500.0,3021.3308,308.20926
+VMD (converged),4,500.0,3517.405,497.20316
+"UVMD, reconstruction only",1,85.44774627685547,0.0,0.0
+"UVMD, reconstruction only",2,233.32440185546875,1969.5999,587.4522
+"UVMD, reconstruction only",3,268.1235656738281,3267.504,144.9932
+"UVMD, reconstruction only",4,3.6400895169208525e-06,2767.6917,344.67563
+"UVMD, end to end",1,509.07281494140625,0.0,0.0
+"UVMD, end to end",2,534.255126953125,1573.401,574.30597
+"UVMD, end to end",3,368.88916015625,3193.7134,190.51894
+"UVMD, end to end",4,229.3813934326172,3609.2366,370.47607
