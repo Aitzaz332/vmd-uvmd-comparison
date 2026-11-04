@@ -79,3 +79,11 @@ forecast origin) would be the next experiment, kept separate from this replica.
 ## Status
 Written and syntax-checked in a sandbox without GPU, PyTorch or the LargeST data. Not yet run on node7. The log parser and report
 generator were tested on synthetic logs; `prepare_data.sh`, `run_region.sh`, `run_table2_sd.sh`, `decomp_timing.py` and `leak_check.py` are untested.
+
+## Running several configurations at once (two GPUs) without interfering
+`run_region.sh` shares `data/<region>/2019/his.npz` and the ASTGCN log/checkpoint folder, so two of them must never run at the
+same time. `scripts/run_isolated.sh` gives each (region, K, N) its own folder under `~/magn_runs/<tag>/` (hash-checked code copy,
+private UVMD output, private ASTGCN log and checkpoint, symlinks to the read-only shared inputs) and copies the logs to
+`results/<tag>/` at the end without running any git command. `scripts/run_queue_isolated.sh <region> <device> K,N ...` runs a list
+of configurations one after another on one GPU. Example on the second GPU while another job uses the first:
+`bash replication/scripts/run_queue_isolated.sh sd cuda:1 3,1 6,1 9,1`. Commit the copied results yourself when no other job is committing.
