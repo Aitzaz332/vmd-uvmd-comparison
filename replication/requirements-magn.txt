@@ -1,8 +1,9 @@
 # Environment for the UNCHANGED upstream MAGN code (replication/magn).
-# The upstream repo ships no requirements file. Its __pycache__ files were produced by CPython 3.8, and
-# data/generate_data_for_training.py calls DataFrame.append(), which was removed in pandas 2.0.
-# So use Python 3.8 and pandas < 2. torch is NOT pinned here: install the build that matches node7's CUDA first
-# (the code only uses plain torch, torch.fft and torch.cfloat, nothing version specific beyond torch >= 1.10).
+# The upstream repo ships no requirements file. data/generate_data_for_training.py calls DataFrame.append(),
+# which was removed in pandas 2.0, so pandas < 2 is required, and pandas 1.5.3 / numpy 1.24.4 have wheels only up to
+# Python 3.11. Use Python 3.10 (node7's default Python 3.13 cannot install these).
+# torch is NOT pinned here: install the build that works on node7 first (torch 2.7.0 with CUDA was verified there).
+# The upstream code only uses plain torch, torch.fft and torch.cfloat.
 numpy==1.24.4
 pandas==1.5.3
 tables==3.8.0

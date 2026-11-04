@@ -11,9 +11,10 @@ unchanged code**, and compare the numbers with the paper.
 ## Run on node7 (start with SD, the smallest)
 ```bash
 git fetch && git checkout magn-paper-replication
-# 1. environment (Python 3.8 and pandas < 2 are required by the upstream data script; install the CUDA torch you use first)
-conda create -n magn python=3.8 -y && conda activate magn        # or any python3.8 venv
-pip install torch                                                # pick the build matching node7's CUDA
+# 1. environment (pandas < 2 is required by the upstream data script, so Python 3.10, not node7's default 3.13)
+conda create -n magn -c conda-forge --override-channels python=3.10 -y   # conda-forge avoids Anaconda's ToS prompt
+conda activate magn
+pip install torch==2.7.0                                         # the version verified with CUDA on node7
 pip install -r replication/requirements-magn.txt
 # 2. data (Kaggle account; put kaggle.json in ~/.kaggle yourself, or download in a browser and scp the zip)
 pip install kaggle && mkdir -p ~/data/LargeST && cd ~/data/LargeST && kaggle datasets download -d liuxu77/largest && unzip -q largest.zip && cd -
