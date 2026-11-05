@@ -1,0 +1,7 @@
+Thu Nov  5 19:04:31 CET 2026
+node4
+CUDA_VISIBLE_DEVICES=0
+torch 2.7.0+cu126 numpy 1.24.4 pandas 1.5.3
+52f35ab7d9ea08a7f6360ef6c092e9ffd5e3957d
+6bfae1bf3ebf5af4684382cd12ba23d28e3a6ae8
+K=9 N=1 bs=48 input_dim=11 seeds=2023 isolated

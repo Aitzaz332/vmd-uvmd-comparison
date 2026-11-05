@@ -48,7 +48,7 @@ Units as in the paper: MAPE in %. ASTGCN* rows are the paper's numbers for the p
 | case III K=6,  N=1 (paper) | 140.166K+2.16M | 0.97 | 2.48 | 0.94% | 2.33 | 7.69 | 1.86% | 10.08 | 16.18 | 7.82% | 4.00 | 8.72 | 3.11% |
 | case III K=6,  N=1 (replicated) | not run yet | |
 | case III K=9,  N=1 (paper) | 140.169K+2.16M | 0.86 | 1.94 | 0.86% | 0.94 | 2.48 | 0.93% | 5.93 | 12.74 | 4.17% | 1.89 | 4.52 | 1.59% |
-| case III K=9,  N=1 (replicated) | not run yet | |
+| **case III K=9,  N=1 (replicated)** | 140.169K+2.16M | 0.84 | 1.65 | 0.82% | 0.94 | 2.09 | 0.91% | 5.82 | 11.22 | 4.19% | 1.91 | 3.93 | 1.57% |
 | case III K=13, N=1 (= Table I SD) (paper) | 140.173K+2.17M | 0.84 | 1.88 | 0.84% | 0.90 | 2.23 | 0.92% | 3.60 | 8.49 | 2.97% | 1.38 | 3.30 | 1.28% |
 | **case III K=13, N=1 (= Table I SD) (replicated)** | 140.173K+2.16M | 0.85 | 1.51 | 0.89% | 0.93 | 1.75 | 0.96% | 3.83 | 7.11 | 3.12% | 1.44 | 2.77 | 1.34% |
 | case III K=15, N=1 (paper) | 140.175K+2.17M | 0.85 | 1.72 | 0.92% | 0.94 | 1.80 | 1.01% | 2.47 | 6.34 | 2.18% | 1.16 | 2.60 | 1.19% |
@@ -65,6 +65,7 @@ Paper: 98.63 s for all 6902 sensors (UVMD, RTX 3080 Ti) against 267 min for iter
 | run | uvmd.py wall time incl. training (h:mm:ss) | decomposition s/sensor | extrapolated s for 6902 sensors |
 |---|---|---|---|
 | sd_K3_N1 | 4:07.28 | - | - |
+| sd_K9_N1 | 8:14.74 | - | - |
 | sd_N1 | 9:52.38 | - | - |
 
 ## Figures (data behind paper Fig. 2 and Fig. 3)
