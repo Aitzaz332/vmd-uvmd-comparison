@@ -29,6 +29,19 @@ def load_classes(uvmd_path: Path):
     return ns["Unfolding"]
 
 
+def load_trained(model, path, dev):
+    """Load model.pth written by upstream uvmd.py.
+
+    Upstream builds `modules_list` inside forward(), so the saved state_dict also holds 'modules_list.N.Alpha', the same
+    shared tensor as the top-level 'Alpha'. A fresh model has no modules_list yet, so keep the top-level keys only, and
+    check that the dropped copies really equal Alpha."""
+    sd = torch.load(path, map_location=dev)
+    dup = [k for k in sd if k.startswith("modules_list.")]
+    for k in dup:
+        assert k.endswith("Alpha") and torch.equal(sd[k], sd["Alpha"]), f"unexpected saved key {k}"
+    model.load_state_dict({k: v for k, v in sd.items() if k not in dup})
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--his", required=True, help="original (not unfolded) his.npz")
@@ -48,7 +61,7 @@ def main():
     T = d.shape[0] - (d.shape[0] % 2)
     Unfolding = load_classes(Path(a.uvmd))
     model = Unfolding(dev, K=a.K, layers=a.layers, freqs_len=2 * T).to(dev)
-    model.load_state_dict(torch.load(a.model, map_location=dev))
+    load_trained(model, a.model, dev)
     model.eval()
 
     result = {}

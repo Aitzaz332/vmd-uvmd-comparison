@@ -15,7 +15,7 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from leak_check import load_classes
+from leak_check import load_classes, load_trained
 
 
 def main():
@@ -36,7 +36,7 @@ def main():
     T, N = d.shape
     N = min(N, a.max_nodes) if a.max_nodes else N
     model = load_classes(Path(a.uvmd))(dev, K=a.K, layers=a.layers, freqs_len=2 * T).to(dev)
-    model.load_state_dict(torch.load(a.model, map_location=dev))
+    load_trained(model, a.model, dev)
     model.eval()
     with torch.no_grad():
         model(d[:, 0].to(dev))                                  # warm-up
