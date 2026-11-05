@@ -8,3 +8,6 @@ magn/data/ca_meta.csv
 magn/experiments/astgcn/*/
 *.pt
 __pycache__/
+
+# SLURM job output
+slurm_logs/
