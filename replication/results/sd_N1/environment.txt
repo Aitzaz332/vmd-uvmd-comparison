@@ -1,8 +1,7 @@
-Thu Nov  5 10:30:29 CET 2026
-node7
-GPU 0: NVIDIA GeForce RTX 3060 (UUID: GPU-b87f2135-f93b-f7e5-3e16-5e03a876c500)
-GPU 1: NVIDIA GeForce RTX 3060 (UUID: GPU-b29c000c-69aa-e7eb-6e0b-9001268f6c61)
+Thu Nov  5 13:18:43 CET 2026
+node4
+CUDA_VISIBLE_DEVICES=0
 torch 2.7.0+cu126 numpy 1.24.4 pandas 1.5.3
-b1704db78ecf58fd901df75f0563ff29f76a7ab1
+d94f2a013c2b727f2940edff3b0b87b50adeef53
 6bfae1bf3ebf5af4684382cd12ba23d28e3a6ae8
-K=13 N=1 bs=48 input_dim=15 seeds=2023
+K=13 N=1 bs=48 input_dim=15 seeds=2023 isolated

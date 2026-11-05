@@ -1,95 +1,95 @@
 (35040, 716, 3)
 (501, 35040) (107, 35040) (108, 35040)
 model.params (M):  0.140173
-Epoch [1/100] - Train Loss: 76060.112973, Val Loss: 72539.092052
-Epoch [2/100] - Train Loss: 70820.305187, Val Loss: 68874.364942
-Epoch [3/100] - Train Loss: 67665.921614, Val Loss: 65979.229008
-Epoch [4/100] - Train Loss: 64943.657700, Val Loss: 63420.730396
-Epoch [5/100] - Train Loss: 62350.301272, Val Loss: 60842.731564
-Epoch [6/100] - Train Loss: 59892.619913, Val Loss: 58506.600157
-Epoch [7/100] - Train Loss: 57491.403763, Val Loss: 56099.998795
-Epoch [8/100] - Train Loss: 55137.206505, Val Loss: 53765.315713
-Epoch [9/100] - Train Loss: 52847.146636, Val Loss: 51554.885551
-Epoch [10/100] - Train Loss: 50565.663860, Val Loss: 49347.824401
-Epoch [11/100] - Train Loss: 48358.031948, Val Loss: 47085.639621
-Epoch [12/100] - Train Loss: 46174.765138, Val Loss: 45016.886974
-Epoch [13/100] - Train Loss: 44027.311479, Val Loss: 42833.932261
-Epoch [14/100] - Train Loss: 41893.885713, Val Loss: 40708.510788
-Epoch [15/100] - Train Loss: 39786.402203, Val Loss: 38682.513216
-Epoch [16/100] - Train Loss: 37742.230933, Val Loss: 36599.611273
-Epoch [17/100] - Train Loss: 35721.678366, Val Loss: 34662.393016
-Epoch [18/100] - Train Loss: 33733.450724, Val Loss: 32611.151559
-Epoch [19/100] - Train Loss: 31780.830764, Val Loss: 30702.876205
-Epoch [20/100] - Train Loss: 29889.670423, Val Loss: 28815.139931
-Epoch [21/100] - Train Loss: 28024.679033, Val Loss: 26933.939544
-Epoch [22/100] - Train Loss: 26203.161462, Val Loss: 25258.094699
-Epoch [23/100] - Train Loss: 24429.004169, Val Loss: 23434.573306
-Epoch [24/100] - Train Loss: 22706.287491, Val Loss: 21813.002729
-Epoch [25/100] - Train Loss: 21022.096995, Val Loss: 20197.382876
-Epoch [26/100] - Train Loss: 19401.518106, Val Loss: 18539.734457
-Epoch [27/100] - Train Loss: 17831.845389, Val Loss: 16971.546136
-Epoch [28/100] - Train Loss: 16333.229102, Val Loss: 15647.179724
-Epoch [29/100] - Train Loss: 14873.068381, Val Loss: 14217.318624
-Epoch [30/100] - Train Loss: 13487.497320, Val Loss: 12814.102261
-Epoch [31/100] - Train Loss: 12181.413163, Val Loss: 11426.639662
-Epoch [32/100] - Train Loss: 10919.287801, Val Loss: 10389.269002
-Epoch [33/100] - Train Loss: 9735.752336, Val Loss: 9108.222268
-Epoch [34/100] - Train Loss: 8595.769939, Val Loss: 7969.900660
-Epoch [35/100] - Train Loss: 7523.597758, Val Loss: 6959.320212
-Epoch [36/100] - Train Loss: 6521.521048, Val Loss: 5949.733116
-Epoch [37/100] - Train Loss: 5578.446437, Val Loss: 5076.583037
-Epoch [38/100] - Train Loss: 4703.801778, Val Loss: 4404.659330
-Epoch [39/100] - Train Loss: 3909.628909, Val Loss: 3538.494061
-Epoch [40/100] - Train Loss: 3189.534851, Val Loss: 2849.625140
-Epoch [41/100] - Train Loss: 2552.898930, Val Loss: 2248.383100
-Epoch [42/100] - Train Loss: 2004.453444, Val Loss: 1754.006124
-Epoch [43/100] - Train Loss: 1551.658963, Val Loss: 1373.592940
-Epoch [44/100] - Train Loss: 1190.391339, Val Loss: 1039.117242
-Epoch [45/100] - Train Loss: 891.280338, Val Loss: 699.199197
-Epoch [46/100] - Train Loss: 464.904735, Val Loss: 406.389779
-Epoch [47/100] - Train Loss: 387.182938, Val Loss: 373.183790
-Epoch [48/100] - Train Loss: 359.906750, Val Loss: 336.569736
-Epoch [49/100] - Train Loss: 312.876681, Val Loss: 295.364049
-Epoch [50/100] - Train Loss: 290.258824, Val Loss: 289.173458
-Epoch [51/100] - Train Loss: 275.088645, Val Loss: 252.901584
-Epoch [52/100] - Train Loss: 235.789604, Val Loss: 224.388612
-Epoch [53/100] - Train Loss: 219.107590, Val Loss: 212.548467
-Epoch [54/100] - Train Loss: 194.094536, Val Loss: 174.699823
-Epoch [55/100] - Train Loss: 163.474377, Val Loss: 161.610450
-Epoch [56/100] - Train Loss: 166.424421, Val Loss: 168.547580
-Epoch [57/100] - Train Loss: 163.050615, Val Loss: 157.944334
-Epoch [58/100] - Train Loss: 158.862654, Val Loss: 162.017448
-Epoch [59/100] - Train Loss: 164.851281, Val Loss: 164.845823
-Epoch [60/100] - Train Loss: 161.028335, Val Loss: 159.192662
-Epoch [61/100] - Train Loss: 160.193075, Val Loss: 163.192995
-Epoch [62/100] - Train Loss: 164.481321, Val Loss: 163.390171
-Epoch [63/100] - Train Loss: 160.483381, Val Loss: 159.818000
-Epoch [64/100] - Train Loss: 161.611189, Val Loss: 163.450487
-Epoch [65/100] - Train Loss: 163.377915, Val Loss: 161.434737
-Epoch [66/100] - Train Loss: 160.365298, Val Loss: 159.089144
-Epoch [67/100] - Train Loss: 162.004507, Val Loss: 163.243136
+Epoch [1/100] - Train Loss: 76048.620045, Val Loss: 72492.177442
+Epoch [2/100] - Train Loss: 70827.922105, Val Loss: 68906.624763
+Epoch [3/100] - Train Loss: 67651.956006, Val Loss: 66208.534134
+Epoch [4/100] - Train Loss: 64942.407384, Val Loss: 63404.695440
+Epoch [5/100] - Train Loss: 62369.541550, Val Loss: 60888.940877
+Epoch [6/100] - Train Loss: 59916.754249, Val Loss: 58438.996422
+Epoch [7/100] - Train Loss: 57493.904531, Val Loss: 56133.161854
+Epoch [8/100] - Train Loss: 55174.318355, Val Loss: 53807.845046
+Epoch [9/100] - Train Loss: 52856.839801, Val Loss: 51551.166435
+Epoch [10/100] - Train Loss: 50613.633109, Val Loss: 49312.756900
+Epoch [11/100] - Train Loss: 48399.234172, Val Loss: 47153.080881
+Epoch [12/100] - Train Loss: 46198.572839, Val Loss: 44994.785211
+Epoch [13/100] - Train Loss: 44039.932693, Val Loss: 42851.029315
+Epoch [14/100] - Train Loss: 41921.517882, Val Loss: 40771.827450
+Epoch [15/100] - Train Loss: 39830.198973, Val Loss: 38671.177515
+Epoch [16/100] - Train Loss: 37761.081197, Val Loss: 36606.064709
+Epoch [17/100] - Train Loss: 35735.726555, Val Loss: 34640.907418
+Epoch [18/100] - Train Loss: 33755.270779, Val Loss: 32741.574310
+Epoch [19/100] - Train Loss: 31820.613589, Val Loss: 30659.154142
+Epoch [20/100] - Train Loss: 29903.599674, Val Loss: 28983.429706
+Epoch [21/100] - Train Loss: 28048.660336, Val Loss: 27042.432991
+Epoch [22/100] - Train Loss: 26217.520989, Val Loss: 25248.356847
+Epoch [23/100] - Train Loss: 24446.287016, Val Loss: 23570.729483
+Epoch [24/100] - Train Loss: 22716.327205, Val Loss: 21798.558977
+Epoch [25/100] - Train Loss: 21046.947548, Val Loss: 20151.175252
+Epoch [26/100] - Train Loss: 19415.290312, Val Loss: 18571.132402
+Epoch [27/100] - Train Loss: 17848.900270, Val Loss: 17015.440074
+Epoch [28/100] - Train Loss: 16340.124347, Val Loss: 15568.069363
+Epoch [29/100] - Train Loss: 14897.406474, Val Loss: 14185.808356
+Epoch [30/100] - Train Loss: 13525.492601, Val Loss: 12793.413656
+Epoch [31/100] - Train Loss: 12195.916594, Val Loss: 11584.753030
+Epoch [32/100] - Train Loss: 10944.452708, Val Loss: 10208.522639
+Epoch [33/100] - Train Loss: 9741.720121, Val Loss: 9160.867744
+Epoch [34/100] - Train Loss: 8619.544012, Val Loss: 8029.428204
+Epoch [35/100] - Train Loss: 7542.730410, Val Loss: 6951.012079
+Epoch [36/100] - Train Loss: 6540.640142, Val Loss: 5992.714698
+Epoch [37/100] - Train Loss: 5594.377898, Val Loss: 5125.963847
+Epoch [38/100] - Train Loss: 4727.093485, Val Loss: 4313.811152
+Epoch [39/100] - Train Loss: 3922.477514, Val Loss: 3547.838618
+Epoch [40/100] - Train Loss: 3198.055694, Val Loss: 2850.527596
+Epoch [41/100] - Train Loss: 2560.516713, Val Loss: 2297.826465
+Epoch [42/100] - Train Loss: 2015.929284, Val Loss: 1759.204543
+Epoch [43/100] - Train Loss: 1558.355707, Val Loss: 1344.419820
+Epoch [44/100] - Train Loss: 1194.288125, Val Loss: 1021.938040
+Epoch [45/100] - Train Loss: 896.394112, Val Loss: 729.675602
+Epoch [46/100] - Train Loss: 465.366556, Val Loss: 405.559926
+Epoch [47/100] - Train Loss: 386.905517, Val Loss: 372.189146
+Epoch [48/100] - Train Loss: 360.005523, Val Loss: 336.619391
+Epoch [49/100] - Train Loss: 313.105426, Val Loss: 295.993318
+Epoch [50/100] - Train Loss: 289.956477, Val Loss: 288.990761
+Epoch [51/100] - Train Loss: 275.556949, Val Loss: 253.447913
+Epoch [52/100] - Train Loss: 235.560519, Val Loss: 223.767083
+Epoch [53/100] - Train Loss: 218.584251, Val Loss: 212.250036
+Epoch [54/100] - Train Loss: 194.840555, Val Loss: 174.605336
+Epoch [55/100] - Train Loss: 163.194433, Val Loss: 160.830758
+Epoch [56/100] - Train Loss: 165.930163, Val Loss: 168.662767
+Epoch [57/100] - Train Loss: 163.306149, Val Loss: 157.628754
+Epoch [58/100] - Train Loss: 158.589538, Val Loss: 161.958182
+Epoch [59/100] - Train Loss: 165.304969, Val Loss: 165.283127
+Epoch [60/100] - Train Loss: 161.518451, Val Loss: 158.613174
+Epoch [61/100] - Train Loss: 160.583744, Val Loss: 163.453314
+Epoch [62/100] - Train Loss: 164.288322, Val Loss: 162.396998
+Epoch [63/100] - Train Loss: 159.890755, Val Loss: 159.045897
+Epoch [64/100] - Train Loss: 161.176381, Val Loss: 163.687397
+Epoch [65/100] - Train Loss: 163.753423, Val Loss: 162.162462
+Epoch [66/100] - Train Loss: 160.397587, Val Loss: 161.309951
+Epoch [67/100] - Train Loss: 162.411247, Val Loss: 163.071273
 Early stopping triggered.
-Testing result:163.2431753653067
+Testing result:163.07211077654804
 Model saved.
 torch.Size([35040, 716, 3])
-	Command being timed: "python uvmd.py --K 13 --layers 1 --input data/sd/2019/his_raw.npz --output data/sd/2019/unfold_K13_N1/his.npz --dir data/sd/2019/unfold_K13_N1"
-	User time (seconds): 5214.21
-	System time (seconds): 9.26
-	Percent of CPU this job got: 884%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 9:50.32
+	Command being timed: "python uvmd.py --K 13 --layers 1 --input /home/aitzaz/vmd-uvmd-comparison/replication/magn/data/sd/2019/his_raw.npz --output /home/aitzaz/magn_runs/sd_N1/unfold/his.npz --dir /home/aitzaz/magn_runs/sd_N1/unfold"
+	User time (seconds): 5460.23
+	System time (seconds): 8.55
+	Percent of CPU this job got: 923%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 9:52.38
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 3808084
+	Maximum resident set size (kbytes): 3830776
 	Average resident set size (kbytes): 0
-	Major (requiring I/O) page faults: 2054
-	Minor (reclaiming a frame) page faults: 677453
-	Voluntary context switches: 829975
-	Involuntary context switches: 5050
+	Major (requiring I/O) page faults: 2239
+	Minor (reclaiming a frame) page faults: 672346
+	Voluntary context switches: 682523
+	Involuntary context switches: 4147
 	Swaps: 0
-	File system inputs: 404952
-	File system outputs: 3262176
+	File system inputs: 605736
+	File system outputs: 3262264
 	Socket messages sent: 0
 	Socket messages received: 0
 	Signals delivered: 0
