@@ -9,7 +9,7 @@ CG=/sys/fs/cgroup/user.slice/user-$(id -u).slice
 while true; do
   {
     echo "=== $(date '+%F %T')"
-    echo "job processes (main.py / uvmd.py): $(pgrep -u "$USER" -fc 'experiments/astgcn/main.py|uvmd.py')"
+    echo "job processes (main.py / uvmd.py): $(pgrep -u "$(id -un)" -fc 'experiments/astgcn/main.py|uvmd.py')"
     nvidia-smi --query-gpu=index,utilization.gpu,memory.used --format=csv,noheader
     free -m | awk 'NR==2{print "host mem used MB",$3,"available MB",$7}'
     [ -r "$CG/memory.events" ]  && echo "user cgroup events: $(tr '\n' ' ' < "$CG/memory.events")"
