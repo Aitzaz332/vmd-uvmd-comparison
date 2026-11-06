@@ -1,0 +1,5 @@
+Fri Nov  6 09:49:05 CET 2026
+node4
+torch 2.7.0+cu126
+c4ca247f7419857567637e5f1ada520f447564b7
+plain ASTGCN, input = [flow, tod, dow], input_dim=3, bs=48, seeds=2023
