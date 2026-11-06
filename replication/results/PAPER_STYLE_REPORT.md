@@ -56,7 +56,7 @@ Units as in the paper: MAPE in %. ASTGCN* rows are the paper's numbers for the p
 | case III K=6,  N=2 (paper) | 210.246K+2.16M | 5.35 | 8.84 | 5.22% | 9.71 | 15.15 | 8.93% | 21.14 | 32.36 | 22.01% | 11.19 | 17.57 | 10.92% |
 | **case III K=6,  N=2 (replicated)** | 210.246K+2.16M | 5.31 | 8.96 | 5.35% | 9.47 | 15.02 | 7.75% | 20.77 | 32.26 | 18.76% | 10.95 | 17.38 | 9.59% |
 | case III K=13, N=2 (paper) | 210.253K+2.17M | 7.42 | 12.47 | 9.53% | 13.27 | 18.57 | 14.87% | 23.62 | 33.30 | 29.22% | 13.49 | 19.82 | 16.65% |
-| case III K=13, N=2 (replicated) | not run yet | |
+| **case III K=13, N=2 (replicated)** | 210.253K+2.16M | 6.38 | 11.34 | 6.95% | 12.93 | 23.07 | 12.38% | 20.91 | 38.07 | 20.02% | 12.34 | 23.33 | 11.91% |
 
 ## Decomposition time
 
@@ -70,6 +70,7 @@ Paper: 98.63 s for all 6902 sensors (UVMD, RTX 3080 Ti) against 267 min for iter
 | sd_K6_N2 | 16:13.03 | - | - |
 | sd_K9_N1 | 8:14.74 | - | - |
 | sd_N1 | 9:52.38 | - | - |
+| sd_N2 | 37:44.26 | - | - |
 
 ## Figures (data behind paper Fig. 2 and Fig. 3)
 
